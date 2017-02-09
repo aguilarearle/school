@@ -1,0 +1,205 @@
+\documentclass[11pt, letterpaper, onecolumn]{article}
+
+% Imports
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath, amsthm, amsfonts,mathtools, framed}
+\usepackage[shortcuts]{extdash} % Use \-/ for hyphenated words
+\usepackage{environ}
+\usepackage{fancyvrb}
+\usepackage[top=1.00in, bottom=1.00in, left=0.75in, right=0.75in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{accents}
+% Pseudocode enabler
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% tikz
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+% Page
+\headsep=0.3in
+\linespread{1.15}
+\setlength\parindent{0pt}
+
+% Horizontal Rules
+\newcommand{\hwRuleWidth}{0.4pt}
+\renewcommand\headrulewidth{\hwRuleWidth}
+\renewcommand\footrulewidth{\hwRuleWidth}
+
+% Header and Footer
+\pagestyle{fancy}
+\lhead{\hwAuthor\ (\hwSection)}
+\chead{\hwClass\ (\hwInstructor): \hwTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+\newcommand{\enterProblemHeader}[2]{
+  \nobreak\extramarks{}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+}
+\newcommand{\exitProblemHeader}[2]{
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2}}{}\nobreak{}
+}
+
+% Counters
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\setcounter{partCounter}{1}
+\newcounter{hwProblemCounter}
+\newcounter{hwSubProblemCounter}
+\numberwithin{equation}{hwProblemCounter}
+\numberwithin{figure}{hwProblemCounter}
+
+% Environments
+\newenvironment{problem}[3] {
+  \setcounter{hwProblemCounter}{#2}
+  \setcounter{hwSubProblemCounter}{#3}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+
+  \large{\textbf{Problem #2.#3: #1}}\\
+}{
+  \exitProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+}
+
+\newcommand{\question}[2]{\textbf{(#1)\ }\ #2\\}
+
+\newenvironment{Proof}[1][Proof]
+  {\proof[#1]\leftskip=1cm\rightskip=1cm}
+  {\endproof}
+%-------------------------------------------------------------------------------
+% Assignmnet Variables
+%-------------------------------------------------------------------------------
+\newcommand{\hwTitle}{Homework 1}
+\newcommand{\hwDueDate}{Jan 26, 2017}
+\newcommand{\hwClass}{CS 181}
+\newcommand{\hwInstructor}{Amit Sahai}
+\newcommand{\hwAuthor}{Earle Aguilar}
+\newcommand{\hwSection}{804501476}
+% First Problem
+\setcounter{hwProblemCounter}{1}
+\setcounter{hwSubProblemCounter}{0}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+% TITLE
+%-------------------------------------------------------------------------------
+{\centering
+  \Large{\textbf{\hwTitle}}\\
+  \vspace{0.1in}\normalsize{\hwDueDate}\\
+  \vspace{0.1in}\textbf{\hwAuthor} (\hwSection)\\
+  \vspace{0.1in}\rule{\textwidth}{\hwRuleWidth}}\\
+
+
+%-------------------------------------------------------------------------------
+% Problem 1.0
+%------------------------------------------------------------------------------
+\begin{problem}{}{1}{0}
+  \section{a}
+  Let $M = (Q, \Sigma, \delta, q_0^{'}, F)$ be a DFA that accepts $w$. We construct
+  an NFA $N=(Q^{'}, \Sigma, \delta^{'}, q_0, F^{'})$ that also accepts $w$. \\ \\
+  Construct $N:$ \\
+  1. $Q^{'} = Q$ \\
+  2. $q_0^{'} = q_0$ \\ 
+  3. $\delta^{'}(q_i, w_i) = \{ \delta(q_i, w_i) \}$  a unit set. \\ 
+  4. $F^{'} = F$ \\
+  From this contruction we emulate M exactly since our delta function only uses
+  one of the possible paths an NFA could take. After the finishing the
+  computation of w there is only one accept state and only one path. 
+  \section{b}
+  Let $N = (Q, \Sigma, \delta, q_0, F)$ be an NFA that accepts $w$. We construct
+  a DFA $M = (Q^{'}, \Sigma, \delta^{'}, q_0^{'}, F^{'})$ that also accepts $w$.
+  Construct $M:$ \\
+  1. $Q^{'} = \mathcal{P}(Q)$ \\
+  2. $\delta^{'}(R, w_i) = \epsilon-closure( \bigcup\limits_{r \in R}\delta(r, w_i))$ \\
+  3. $q_0 = \epsilon-closure(\{ q_0 \})$ \\
+  4. $F^{'} = \{ a \in Q^{'} \ | \ \ |a \in F| > \frac{|a|}{3}   \}$
+\end{problem}
+\newpage
+%-------------------------------------------------------------------------------
+% Problem 2.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{2}{0}
+  We $M = (Q,\Sigma, \delta, q_0, F)$ be a DFA that accepts L. We construct an
+  NFA $M^{'}$ that accepts $L_R$ \\ \\
+  Constructing $M^{'}:$ \\
+  1. $Q^{'} = Q$ \\
+  2. $\Sigma = \Sigma$ \\
+  3. $\delta^{'}(q_i, a \in \Sigma) = \{ q_j \vert \delta(q_j, a \in \Sigma) = q_i \}$ \\
+  4. $q_0^{'} \in F$ \\
+  5. $F^{'} = q_0$ \\ \\
+  Claim: $w$ is accepted by M $\iff w^R$ is accepted by $M^{'}$
+  \begin{proof} $ $\newline
+    ($\Leftarrow$) Let $w=w_0w_1\dots w_m \in L$. Machine M starts at $q_0$ and
+    $\forall i \ge 0$ ,$\ q_{i+1} = \delta(q_i, w_i)$. When we reach $w_n$,
+    $\delta(q_{n-1}, w_n) \in F$  \\ \\
+    ($\Rightarrow$) Let $w=w_nw_{n-1}\dots w_1 \in L_R$. By construction 
+    Machine $M^{'}$ starts at $q_0^{'} \in F$, the accepting states of M. Also by
+    construciton of the delta function, $\delta^{'}(q_i, a \in \Sigma)$, we reversed
+    the paths of Machine M s.t $\forall i \le n$, $\delta^{'}(q_i, a)$ will send
+    us to a state $q_j$ where $\delta(q_j, a) = q_i$. When we reach $w_1$, 
+    $\delta(q_1, w_1) \in F^{'} = q_0$.
+  \end{proof}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 3.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{3}{0}
+  We $M = (Q,\Sigma, \delta, q_0, F)$ be a DFA that accepts L. We construct an
+  NFA $M^{'}$ that accepts $L_{alt}$ \\ \\
+  Constructing $M^{'}:$ \\
+  1. $Q^{'} = Q$ \\
+  2. $\Sigma = \Sigma$ \\
+  3. $\delta^{'}(q_i, a \in \Sigma) = \{ q_{j} \ | \ \delta(q_{i+1}, b \in \Sigma) =q_j \}$ \\
+  4. $q_0^{'} = q_0$ \\
+  5. $F^{'} = \{q_{n-2}, q_n\}$ \\ \\
+  Claim: $w$ is accepted by M $\iff w_{alt}$ is accepted by $M^{'}$
+  \begin{proof} $ $\\
+    ($\Leftarrow$) Let $w=w_0w_1\dots w_m \in L$. Machine M starts at $q_0$ and
+    $\forall i \ge 0$ ,$\ q_{i+1} = \delta(q_i, w_i)$. When we reach $w_n$,
+    $\delta(q_{n-1}, w_n) \in F$  \\ \\
+
+    
+  \end{proof}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 4.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{4}{0}
+\end{problem}
+\end{document}
+
+
+
+ 
+% \begin{align}
+% \end{align}
+% \frac{}{}

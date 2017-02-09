@@ -1,0 +1,249 @@
+\documentclass[11pt, letterpaper, onecolumn]{article}
+
+% Imports
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath, amsthm, amsfonts,mathtools, framed}
+\usepackage[shortcuts]{extdash} % Use \-/ for hyphenated words
+\usepackage{environ}
+\usepackage{fancyvrb}
+\usepackage[top=1.00in, bottom=1.00in, left=0.75in, right=0.75in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{accents}
+% Pseudocode enabler
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% tikz
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+% Page
+\headsep=0.3in
+\linespread{1.15}
+\setlength\parindent{0pt}
+
+% Horizontal Rules
+\newcommand{\hwRuleWidth}{0.4pt}
+\renewcommand\headrulewidth{\hwRuleWidth}
+\renewcommand\footrulewidth{\hwRuleWidth}
+
+% Header and Footer
+\pagestyle{fancy}
+\lhead{\hwAuthor\ (\hwSection)}
+\chead{\hwClass\ (\hwInstructor): \hwTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+\newcommand{\enterProblemHeader}[2]{
+  \nobreak\extramarks{}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+}
+\newcommand{\exitProblemHeader}[2]{
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2}}{}\nobreak{}
+}
+
+% Counters
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\setcounter{partCounter}{1}
+\newcounter{hwProblemCounter}
+\newcounter{hwSubProblemCounter}
+\numberwithin{equation}{hwProblemCounter}
+\numberwithin{figure}{hwProblemCounter}
+
+% Environments
+\newenvironment{problem}[3] {
+  \setcounter{hwProblemCounter}{#2}
+  \setcounter{hwSubProblemCounter}{#3}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+
+  \large{\textbf{Problem #2.#3: #1}}\\
+}{
+  \exitProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+}
+
+\newcommand{\question}[2]{\textbf{(#1)\ }\ #2\\}
+
+\newenvironment{Proof}[1][Proof]
+  {\proof[#1]\leftskip=1cm\rightskip=1cm}
+  {\endproof}
+%-------------------------------------------------------------------------------
+% Assignmnet Variables
+%-------------------------------------------------------------------------------
+\newcommand{\hwTitle}{Homework 1}
+\newcommand{\hwDueDate}{Jan 26, 2017}
+\newcommand{\hwClass}{CS 181}
+\newcommand{\hwInstructor}{Amit Sahai}
+\newcommand{\hwAuthor}{}
+\newcommand{\hwSection}{804501476}
+% First Problem
+\setcounter{hwProblemCounter}{1}
+\setcounter{hwSubProblemCounter}{0}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+% TITLE
+%-------------------------------------------------------------------------------
+{\centering
+  \Large{\textbf{\hwTitle}}\\
+  \vspace{0.1in}\normalsize{\hwDueDate}\\
+  \vspace{0.1in}\textbf{\hwAuthor} (\hwSection)\\
+  \vspace{0.1in}\rule{\textwidth}{\hwRuleWidth}}\\
+
+
+%-------------------------------------------------------------------------------
+% Problem 1.0
+%------------------------------------------------------------------------------
+\begin{problem}{}{1}{0}
+  \section{a} \textbf{$L_{Shuffle}(L_1, L_2)$ not regular} \\
+  Let $L_1 = L_2 = \{ 0^n 1^n \}$ then
+  \begin{align}
+    L_{Shuffle}(L_1, L_2) &= \{ 0^n0^n1^n1^n\} \\
+    L_{Shuffle}(L_1, L_2) & = \{0^{2n}1^{2n}\} = \{ 0^m 1^m | m = 2n\}
+  \end{align}
+  We know that $\{0^m1^m\}$ is not regular so $L_{Shuffle}(L_1, L_2)$ is not
+  regular. \\ \\
+  \textbf{$L_{Shuffle}(L_1, \bar{L_2})$ not regular} \\
+  Let $L^{'}_2 = \{2^n3^n\} \subseteq \bar{L_2}$ then
+  \begin{align}
+    L_{Shuffle}(L_1, \bar{L_2}) &= \{ \{02\}^n \{13\}^n \} 
+  \end{align}
+  $\{\{02\}^n \{13\}^n\}$ is not regular and therefore
+  $L_{Shuffle}(L_1, \bar{L_2})$ is also not regular.
+  \section{b}
+  Claim: For $x \in L_1$ and $y \in L_2$, s.t. $|x|=|y|=n$, $\exists$ machines
+  $N_1$ and $N_2$ s.t $N_1(x): Accepts$ and $N_2(y): Accepts$ $\iff$ $\exists$
+  M that recognizes $w \in L_{shuffle}(x,y)$, $M(w): Accepts$. 
+  \begin{proof} $ $ \\
+    Let M be a DFA recognizing $L_{shuffle}$:  
+    \begin{itemize}
+    \item $Q = Q_1 \cup Q_2$
+    \item $q^{''}_0 = q_0 \in Q_1$
+    \item $F^{''} = F^{'}$
+    \item $\delta^{'}(s \in Q, w_i)  = \begin{cases} \delta_1(q_0, w_i), \ s=q_0 
+      \\ \delta_2(s^{'}, w_i), \ s \in Q_1, \ s^{'} \in Q_2
+      \\ \delta_1(s^{'}, w_i), \ s \in Q_2, \ s^{'} \in Q_1
+    \end{cases}$
+    \end{itemize}
+    ($\Rightarrow$)   $L_1$ and $L_2$ be regular $\implies \exists$ DFAs $N_1$
+    and $N_2$ that accept $x$ and $y$ respectively. Now $N_1$ recognizes x as
+    follows. $\exists$ states $a_1, a_2, \dots, a_n$ s.t.
+    $\delta_1(a_i, x_i) = \{a_j \in Q_1\}$ and $a_n \in F$. $N_2$ recognizes y
+    since $\exists$ states $b_1, b_2, \dots, b_n$ s.t
+    $\delta_2(b_i, y_i)=\{b_j \in Q_2\}$. Now the states $a_1b_1a_2b_2\dots a_nb_n$
+    is concatenation of paths on $N_1$ and $N_2$ from $q_0 \in Q_1$ to
+    $q_n \in Q_2$ for for $L_{shuffle}(x,y).$
+    
+    ($\Leftarrow$) 
+    Now M recognizes $L_{Shuffle}$ as follows. Let
+    w=$w_1w_2\dots w_m \in L_{shuffle}$, then $\exists$ states $s_1,...s_{2n}$ s.t
+    $s_1 = a_1$ and $s_m = b_n$. Therefore a concatenation of their paths
+    $a_1b_1a_2b_2\dots a_nb_n$ is an accpeting compuation path on M for w.
+    
+  \end{proof}
+
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 2.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{2}{0}
+  \section{a}
+  \begin{proof}
+    Assume $L_2 = b^{*} \cup L_1$ is regular. Then by Pumping Lemma
+    $\exists \  p \in \mathbb{N}$  s.t $w=b^p = xyz$, $|xy| \le p$ and
+    $|y| \ge 1$. Now by Pumping Lemma we can
+    pump so that $ab^ic \in L_2$
+    since $b*$ is the set off all possible strings created by concatenating
+    any number $i$ of $b$ it will produce an $ab^ic \in L_2$. 
+  \end{proof}
+  \section{b}
+  \begin{proof}
+    Let $M = (Q, \Sigma, \delta, q_0, F)$ be a DFA recognizing L and $n=k+p+m$
+    be the number of states in M. Let $s=s_1s_2\dots s_n$ be a string in L s.t a partion 
+    $\exists$ where $s=xyz$ as such: \\
+    1) $x =s_1 \dots s_k$ \\ 
+    2) $y = s_{1^{'}} \dots s_l$ s.t $|y| \ge p$ \\
+    3) $z =s_{1^{''}} \dots s_m$ \\
+    Let $abc$ be strings s.t $y=abc$. Observe $r_{1^{'}} \dots r_{l+1}$ the sequence of 
+    states M enters while processing Y so $r_{i+1} = \delta(r_i, s_{i^{'}})$ for 
+    $1^{'} \le i \le l$. The sequence has length $l+1$ which is at least $p+1$. By 
+    the pigeonhole principle $\exists \ i,j$ s.t $r_i=r_j$, $1^{'} \le i < j \le l$. 
+    \\ \\ \\ \\ \\ \\ \\
+    Let $a=r_{1^{'}} \dots r_{i-1}$, $b=r_{i} \dots r_{j-1}$, $c=r_{j} \dots r_{l}$  
+    Since $i \ne j \implies |b| > 0$ and since $x$ takes M $r_1$ to $r_{1^{'}}$, $a$
+    takes M from $r_{'} \ to \ r_i$, $b$ takes M from $r_i \ to \ r_i$, $c$ takes M from
+    $r_j \ to \ r_l$, and $z$ takes M from $r_{1^{''}} \ to \ r_m$ then $xab^{i}cz \in L$ 
+  \end{proof}
+  \section{c}
+  \begin{proof} $ $ \\
+    Assume for contradiction $L_2$ is regular
+    \begin{itemize}
+      \setlength\itemsep{0em}
+      \item By Pumping Lemma $\exists \ p$ 
+      \item Consider $\alpha^i\beta^n = xy$, where $y=\beta^n$ and $n > p$. 
+      \item By pumping lemma $\beta^n = abc$, $|b| > 0$ 
+      \item Let $|b| = q$ s.t $y=\beta^q\beta^{n-q}$ 
+      \item Let $i = n+1 \implies \beta^{q(n+1)} \beta^{n-q} = \beta^{n(q+1)}$ 
+      \item If $q=1$ then $2n$ is even or iff $q>1$ then $q+1|n(q+1)$ therefore
+      \item $\alpha \beta^{n(q+1)} \notin L_2$ so $L_2$ is not regular.
+    \end{itemize}
+  \end{proof}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 3.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{3}{0}
+Given $0^*21^* \in L$ and $L$ is regular. By inspection we note the following pattern: 
+ \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l |}
+      \hline
+      $L$                               & $L_{\frac{1}{3} - \frac{1}{3}}(L)$ \\ \hline
+      0\underline{\textbf{2}}1          & 01                           \\ \hline
+      00\underline{\textbf{21}}11       & 0011                         \\ \hline
+      000\underline{\textbf{211}}111    & 000111                       \\ \hline
+      0000\underline{\textbf{2111}}1111 & 00001111                     \\ \hline
+      $\ \ \ \ \ \ \ \ \ \vdots$        & $\ \ \ \ \ \ \vdots$         \\ \hline
+      $0^n21^{|xyz|-(n+1)}$                & $0^n1^n$                      \\ \hline
+    \end{tabular} 
+  \end{center}
+Let $L_1 = \{ 0^n21^{|xyz|-(n+1)} \} \in L$. Regular languages are closed under 
+intersection so then \newline $L_{\frac{1}{3} - \frac{1}{3}}(L_1) \cap L = \{ 0^n1^n \}$, but 
+we know that \{$0^n1^n$\} not regular.
+\end{problem}
+\end{document}
+
+
+
+ 
+% \begin{align}
+% \end{align}
+% \frac{}{}
+
