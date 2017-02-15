@@ -1,0 +1,132 @@
+---
+title: "Homework 3"
+output: pdf_document
+---
+
+\begin{center}
+Earle Aguilar \\
+804501476 \\
+01-27-2017
+\end{center}
+
+\section{3.4}
+
+\begin{center}
+  \begin{tabular}{| l | l | l | l | l | l | l |}
+    \hline
+      Source  & DF & SS      & MS     & F     & P           \\ \hline
+      Factor  & 4  & 987.71  & 246.93 & 33.10 & $\approx$ 0 \\ \hline
+      Error   & 25 & 186.53  & 7.46   &       &             \\ \hline
+      Total   & 29 & 1174.24 &        &       &             \\ \hline
+  \end{tabular} 
+\end{center}
+
+\section{3.5}
+No there are more than one type of chococalate that could have been tested. We could 
+have tested combinations of those cholocate types and see their effects on depression. No, a causal effect cannot be established.  The study would have to include a random sample of people, not just individuals that already consume chocolate. There needs to be a control group that does not consume chocolate. The treatment group must be given a known quantity of chocolate.
+
+\section{3.16}
+```{r, echo = F}
+Temp <- c(100, 100,100,100,100,125,125,125,125,
+          150,150,150,150, 150 ,175,175,175,175)
+Temp <- factor(Temp)
+Density <- c(21.8 ,21.9 ,21.7 ,21.6 ,21.7,
+             21.7 ,21.4 ,21.5, 21.4, 21.9, 
+             21.8, 21.8, 21.6, 21.5, 21.9, 
+             21.7, 21.8, 21.4)
+RESI1 <- c(0.06 ,0.16 ,-0.04 ,-0.14 ,-0.04 ,
+           0.2 ,-0.1 ,0 ,-0.1 ,0.18 ,
+           0.08 ,0.08 ,-0.12 ,-0.22 ,
+           0.2 ,0 ,0.1 ,-0.3)
+p16 <- data.frame(Temp, Density, RESI1)
+```
+\subsection{a}
+There are no signs that the temperature affects density. The p-value of the anova test is 0.1569.
+```{r}
+m1 <- lm(Density ~ Temp, p16)
+anova(m1)
+```
+\subsection{b}
+There is no indication that the temperature affects density therefore there is no need to use Fisher's LSD method.
+\subsection{c}
+There is no signs of non-constant variance in the residual plot.
+```{r}
+par(mfrow=c(2,2))
+plot(m1)
+```
+\section{3.26}
+```{r, echo=F}
+Brand <- c(1 ,1 ,1 ,1 ,1, 2 ,2 ,2 ,2 ,2, 3 ,3 ,3 ,3 ,3)
+Brand <- factor(Brand)
+Life <- c(100 ,96 ,92 ,96 ,92, 76 ,80 ,75 ,84 ,82,
+          108 ,100 ,96 ,98 ,100)
+p26 <- data.frame(Brand, Life)
+```
+\subsection{a}
+```{r}
+m2 <- lm(Life ~ Brand, p26)
+anova(m2)
+```
+The lives of the batteries are different. The p-value of the F-test produced by ANOVA is $6.141 \times 10^{-6}$
+\subsection{b}
+The residual plot shows that there is nothing wront. There is no trend line and the variance is constant.
+```{r}
+par(mfrow=c(2,2))
+plot(m2)
+```
+\subsection{c}
+
+\textbf{$95\%$ CI for Battery Brand 2}
+```{r}
+b <- p26[p26$Brand == 2,]
+mean_b <- mean(b$Life)
+sd_b <- sd(b$Life)
+k <- qt(p = 0.975, 4)
+se <- k * (sd_b/sqrt(5))
+c(mean_b - se, mean_b +se)
+```
+
+\textbf{$99\%$ CI for Difference of Means}
+```{r}
+c <- p26[p26$Brand == 3,]
+mean_c <- mean(c$Life)
+sd_c <- sd(c$Life)
+s_pooled <- (4*sd_c^2 + 4*sd_b^2) / 8
+D <- mean_b - mean_c
+t <- qt(0.99, 8)
+se <- t* sqrt(s_pooled*(2/5))
+c(D - se, D+se)
+```
+\subsection{d}
+#TODO
+\section{3.27}
+```{r, echo=F}
+Catalyst <- c(1 ,1 ,1 ,1 ,1 ,2 ,2 ,2 ,2 ,2,
+              3 ,3 ,3 ,3 ,3 ,4 ,4 ,4 ,4 ,4)
+Catalyst <- factor(Catalyst)
+Concentration <- c(58.2 ,57.2 ,58.4 ,55.8 ,54.9,
+                   56.3 ,54.5 ,57 ,55.3 ,0.0 ,50.1,
+                   54.2 ,55.4 ,0.0 ,0.0 ,52.9 ,49.9 ,50 ,51.7, 0.0)
+p27 <- data.frame(Catalyst, Concentration)
+```
+\subsection{a}
+There is no evidence that suggest the catalysts have an effect on the concentration.
+```{r}
+m3 <- lm(Concentration ~ Catalyst, p27)
+anova(m3)
+```
+\subsection{b}
+There are signs of non constant variance.
+```{r}
+par(mfrow=c(2,2))
+plot(m3)
+```
+\subsection{c}
+```{r}
+c1 <- p27[p27$Catalyst == 1,]
+mean_c1 <- mean(c1$Concentration)
+sd_c1 <- sd(c1$Concentration)
+t <- qt(0.99, 4)
+se <- t * (sd_c1/ sqrt(5))
+c(mean_c1 - se, mean_c1 + se)
+```

@@ -1,0 +1,84 @@
+---
+title: "Stats 101B Code and Outputs"
+output: pdf_document
+---
+
+Loading data and creating a new variable that is the mean of the two repetitions. I created two dataframes for clarity between all three analysis. 
+
+```{r}
+library(leaps)
+library(car)
+setwd("~/vmshare/ucla/classes/stats101b")
+herpes <- read.table("hsv34.txt")
+herpes$rep.avg <- (herpes$rep1 + herpes$rep2) / 2
+cols <- c("A" ,"B", "C", "D", "E")
+herpes[cols] <- lapply(herpes[cols], factor)
+
+herpes16 <- herpes[1:16,]
+herpes18 <- herpes[-(1:16),]
+```
+
+# All 36 trials
+
+```{r}
+m1 <- lm(rep.avg ~ A + B + C + D + E, herpes)
+summary(m1)
+par(mfrow=c(2,2))
+plot(m1)
+
+herpes <- herpes[, -c(6,7)]
+backwards <- regsubsets(rep.avg ~.,data=herpes,method="backward",nvmax=10)
+backwards <- summary(backwards)
+bic <- backwards$bic
+p <- length(bic)
+par(mfrow=c(1,1))
+plot(1:p, bic)
+lines(1:p, bic)
+
+m2 <- lm(rep.avg ~ D + E, herpes)
+plot(m2)
+```
+
+# First 16 trials
+
+```{r}
+herpes16 <- herpes[1:16,]
+m3 <-  lm(rep.avg ~ A + B + C + D + E, herpes16)
+summary(m3)
+plot(m3)
+
+backwards <- regsubsets(rep.avg ~. ,data=herpes16 ,method="backward" ,nvmax=10)
+backwards <- summary(backwards)
+bic <- backwards$bic
+p <- length(bic)
+par(mfrow=c(1,1))
+plot(1:p, bic)
+lines(1:p, bic)
+
+m4 <- lm(rep.avg ~ D + E, herpes16)
+summary(m4)
+plot(m4)
+```
+
+# Last 18 trials
+
+```{r}
+herpes18 <- herpes[-(1:16),]
+
+m5 <-  lm(rep.avg ~ A + B + C + D + E, herpes18)
+summary(m5)
+plot(m5)
+
+backwards <- regsubsets(rep.avg ~. ,data=herpes18 ,method="backward" ,nvmax=10)
+backwards <- summary(backwards)
+bic <- backwards$bic
+p <- length(bic)
+par(mfrow=c(1,1))
+plot(1:p, bic)
+lines(1:p, bic)
+
+m6 <- lm(rep.avg ~ D + E, herpes18)
+summary(m6)
+plot(m6)
+```
+
