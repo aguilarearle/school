@@ -1,0 +1,121 @@
+---
+title: "Homework 5"
+output: pdf_document
+---
+
+\begin{center}
+Earle Aguilar \\
+(804501476) \\
+2/17/2017
+\end{center}
+
+\section{5.1}
+\begin{center}
+  \begin{tabular}{| l | l | l | l | l | l | l |}
+    \hline
+      Source      & DF & SS      & MS      & F     & P   \\ \hline
+      A           & 1  & 0.322   & 0.322   & 0.037 &  \\ \hline
+      B           & 2  & 80.554  & 40.2771 & 4.59  &  \\ \hline
+      Interaction & 2  & 45.348  & 22.674  & 2.58  &  \\ \hline    
+      Error       & 12 & 105.327 & 8.7773  &       &  \\ \hline
+      Total       & 17 & 231.551 &         &       &  \\ \hline
+  \end{tabular} 
+\end{center}
+\section{5.4}
+```{r}
+depth_of_cut <- c(0.15,0.15,0.15,0.18,0.18,0.18,0.2,0.2,0.2,0.25,0.25,
+                  0.25,0.15,0.15,0.15,0.18,0.18,0.18,0.2,0.2,0.2,0.25,
+                  0.25,0.25,0.15,0.15,0.15,0.18,0.18,0.18,0.2,0.2,0.2,
+                  0.25,0.25,0.25)  
+depth_of_cut <- factor(depth_of_cut)
+
+feed_rate <- c(0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,
+               0.2,0.2,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,
+               0.25,0.25,0.25,0.25,0.3,0.3,0.3,0.3,0.3,0.3,
+               0.3,0.3,0.3,0.3,0.3,0.3)
+feed_rate <- factor(feed_rate)
+
+surface_finish <- c(74,64,60,79,68,73,82,88,92,99,
+                    104,96,92,86,88,98,104,88,99,108,
+                    95,104,110,99,99,98,102,104,99,95,
+                    108,110,99,114,107,111)
+
+df1 <- data.frame(depth_of_cut, feed_rate, surface_finish)
+```
+\subsection{a}
+According to the ANOVA the main effects of depth cut and feed rate are significant $p-values < 0.001$ there is a significant interaction between the factors as well $p-value = 0.01797$. 
+```{r}
+model1 <- lm(surface_finish ~ depth_of_cut + feed_rate + depth_of_cut*feed_rate,df1)
+anova(model1)
+```
+
+\subsection{b}
+The errors seem to follow normal distrubution since they qq-plot shows they are approximetaly linear. There is no indication of non-contant variance in the residual plot. 
+```{r}
+par(mfrow = c(2,2))
+qqnorm(model1$residuals)
+qqline(model1$residuals)
+plot(model1, 1)
+```
+\subsection{c}
+
+```{r, echo=F}
+mean_1 <- mean(df1[df1$feed_rate == 0.20,]$surface_finish)
+mean_2 <- mean(df1[df1$feed_rate == 0.25,]$surface_finish)
+mean_3 <- mean(df1[df1$feed_rate == 0.30,]$surface_finish)
+```   
+
+\begin{center}
+  \begin{tabular}{| l | l | l | l | l | l | l |}
+    \hline
+      Feed Rate & Estimate \\ \hline
+      0.20      & 81.58333 \\ \hline
+      0.25      & 97.58333 \\ \hline
+      0.30      & 103.8333 \\ \hline    
+  \end{tabular} 
+\end{center}
+
+\subsection{d}
+Feed rate: $p-value = 1.086\times 10^{-9}$ \newline
+Depth of cut: $p-value = 1.653\times 10^{-7}$ \newline
+Feed rate*depth of cut: $p-value = 0.01797$ 
+
+\section{5.5}
+TODO: ask if we do this or use tukeys and calculate the mean of factor A at one level of B.
+
+\begin{align}
+CI (\mu_1 - \mu_2) &=  (\bar{y_{1..}} - \bar{y_{2..}}) \pm t_{\frac{\alpha}{2},ab(n-1)}\sqrt{\frac{2MS_E}{n}} \\
+&= -16 \pm 2.064*\sqrt{\frac{2*28.72}{3}} \\
+CI &= [25.03, -6.97] 
+\end{align}
+
+\section{5.10}
+```{r}
+Glass_Type <- c(1,1,1,2,2,2,3,3,3,1,1,1,2,2,
+                2,3,3,3,1,1,1,2,2,2,3,3,3)
+Glass_Type <- factor(Glass_Type)
+Temperature <- c(100,100,100,100,100,100,100,
+                 100,100,125,125,125,125,125,
+                 125,125,125,125,150,150,150,
+                 150,150,150,150,150,150)   
+Temperature <- factor(Temperature)
+Light_Output <- c(580,568,570,550,530,
+                  579,546,575,599,1090,
+                  1087,1085,1070,1035,1000,
+                  1045,1053,1066,1392,1380,
+                  1386,1328,1312,1299,867,904,889)
+df2 <- data.frame(Glass_Type,Temperature, Light_Output)
+```
+
+\subsection{a}
+The ANOVA shows that interaction is significatn $p-value = 1.254 \times 10^{-14}$. The glass type, $p-value = 3.886\times 10^{-13}$, and temperature, $p-value < 2.2 \times 10^{-16}$ also significantly affect the response significantly. 
+```{r}
+model2 <- lm(Light_Output ~ Glass_Type + Temperature + Glass_Type*Temperature, df2)
+anova(model2)
+```
+\subsection{b}
+\subsection{c}
+
+\section{5.17}
+\section{5.43}
+\section{5.44}
