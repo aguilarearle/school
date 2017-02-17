@@ -50,7 +50,7 @@ anova(model1)
 ```
 
 \subsection{b}
-The errors seem to follow normal distrubution since they qq-plot shows they are approximetaly linear. There is no indication of non-contant variance in the residual plot. 
+The errors seem to follow normal distribution since they qq-plot shows they are approximately linear. There is no indication of non-constant variance in the residual plot. 
 ```{r}
 par(mfrow = c(2,2))
 qqnorm(model1$residuals)
@@ -81,12 +81,11 @@ Depth of cut: $p-value = 1.653\times 10^{-7}$ \newline
 Feed rate*depth of cut: $p-value = 0.01797$ 
 
 \section{5.5}
-TODO: ask if we do this or use tukeys and calculate the mean of factor A at one level of B.
 
 \begin{align}
 CI (\mu_1 - \mu_2) &=  (\bar{y_{1..}} - \bar{y_{2..}}) \pm t_{\frac{\alpha}{2},ab(n-1)}\sqrt{\frac{2MS_E}{n}} \\
 &= -16 \pm 2.064*\sqrt{\frac{2*28.72}{3}} \\
-CI &= [25.03, -6.97] 
+CI &= [-25.03, -6.97] 
 \end{align}
 
 \section{5.10}
@@ -98,7 +97,6 @@ Temperature <- c(100,100,100,100,100,100,100,
                  100,100,125,125,125,125,125,
                  125,125,125,125,150,150,150,
                  150,150,150,150,150,150)   
-Temperature <- factor(Temperature)
 Light_Output <- c(580,568,570,550,530,
                   579,546,575,599,1090,
                   1087,1085,1070,1035,1000,
@@ -108,14 +106,82 @@ df2 <- data.frame(Glass_Type,Temperature, Light_Output)
 ```
 
 \subsection{a}
-The ANOVA shows that interaction is significatn $p-value = 1.254 \times 10^{-14}$. The glass type, $p-value = 3.886\times 10^{-13}$, and temperature, $p-value < 2.2 \times 10^{-16}$ also significantly affect the response significantly. 
+The ANOVA table shows that there is significant interaction between glass type and both temperature and temperature squared. The effects of glass type and temperature also significantly affect the response.
+
 ```{r}
-model2 <- lm(Light_Output ~ Glass_Type + Temperature + Glass_Type*Temperature, df2)
+model2 <- lm(Light_Output ~ Glass_Type *(Temperature + I(Temperature^2)) , df2)
 anova(model2)
 ```
+
 \subsection{b}
+
+```{r}
+glass_type1 <- lm(Light_Output ~ (Temperature + I(Temperature^2)), 
+                  subset = Glass_Type == 1,data = df2 )
+glass_type2 <- lm(Light_Output ~ (Temperature + I(Temperature^2)), 
+                  subset = Glass_Type == 2,data = df2 )
+glass_type3 <- lm(Light_Output ~ (Temperature + I(Temperature^2)), 
+                  subset = Glass_Type == 3,data = df2 )
+```
+
+\textbf{Glass Type I} \newline
+$Light Output = -3646.00 + 59.47*Temperature - 0.1728*Temperature^2$ \newline
+\textbf{Glass Type II} \newline
+$Light Output = -3415.00 + 56.00*Temperature - 0.1623*Temperature^2$ \newline
+\textbf{Glass Type III} \newline
+$Light Output = -7845.33 + 136.13*Temperature - 0.5195*Temperature^2$
+
 \subsection{c}
+The residuals are not following a normal distribution according to the Normal Q-Q plot. There are no signs of non-constant variance in residual plot.
+
+```{r}
+par(mfrow=c(2,2))
+qqnorm(model2$residuals)
+qqline(model2$residuals)
+plot(model2,1)
+```
 
 \section{5.17}
+
+\begin{center}
+  \begin{tabular}{| l | l | l | l | l | l | l |}
+    \hline
+      Source&DF           &SS          &MS       &Expected MS                                                     &F              \\ \hline
+      A     &$a-1$        &$SS_A$      &$MS_A$   &$\sigma^2 + \frac{bc\sum \tau_i^2}{(a-1)}$                      &$\frac{MS_A}{MS_E}$\\ \hline
+      B     &$b-1$        &$SS_B$      &$MS_B$   &$\sigma^2 + \frac{ac\sum \beta_i^2}{(b-1)}$                     &$\frac{MS_B}{MS_E}$\\ \hline
+      C     &$c-1$        &$SS_C$      &$MS_C$   &$\sigma^2 + \frac{ab\sum \gamma_i^2}{(c-1)}$                    &$\frac{MS_C}{MS_E}$\\ \hline
+      AB    &$(a-1)(b-1)$ &$SS_{AB}$   &$MS_{AB}$&$\sigma^2 + \frac{c\sum \sum (\tau \beta)_{ij}^2}{(a-1)(b-1)}$  &$\frac{MS_{AB}}{MS_E}$\\ \hline    
+      BC    &$(b-1)(c-1)$ &$SS_{BC}$   &$MS_{BC}$&$\sigma^2 + \frac{a\sum \sum (\gamma \beta)_{jk}^2}{(b-1)(c-1)}$&$\frac{MS_{BC}}{MS_E}$\\ \hline    
+      Error &$(ab-b)(c-1)$&$SS_{E}$    &$MS_{E}$ &$\sigma^2$                                                      &\\ \hline
+      Total &$abc-1$      &$SS_{Total}$&$$       &$$                                                              &\\ \hline
+  \end{tabular} 
+\end{center}
+
 \section{5.43}
+
+\begin{center}
+  \begin{tabular}{| l | l | l | l | l | l | l |}
+    \hline
+      Source & SS      & DF & MS   & F        \\ \hline
+      A      & 350.00  & 2  & 175  & 21.0084    \\ \hline
+      B      & 300.00  & 2  & 150  & 18.0072     \\ \hline
+      AB     & 200.00  & 4  & 50   & 6.0024     \\ \hline    
+      Error  & 150.00  & 18 & 8.33 &         \\ \hline
+      Total  & 1000.00 & 26 &      &         \\ \hline
+  \end{tabular} 
+\end{center}
+
 \section{5.44}
+
+\begin{center}
+  \begin{tabular}{| l | l | l | l | l | l | l |}
+    \hline
+      Source & SS      & DF & MS    & F     \\ \hline
+      A      & 350.00  & 2  & 175   & 31.11 \\ \hline
+      B      & 300.00  & 2  & 150   & 26.67 \\ \hline
+      AB     & 200.00  & 4  & 50    & 8.89  \\ \hline
+      Block  & 60.00   & 2  & 30    & 5.33  \\ \hline
+      Error  & 90.00   & 16 & 5.625 &       \\ \hline
+      Total  & 1200.00 & 26 &       &       \\ \hline
+  \end{tabular} 
+\end{center}
