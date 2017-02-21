@@ -132,28 +132,30 @@
   \begin{proof} $ $ \\
     Towards contradiction: \\
     - Assume $L_1$ is CF. \\
-    - By pumping lemma $\exists$ pumping length p. \\
-    - Let $s=0^p1^{pm}$ s.t. $|s| \ge p$. \\
-    - By pumping lemma $0^p1^{pm} = xyzuv $ \\
+    - By pumping lemma $\exists$ pumping length $p$. \\
+    - Let $s=0^k1^{km}$ s.t. $|s| \ge p$. \\
+    - By pumping lemma $0^k1^{km} = xyzuv $ \\
     1) $|yzu| \le p$ \\
-    2) $|yu| > 0$ \\
-    \textbf{Cases}: \\
-    1) $yzu = 0^k$, $1 \le k \le p$. Then $xy^2zu^2v = 0^{p+\alpha} 1^{pm}$ \\
+    2) $|yu| > 0$ \\ \\
+    \textbf{Cases}: \\ \\
+    1) $yzu = 0^{\alpha}$, $1 \le k \le p$. Then $xy^2zu^2v = 0^{k^{'}} 1^{nk^{'}}$ \\
+    The number of $1$'s does not change therefore:
     \begin{align}
-      \frac{a}{b} &= m \\
-      \frac{pm}{p+\alpha} &= m \\
-      pm &= pm + m\alpha \\
-      m\alpha = 0
-    \end{align} 
-    $\alpha$ cannot be zero. \\
-    2) $yzu = 1^{\alpha}$ then $xzv = 0^p 1^{pm-\alpha}$
-    \begin{align}
-      \frac{a}{b} &= m \\
-      \frac{pm-\alpha}{p} &= m \\
-      pm-\alpha = pm \\
-      \alpha = 0
+      k^{'}n &= km \\
+      n &= \frac{k}{k^{'}}m \\
+      n &= \frac{k}{k+\alpha} m
     \end{align}
-    $\alpha$ cannot be zero. \\
+    n has to be an integer but $k^{'} > k$ therefore $n \notin \mathbb{N}$. \\ \\
+    \newpage
+    2) $yzu = 1^{\alpha}$, $1 \le k \le p$. Then $xzv = 0^{\frac{k^{'}}{n}} 1^{k^{'}}$ \\
+    The number of $0$'s does not change therefore:
+    \begin{align}
+      \frac{k}{m} &= \frac{k^{'}}{n} \\
+      kn &= k^{'}m \\
+      n &= \frac{k^{'}}{k}m \\
+      n &= \frac{k - \alpha}{k}m
+    \end{align}
+    n has to be an integer but $k^{'} < k$ therefore $n \notin \mathbb{N}$ \\ \\
     3) $yzu = 0^{\alpha} 1^{\beta}$, $1 \le \alpha + \beta \le p$ then $xy^2zv^2u = 0^{p+\alpha}1^{pm+\beta}$
     \begin{align}
       \frac{a}{b} &= m \\
@@ -162,7 +164,34 @@
       \beta = m\alpha
     \end{align}
   \end{proof}
+  
   \section{b)}
+  Let $L=\{a^nb^n \ | \ n \ge 0\}$ then
+  $\tilde L = \{a^nb^{2n}a^n \ | \ w \in L \ \text{or} \ w^R \in L \}$
+  \begin{proof}
+    Towards contradiciton assume that $\tilde L$ is context-free. \\
+    \begin{itemize}
+    \item By pumping lemma $\exists$ pumping length p.
+    \item Let $w \in \tilde L$, \ $w = a^{p}b^{2p}a^p$, \ $|w| \ge p$
+    \item By pumping lemma $a^{p}b^{2p}a^p =xyzuv$
+    \item $|yzu| \le p$
+    \item $yu > 1$ 
+    \end{itemize}
+    \newpage
+    \textbf{Cases:} \\
+    1) $yzu = a^{\alpha}$ on the left, $1 \le \alpha \le p$
+    \begin{center}
+      $xzv = a^{p-\alpha}b^{2p}a^p \notin \tilde L$
+    \end{center}
+    2) $yzu = a^{\alpha}$ on the right, $1 \le \alpha \le p$
+    \begin{center}
+      $xzv = a^pb^{2p}a^{p-\alpha} \notin \tilde L$
+    \end{center}
+    3) $yzu = b^{\beta}$, $1 \le \beta \le p$
+    \begin{center}
+      $xzv = a^pb^{2p-\beta}a^p \notin \tilde L$
+    \end{center}
+  \end{proof}
 \end{problem}
 %-------------------------------------------------------------------------------
 % Problem 2.0
