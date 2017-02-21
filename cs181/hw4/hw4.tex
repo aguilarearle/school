@@ -167,13 +167,71 @@
 %-------------------------------------------------------------------------------
 % Problem 2.0
 %-------------------------------------------------------------------------------
-\begin{problem}{}{2}{0} 
+\begin{problem}{}{2}{0}
+  \section{a)}
+  We have two stacks $S_1$ and $S_2$. First the elements of a string must be pushed
+  onto $S_1$. Once all elements are in $S_1$ push all but the bottom most
+  element onto $S_2$. Now the stacks will represent a window into two elements of
+  of the input string, the top of $S_1$ will be the element on the left and
+  the top of $S_2$ will be the element on the right. To simulate head movement
+  of Turing machien T we define left and right movement by pushing and popping from stacks of
+  multi-stack machine M. \\ \\
+  \textbf{Move head to the right} \\
+  $Push_{S_1}(Pop_{S_2}) $ \\
+  \textbf{Move head to the right and replace element with $\beta$} \\
+  $Pop_{S_1}, Push_{S_1}(\beta),Push_{S_1}(Pop_{S_2}(\alpha)) $ \\
+  \textbf{Move head to the right and write $\beta$} \\
+  $Push_{S_1}(\beta),Push_{S_1}(Pop_{S_2}(\alpha)) $ \\
+  \textbf{Move head to the left} \\
+  $Push_{S_2}(Pop_{S_1}(\alpha)) $ \\
+  \textbf{Move head to the left and replace element with $\beta$} \\
+  $Pop_{S_1},Push_{S_2}(\beta) $ \\
+  \textbf{Move head to the left and write $\beta$} \\
+  $Push_{S_2}(Pop_{S_1}(\alpha)), Push_{s_2}(\beta) $  \\ \\
+  The states of machine M are equal to the states of T. Transitioning between
+  states is done using the $\delta$ function of machine T.  An accepting state
+  of this machine would be conditioned on a specific configuration of the
+  elements in the stacks and we can move left to right to determine if the
+  configuration is valid and then transitioning on to an accept state that is in
+  T.  
+  \section{b)}
+  We simulate three stacks using a turing machine T. In class we showed that
+  a multi-tape turing machine can be simulated using a single tape. For
+  simplicity we use multiple seperate tapes. We have an input tape to store
+  the input string and $t_1$, $t_2$, and $t_3$ each tape for one stack. We are
+  given machine M with three stacks $S_1$, $S_2$, and $S_3$. Let
+  $x=x_1x_2\dots x_n$ be the input string. \\ \\
+  \textbf{Starting States of Stacks and Tapes} \\
+  Each stack has a starting state with an end of stack symbol on it. Machine T
+  has the input $x$ on its input tape and each tape $t_i$ will have the
+  corresponding stack symbol as its first symbol. \\
+  \textbf{Stack Operations} \\
+  Upon reading $x_i$ machine M can: \\
+  1) $Push_{S_i}(x_i)$ - Push $x_i$ onto stack $S_i$ for $i \in \{1,2,3\}$ \\
+  2) $Pop_{S_i}$ - Pop element off of $S_i$. \\
+  3) $Push_{S_i}(Pop_{S_j}), \ i \ne j$  - Pop and element of of one stack and
+  push to another. \\
+  \textbf{Equivalent Tape Operations} \\
+  Each operation corresponds to the operations defined above respectively.
+  Upon reading $x_i$ machine T: \\
+  1) Move head to end of tape $t_i$, when first \textvisiblespace \ is under head, and
+  write $x_i$ onto it. \\
+  2) Move head to end of tape $t_i$, then move the the left by one and write
+  \textvisiblespace. \\
+  3) Move to end of tape $t_j$ and the left by one. Then move to end of $t_i$
+  and write symbol under head of $t_j$ onto $t_i$. \\
+  
+  The states of machine T are equal to the states of machine M. Transitions
+  between states in T follow the $\delta$ function of machine M. T accepts if
+  after processing string $x$ it is in the accept states of machine M.  \\ \\
+
+  In part a) we showed that a Turing machine is no more powerful than a 2 stack
+  PDA. In part b) we showed that a 3-stack machine is no more powerful than a
+  TM machine. Therefore a 3-stack PDA is no more powerful than a 2-stack PDA.
 \end{problem}
 %-------------------------------------------------------------------------------
 % Problem 3.0
 %-------------------------------------------------------------------------------
-\begin{problem}{}{3}{0}
-\end{problem}
 
 \end{document}
 
