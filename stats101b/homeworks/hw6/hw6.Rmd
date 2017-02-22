@@ -1,0 +1,116 @@
+---
+title: "Homework 6"
+output: pdf_document
+---
+
+I found this half-normal quantile plot written by professor TODO
+```{r}
+halfnormalplot <- function(y, label=F, n=length(y), fac.names=NULL,
+                           xlim=c(-.1, 2.5), main="Half-Normal Plot", 
+                           ...)
+  { # label the most singificant n effects 
+    m <- length(y)
+    x <- seq(0.5+0.25/m, 1.0-0.25/m, by=0.5/m)
+    x <-  qnorm(x)
+    y <-  sort(abs(y))
+    qqplot(x, y, xlab="half-normal quantiles", ylab="absolute effects",
+           xlim=xlim, main=main, ...)
+    if(is.null(fac.names)) fac.names <-  names(y)
+    else fac.names <-  rev( c(fac.names, rep("", length(y)-length(fac.names)) ) )
+    if(label) for(i in (m-n+1):m) text(x[i]+.2,y[i], fac.names[i])  
+  }
+```
+
+\section{6.17}
+```{r}
+effects <- c("A","B","C","D","AB","AC","AD","BC",
+             "BD","CD","ABC","ABD","ACD","BCD","ABCD")
+values <- c(76.95,-67.52,-7.84,-18.73,-51.32,
+            11.69,9.78,20.78,14.74,1.27,-2.82,
+            -6.5,10.2,-7.98,-6.25)
+df1 <- data.frame(effects, values)
+```
+\subsection{a}
+```{r}
+qqnorm(df1$values)
+qqline(df1$values)
+```
+
+\subsection{b}
+The effects A, B, and AB are significant according to the Normal QQ plot. Therefore a model could include these effects only.
+
+\section{6.24}
+```{r}
+A <- c("3rd","3rd","1st","1st","3rd","3rd","1st",
+       "1st","3rd","3rd","1st","1st","3rd","3rd",
+       "1st","1st")
+
+B <- c("BW","BW","BW","BW","Color","Color","Color",
+       "Color","BW","BW","BW","BW","Color","Color",
+       "Color","Color")
+
+C <- c(19.95,19.95,19.95,19.95,19.95,19.95,19.95,
+       19.95,24.95,24.95,24.95,24.95,24.95,24.95,
+       24.95,24.95)
+C <- as.factor(C)
+
+Number_of_Orders <- c(50,54,44,42,46,48,42,43,49,
+                      46,48,45,47,48,56,54) 
+
+df2 <- data.frame(A, B, C, Number_of_Orders)
+
+options(contrasts=c("contr.sum","contr.poly"))
+
+```
+
+\subsection{a}
+The factors which are significant are C, AB, AC, BC with p-values: $0.0085163$, $0.0056019$, $0.0004176$, and $0.0037282$ respectively.
+```{r}
+m1 <- lm(Number_of_Orders ~ A*B*C,df2)
+anova(m1)
+
+#par(mfrow=c(2,2))
+halfnormalplot(m1$effects,label=T)
+qqline(m1$effects)
+
+```
+\subsection{b}
+The Residual plot does not show any indication of non-constant variance. The normal Q-Q plot shows that the residuals are not following the normal distribution.
+```{r}
+#par(mfrow=c(2,2))
+m2 <- lm(Number_of_Orders ~ C + A*B + A*C + B*C,df2)
+plot(m2,1:2)
+```
+\subsection{c}
+According to the interaction plots, I recommend $3^{rd}$ class mail with black and white brochures, and a price of $\$19.95$ this would create the highest number of orders.
+```{r}
+#par(mfrow=c(2,2))
+interaction.plot(df2$A,df2$B,df2$Number_of_Orders,
+                 xlab = "A: Class", ylab="Number of Orders",
+                 trace.label = "B: Type",col=c("red", "black"))
+interaction.plot(df2$A,df2$C,df2$Number_of_Orders,
+                 xlab = "A: Class", ylab="Number of Orders",
+                 trace.label = "C: Price",col=c("red", "black"))
+interaction.plot(df2$B,df2$C,df2$Number_of_Orders,
+                 xlab = "B: Type", ylab="Number of Orders",
+                 trace.label = "C: Price",col=c("red", "black"))
+```
+\section{6.30} 
+```{r}
+library(readxl)
+df3 <-  read_excel("/Users/Earle/Downloads/Test_book_prob.xlsx")
+```
+\subsection{a)}
+```{r}
+```
+\subsection{b)}
+\section{6.35}
+\section{6.45}
+\section{7.14}
+
+
+
+
+
+
+
