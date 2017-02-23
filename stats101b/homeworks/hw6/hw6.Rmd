@@ -6,7 +6,7 @@ output: pdf_document
 I found this half-normal quantile plot written by professor TODO
 ```{r}
 halfnormalplot <- function(y, label=F, n=length(y), fac.names=NULL,
-                           xlim=c(-.1, 2.5), main="Half-Normal Plot", 
+                           xlim=c(-.1, 2.5), main="Half-Normal Plot",l_pos, 
                            ...)
   { # label the most singificant n effects 
     m <- length(y)
@@ -17,7 +17,7 @@ halfnormalplot <- function(y, label=F, n=length(y), fac.names=NULL,
            xlim=xlim, main=main, ...)
     if(is.null(fac.names)) fac.names <-  names(y)
     else fac.names <-  rev( c(fac.names, rep("", length(y)-length(fac.names)) ) )
-    if(label) for(i in (m-n+1):m) text(x[i]+.2,y[i], fac.names[i])  
+    if(label) for(i in (m-n+1):m) text(x[i]+.2,y[i], fac.names[i], pos=l_pos)  
   }
 ```
 
@@ -66,20 +66,20 @@ options(contrasts=c("contr.sum","contr.poly"))
 \subsection{a}
 The factors which are significant are C, AB, AC, BC with p-values: $0.0085163$, $0.0056019$, $0.0004176$, and $0.0037282$ respectively.
 ```{r}
-m1 <- lm(Number_of_Orders ~ A*B*C,df2)
-anova(m1)
+m <- lm(Number_of_Orders ~ A*B*C,df2)
+anova(m)
 
 #par(mfrow=c(2,2))
-halfnormalplot(m1$effects,label=T)
-qqline(m1$effects)
+halfnormalplot(m$effects[2:8],label=T, l_pos=2)
+qqline(m$effects[2:8])
 
 ```
 \subsection{b}
-The Residual plot does not show any indication of non-constant variance. The normal Q-Q plot shows that the residuals are not following the normal distribution.
+The residual plot does not show any indication of non-constant variance. The normal Q-Q plot shows that the residuals are not following the normal distribution.
 ```{r}
 #par(mfrow=c(2,2))
-m2 <- lm(Number_of_Orders ~ C + A*B + A*C + B*C,df2)
-plot(m2,1:2)
+m <- lm(Number_of_Orders ~ C + A*B + A*C + B*C,df2)
+plot(m,1:2)
 ```
 \subsection{c}
 According to the interaction plots, I recommend $3^{rd}$ class mail with black and white brochures, and a price of $\$19.95$ this would create the highest number of orders.
@@ -99,14 +99,66 @@ interaction.plot(df2$B,df2$C,df2$Number_of_Orders,
 ```{r}
 library(readxl)
 df3 <-  read_excel("/Users/Earle/Downloads/Test_book_prob.xlsx")
+names(df3) <- c("A", "B", "C", "Scrumptiousness")
+df3$A <- as.factor(df3$A)
+df3$B <- as.factor(df3$B)
+df3$C <- as.factor(df3$C)
 ```
 \subsection{a)}
+
+The ANOVA indicates that the most significant factor is the pan matrial. Creating model with this we see that a glass pan plays the significant role in scrumptiousness.
+
 ```{r}
+m <- lm(Scrumptiousness ~ A*B*C, df3)
+anova(m)
+m <- lm(Scrumptiousness ~ A, df3)
+summary(m)
 ```
 \subsection{b)}
+\subsection{c)}
 \section{6.35}
+```{r}
+df4 <- read_excel("/Users/Earle/Downloads/Chapter6_p35.xlsx")
+names(df4) <- c("A","B","C","D","Surface_Roughness")
+df4$A <- as.factor(df4$A)
+df4$B <- as.factor(df4$B)
+df4$C <- as.factor(df4$C)
+df4$D <- as.factor(df4$D)
+
+```
+
+\subsection{a}
+The half normal probability indicates that A, B, C, and AB significant.
+```{r}
+options(contrasts=c("contr.sum","contr.poly"))
+m <- lm(Surface_Roughness ~ A*B*C*D,df4)
+halfnormalplot(m$effects[2:16],label=T,l_pos=2)
+qqline(m$effects[2:16])
+```
+\subsection{b}
+The residual plot show a trend line, but there is no indication of non-constant variance. The normal QQ plot shows that the resiuals are not following the normal distribution.
+```{r}
+m <- lm(Surface_Roughness ~ A + B + C + A*B,df4)
+anova(m)
+plot(m,1:2)
+```
+\subsection{c}
+The transformation eliminated the trend line that was present in the earlier untransformed analysis. It also made the residuals follow the normal distribution more closely.
+```{r}
+df4$Surface_Roughness_T <- 1/df4$Surface_Roughness
+m <- lm(1/Surface_Roughness ~ A*B*C*D, df4)
+halfnormalplot(m$effects[2:16],label=T,l_pos=2)
+qqline(m$effects[2:16])
+
+m <- lm(1/Surface_Roughness ~ A+B+C+A*B, df4)
+anova(m)
+plot(m,1:2)
+```
+\subsection{d}
+$$\frac{1}{Surface \ Roughness} = 397.81 - 51.61 A - 74.74B -34.24 C+58.70AB$$
 \section{6.45}
 \section{7.14}
+
 
 
 
