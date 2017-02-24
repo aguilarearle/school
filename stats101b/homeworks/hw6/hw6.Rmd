@@ -3,6 +3,12 @@ title: "Homework 6"
 output: pdf_document
 ---
 
+\begin{center}
+Earle Aguilar \\
+804501476 \\
+2017-02-24
+\end{center}
+
 
 ```{r, echo=F}
 halfnormalplot <- function(y, label=F, n=length(y), fac.names=NULL,
@@ -79,14 +85,14 @@ anova(m)
 \subsection{b}
 The residual plot does not show any indication of non-constant variance. The normal Q-Q plot shows that the residuals are not following the normal distribution.
 ```{r}
-#par(mfrow=c(2,2))
+par(mfrow=c(2,2))
 m <- lm(Number_of_orders ~ C + A*B + A*C + B*C,df2)
 plot(m,1:2)
 ```
 \subsection{c}
 According to the interaction plots, If we need to use the price of $\$19.95$ the I recommend $3^{rd}$ class mail with black and white brochures. However if we need to use price $\$24.95$ then I recommend $1^{st}$ class mail with color brochures.
 ```{r}
-#par(mfrow=c(2,2))
+par(mfrow=c(2,2))
 interaction.plot(df2$A,df2$B,df2$Number_of_orders,
                  xlab = "A: Class", ylab="Number of Orders",
                  trace.label = "B: Type",col=c("red", "black"))
@@ -202,6 +208,7 @@ halfnormalplot(m$effects[2:16],label=T)
 \subsection{b}
 The residual plot show a trend line which is an indication of non-constant variance. The normal QQ plot shows that the resiuals are approximately following the normal distribution.
 ```{r}
+par(mfrow=c(2,2))
 m <- lm(surface_roughness ~ A + B + C + A*B ,df2)
 anova(m)
 plot(m,1:2)
@@ -209,6 +216,7 @@ plot(m,1:2)
 \subsection{c}
 The transformation eliminated the trend line that was present in the earlier untransformed analysis. It also made the residuals follow the normal distribution more closely.
 ```{r}
+par(mfrow=c(2,2))
 m <- lm(1/surface_roughness ~ A*B*C*D, df2)
 halfnormalplot(m$effects[2:16],label=T)
 
