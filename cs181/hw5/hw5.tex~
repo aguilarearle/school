@@ -1,0 +1,273 @@
+\documentclass[11pt, letterpaper, onecolumn]{article}
+
+% Imports
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath, amsthm, amsfonts,mathtools, framed, wasysym}
+\usepackage[shortcuts]{extdash} % Use \-/ for hyphenated words
+\usepackage{environ}
+\usepackage{fancyvrb}
+\usepackage[top=1.00in, bottom=1.00in, left=0.75in, right=0.75in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{accents}
+% Pseudocode enabler
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% tikz
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+% Page
+\headsep=0.3in
+\linespread{1.15}
+\setlength\parindent{0pt}
+
+% Horizontal Rules
+\newcommand{\hwRuleWidth}{0.4pt}
+\renewcommand\headrulewidth{\hwRuleWidth}
+\renewcommand\footrulewidth{\hwRuleWidth}
+
+% Header and Footer
+\pagestyle{fancy}
+\lhead{\hwAuthor\ (\hwSection)}
+\chead{\hwClass\ (\hwInstructor): \hwTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+\newcommand{\enterProblemHeader}[2]{
+  \nobreak\extramarks{}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+}
+\newcommand{\exitProblemHeader}[2]{
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2}}{}\nobreak{}
+}
+
+% Counters
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\setcounter{partCounter}{1}
+\newcounter{hwProblemCounter}
+\newcounter{hwSubProblemCounter}
+\numberwithin{equation}{hwProblemCounter}
+\numberwithin{figure}{hwProblemCounter}
+
+% Environments
+\newenvironment{problem}[3] {
+  \setcounter{hwProblemCounter}{#2}
+  \setcounter{hwSubProblemCounter}{#3}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+
+  \large{\textbf{Problem #2.#3: #1}}\\
+}{
+  \exitProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+}
+
+\newcommand{\question}[2]{\textbf{(#1)\ }\ #2\\}
+
+\newenvironment{Proof}[1][Proof]
+  {\proof[#1]\leftskip=1cm\rightskip=1cm}
+  {\endproof}
+%-------------------------------------------------------------------------------
+% Assignmnet Variables
+%-------------------------------------------------------------------------------
+\newcommand{\hwTitle}{Homework 4}
+\newcommand{\hwDueDate}{Feb 19, 2017}
+\newcommand{\hwClass}{CS 181}
+\newcommand{\hwInstructor}{Amit Sahai}
+\newcommand{\hwAuthor}{}
+\newcommand{\hwSection}{804501476}
+
+% First Problem
+
+\setcounter{hwProblemCounter}{1}
+\setcounter{hwSubProblemCounter}{0}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+% TITLE
+%-------------------------------------------------------------------------------
+{\centering
+  \Large{\textbf{\hwTitle}}\\
+  \vspace{0.1in}\normalsize{\hwDueDate}\\
+  \vspace{0.1in}\textbf{\hwAuthor} (\hwSection)\\
+  \vspace{0.1in}\rule{\textwidth}{\hwRuleWidth}}\\
+
+
+%-------------------------------------------------------------------------------
+% Problem 1.0
+%------------------------------------------------------------------------------
+\begin{problem}{}{1}{0}
+  \section{a)}
+  $L_1 = \{0^a 1^b \ | \ a \ \text{divides} \ b \}$ is equivalent to
+  $L_1 = \{ 0^a 1^{am} \ | \ m \ge 0 \}$.
+ 
+  \begin{proof} $ $ \\
+    Towards contradiction: \\
+    - Assume $L_1$ is CF. \\
+    - By pumping lemma $\exists$ pumping length $p$. \\
+    - Let $s=0^k1^{km}$ s.t. $|s| \ge p$. \\
+    - By pumping lemma $0^k1^{km} = xyzuv $ \\
+    1) $|yzu| \le p$ \\
+    2) $|yu| > 0$ \\ \\
+    \textbf{Cases}: \\ \\
+    1) $yzu = 0^{\alpha}$, $1 \le k \le p$. Then $xy^2zu^2v = 0^{k^{'}} 1^{nk^{'}}$ \\
+    The number of $1$'s does not change therefore:
+    \begin{align}
+      k^{'}n &= km \\
+      n &= \frac{k}{k^{'}}m \\
+      n &= \frac{k}{k+\alpha} m
+    \end{align}
+    n has to be an integer but $k^{'} > k$ therefore $n \notin \mathbb{N}$. \\ \\
+    \newpage
+    2) $yzu = 1^{\alpha}$, $1 \le k \le p$. Then $xzv = 0^{\frac{k^{'}}{n}} 1^{k^{'}}$ \\
+    The number of $0$'s does not change therefore:
+    \begin{align}
+      \frac{k}{m} &= \frac{k^{'}}{n} \\
+      kn &= k^{'}m \\
+      n &= \frac{k^{'}}{k}m \\
+      n &= \frac{k - \alpha}{k}m
+    \end{align}
+    n has to be an integer but $k^{'} < k$ therefore $n \notin \mathbb{N}$ \\ \\
+    3) $yzu = 0^{\alpha} 1^{\beta}$, $1 \le \alpha + \beta \le p$ then $xy^2zv^2u = 0^{p+\alpha}1^{pm+\beta}$
+    \begin{align}
+      \frac{a}{b} &= m \\
+      \frac{pm+\beta}{p+\alpha} &= m \\
+      pm+\beta = pm + m\alpha  \\
+      \beta = m\alpha
+    \end{align}
+  \end{proof}
+  
+  \section{b)}
+  Let $L=\{a^nb^n \ | \ n \ge 0\}$ then
+  $\tilde L = \{a^nb^{2n}a^n \ | \ w \in L \ \text{or} \ w^R \in L \}$
+  \begin{proof}
+    Towards contradiciton assume that $\tilde L$ is context-free. \\
+    \begin{itemize}
+    \item By pumping lemma $\exists$ pumping length p.
+    \item Let $w \in \tilde L$, \ $w = a^{p}b^{2p}a^p$, \ $|w| \ge p$
+    \item By pumping lemma $a^{p}b^{2p}a^p =xyzuv$
+    \item $|yzu| \le p$
+    \item $yu > 1$ 
+    \end{itemize}
+    \newpage
+    \textbf{Cases:} \\
+    1) $yzu = a^{\alpha}$ on the left, $1 \le \alpha \le p$
+    \begin{center}
+      $xzv = a^{p-\alpha}b^{2p}a^p \notin \tilde L$
+    \end{center}
+    2) $yzu = a^{\alpha}$ on the right, $1 \le \alpha \le p$
+    \begin{center}
+      $xzv = a^pb^{2p}a^{p-\alpha} \notin \tilde L$
+    \end{center}
+    3) $yzu = b^{\beta}$, $1 \le \beta \le p$
+    \begin{center}
+      $xzv = a^pb^{2p-\beta}a^p \notin \tilde L$
+    \end{center}
+  \end{proof}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 2.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{2}{0}
+  \section{a)}
+  We have two stacks $S_1$ and $S_2$. First the elements of a string must be pushed
+  onto $S_1$. Once all elements are in $S_1$ push all but the bottom most
+  element onto $S_2$. Now the stacks will represent a window into two elements of
+  of the input string, the top of $S_1$ will be the element on the left and
+  the top of $S_2$ will be the element on the right. To simulate head movement
+  of Turing machien T we define left and right movement by pushing and popping from stacks of
+  multi-stack machine M. \\ \\
+  \textbf{Move head to the right} \\
+  $Push_{S_1}(Pop_{S_2}) $ \\
+  \textbf{Move head to the right and replace element with $\beta$} \\
+  $Pop_{S_1}, Push_{S_1}(\beta),Push_{S_1}(Pop_{S_2}(\alpha)) $ \\
+  \textbf{Move head to the right and write $\beta$} \\
+  $Push_{S_1}(\beta),Push_{S_1}(Pop_{S_2}(\alpha)) $ \\
+  \textbf{Move head to the left} \\
+  $Push_{S_2}(Pop_{S_1}(\alpha)) $ \\
+  \textbf{Move head to the left and replace element with $\beta$} \\
+  $Pop_{S_1},Push_{S_2}(\beta) $ \\
+  \textbf{Move head to the left and write $\beta$} \\
+  $Push_{S_2}(Pop_{S_1}(\alpha)), Push_{s_2}(\beta) $  \\ \\
+  The states of machine M are equal to the states of T. Transitioning between
+  states is done using the $\delta$ function of machine T.  An accepting state
+  of this machine would be conditioned on a specific configuration of the
+  elements in the stacks and we can move left to right to determine if the
+  configuration is valid and then transitioning on to an accept state that is in
+  T.  
+  \section{b)}
+  We simulate three stacks using a turing machine T. In class we showed that
+  a multi-tape turing machine can be simulated using a single tape. For
+  simplicity we use multiple seperate tapes. We have an input tape to store
+  the input string and $t_1$, $t_2$, and $t_3$ each tape for one stack. We are
+  given machine M with three stacks $S_1$, $S_2$, and $S_3$. Let
+  $x=x_1x_2\dots x_n$ be the input string. \\ \\
+  \textbf{Starting States of Stacks and Tapes} \\
+  Each stack has a starting state with an end of stack symbol on it. Machine T
+  has the input $x$ on its input tape and each tape $t_i$ will have the
+  corresponding stack symbol as its first symbol. \\
+  \textbf{Stack Operations} \\
+  Upon reading $x_i$ machine M can: \\
+  1) $Push_{S_i}(x_i)$ - Push $x_i$ onto stack $S_i$ for $i \in \{1,2,3\}$ \\
+  2) $Pop_{S_i}$ - Pop element off of $S_i$. \\
+  3) $Push_{S_i}(Pop_{S_j}), \ i \ne j$  - Pop and element of of one stack and
+  push to another. \\
+  \textbf{Equivalent Tape Operations} \\
+  Each operation corresponds to the operations defined above respectively.
+  Upon reading $x_i$ machine T: \\
+  1) Move head to end of tape $t_i$, when first \textvisiblespace \ is under head, and
+  write $x_i$ onto it. \\
+  2) Move head to end of tape $t_i$, then move the the left by one and write
+  \textvisiblespace. \\
+  3) Move to end of tape $t_j$ and the left by one. Then move to end of $t_i$
+  and write symbol under head of $t_j$ onto $t_i$. \\
+  
+  The states of machine T are equal to the states of machine M. Transitions
+  between states in T follow the $\delta$ function of machine M. T accepts if
+  after processing string $x$ it is in the accept states of machine M.  \\ \\
+
+  In part a) we showed that a Turing machine is no more powerful than a 2 stack
+  PDA. In part b) we showed that a 3-stack machine is no more powerful than a
+  TM machine. Therefore a 3-stack PDA is no more powerful than a 2-stack PDA.
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 3.0
+%-------------------------------------------------------------------------------
+
+\end{document}
+
+
+
+ 
+% \begin{align}
+% \end{align}
+% \frac{}{}
+
