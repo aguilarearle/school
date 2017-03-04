@@ -130,23 +130,35 @@
 %------------------------------------------------------------------------------
 \begin{problem}{}{1}{0}
   We emulate a TM with FRTM as follows: \\
-  \textbf{1) The start state:} We add two \blacksmiley{} and then copy the input after.
+  \textbf{1) Seach Symbol:} We use two \blacksmiley{} to determine what the character
+  on the left is. \\
+  \textbf{2) The start state:} We write the input onto the tape and mark the
+  first one with \blacksmiley{}.   
   \begin{center}
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
       \hline
-       \blacksmiley{} & \blacksmiley{} & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
+         \blacksmiley{} &       &       &      &         & \\ \hline
+         $x_1$          & $x_2$ & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
     \end{tabular} 
   \end{center}
-  \textbf{2) Move left:} After moving to the left-end of the tape. Move right until we see
-  second \blacksmiley{} then move right once. \\
-  \textbf{3) Move right:}
-  If first time moving right, just move right. Else: 
-  \begin{itemize}
-  \item Move left and then move right until we see  \blacksmiley{} and delete it.
-  \item Move right until we find the next \blacksmiley{}. Then more move right
-    twice.
-  \item Write \blacksmiley{} and move right twice.
-  \end{itemize}
+  \textbf{3) Move Right:} First remove \blacksmiley{} from current position then move
+  right and write  \blacksmiley{} in new position. 
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+      \hline
+               & \blacksmiley{} &       &      &         & \\ \hline
+         $x_1$ & $x_2$          & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
+    \end{tabular} 
+  \end{center}
+  \textbf{4) Move Left:} We will determine the character on the left by guessing.
+  We will move left and write \blacksmiley{}.
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+      \hline
+          \blacksmiley{}     & \blacksmiley{} &       &      &         & \\ \hline
+         $x_1$ & $x_2$          & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
+    \end{tabular} 
+  \end{center}
 \end{problem}
 %-------------------------------------------------------------------------------
 % Problem 2.0

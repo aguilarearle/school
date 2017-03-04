@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.10.28)  2 MAR 2017 18:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.10.28)  3 MAR 2017 13:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1019,46 +1019,37 @@ LaTeX Font Info:    Try loading font information for U+wasy on input line 133.
 (/usr/share/texlive/texmf-dist/tex/latex/wasysym/uwasy.fd
 File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 135.
+LaTeX Font Info:    Try loading font information for U+msa on input line 138.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 135.
+LaTeX Font Info:    Try loading font information for U+msb on input line 138.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 145.
-
-
-(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 145.
-
-Underfull \hbox (badness 10000) in paragraph at lines 154--155
+Underfull \hbox (badness 10000) in paragraph at lines 166--167
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--160
+Underfull \hbox (badness 10000) in paragraph at lines 168--172
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--160
+Underfull \hbox (badness 10000) in paragraph at lines 168--172
 
  []
 
 <cs_181_hw5_p_2.png, id=4, 839.135pt x 372.39125pt>
 File: cs_181_hw5_p_2.png Graphic file (type png)
  <use cs_181_hw5_p_2.png>
-Package pdftex.def Info: cs_181_hw5_p_2.png used on input line 161.
+Package pdftex.def Info: cs_181_hw5_p_2.png used on input line 173.
 (pdftex.def)             Requested size: 545.43127pt x 242.05144pt.
 
-Overfull \hbox (39.54128pt too wide) in paragraph at lines 161--162
+Overfull \hbox (39.54128pt too wide) in paragraph at lines 173--174
 [][] 
  []
 
@@ -1070,12 +1061,12 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
- <./cs_181_hw5_p_2.png>]
+]
 
-LaTeX Warning: Command \l invalid in math mode on input line 204.
+LaTeX Warning: Command \l invalid in math mode on input line 216.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 206--211
+Underfull \hbox (badness 10000) in paragraph at lines 218--223
 
  []
 
@@ -1085,8 +1076,8 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[2]
-Overfull \hbox (18.58984pt too wide) in paragraph at lines 239--244
+[2 <./cs_181_hw5_p_2.png>]
+Overfull \hbox (18.58984pt too wide) in paragraph at lines 251--256
 []\OT1/cmr/bx/n/12 (c) \OT1/cmr/m/n/12 We can ar-range the set $\OML/cmm/m/it/1
 2 E[]$ \OT1/cmr/m/n/12 con-structed in the pre-vi-ous prob-lem as such $\OML/cm
 m/m/it/12 E[] \OT1/cmr/m/n/12 = (\OML/cmm/m/it/12 L[]; L[]; L[]; L[]; [] \OT1/c
@@ -1099,15 +1090,22 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[3] (./hw5.aux) ) 
+[3]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[4] (./hw5.aux) ) 
 Here is how much of TeX's memory you used:
- 23391 strings out of 495020
- 453321 string characters out of 6181323
- 505125 words of memory out of 5000000
- 26201 multiletter control sequences out of 15000+600000
+ 23374 strings out of 495020
+ 453029 string characters out of 6181323
+ 504125 words of memory out of 5000000
+ 26187 multiletter control sequences out of 15000+600000
  10793 words of font info for 41 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 48i,12n,66p,10383b,328s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 48i,12n,66p,10383b,316s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12
 .pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></
@@ -1119,10 +1117,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist
 type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
 wasy/wasy10.pfb>
-Output written on hw5.pdf (3 pages, 141602 bytes).
+Output written on hw5.pdf (4 pages, 143371 bytes).
 PDF statistics:
- 64 PDF objects out of 1000 (max. 8388607)
- 45 compressed objects within 1 object stream
+ 67 PDF objects out of 1000 (max. 8388607)
+ 47 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 
