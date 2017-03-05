@@ -135,31 +135,52 @@
   \textbf{2) The start state:} We write the input onto the tape and mark the
   first one with \blacksmiley{}.   
   \begin{center}
-    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
       \hline
          \blacksmiley{} &       &       &      &         & \\ \hline
          $x_1$          & $x_2$ & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
     \end{tabular} 
   \end{center}
   \textbf{3) Move Right:} First remove \blacksmiley{} from current position then move
-  right and write  \blacksmiley{} in new position. 
+  right and write  \blacksmiley{} in new position. \\ \\ \textbf{For example:}
   \begin{center}
-    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
       \hline
                & \blacksmiley{} &       &      &         & \\ \hline
          $x_1$ & $x_2$          & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
     \end{tabular} 
   \end{center}
   \textbf{4) Move Left:} We will determine the character on the left by guessing.
-  We will move left and write \blacksmiley{}.
+  We will move left and write \blacksmiley{} to the first element. 
+  \\ \\ \textbf{For example:}
   \begin{center}
-    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
       \hline
-          \blacksmiley{}     & \blacksmiley{} &       &      &         & \\ \hline
-         $x_1$ & $x_2$          & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
+          \blacksmiley{} &       &       & \blacksmiley{} &         &       \\ \hline
+         $x_1$           & $x_2$ & $x_3$ & $x_4$ & $\dots$ & $x_n$ \\ \hline
     \end{tabular} 
   \end{center}
+$ $ \\
+We move the head right and check if the next element has a \blacksmiley{}. If not 
+move the head to the left again and begin to move right until the leftmost 
+\blacksmiley{} is encountered. We remove the it and move right, writing 
+\blacksmiley{} in the element under the new position.
+\\ \\ \textbf{For example:}
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+      \hline
+          &   \blacksmiley{}     &       & \blacksmiley{} &         &       \\ \hline
+         $x_1$           & $x_2$ & $x_3$ & $x_4$ & $\dots$ & $x_n$ \\ \hline
+    \end{tabular} 
+  \end{center}
+$ $ \\
+
+We continue to do this until we have two consecutive \blacksmiley{}. Once this is
+true we remove the \blacksmiley{} under the head and go left except this time 
+we stop when we reach \blacksmiley{}. This is the element to the left.
+
 \end{problem}
+\newpage
 %-------------------------------------------------------------------------------
 % Problem 2.0
 %-------------------------------------------------------------------------------
