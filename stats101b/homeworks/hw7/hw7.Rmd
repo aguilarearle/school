@@ -1,0 +1,65 @@
+---
+title: "Homework 7"
+output: pdf_document
+---
+
+\begin{center}
+Earle Aguilar \\
+804501476 \\
+2017-02-24
+\end{center}
+
+
+
+```{r, echo=F}
+library(readxl)
+
+```
+
+\section{7.21}
+\section{8.11}
+```{r}
+df <- read_excel("~/vmshare/stats 101b datasets/CH 8 (P11).xlsx")
+
+```
+\subsection{a}
+If the design generators are $I=ACE$ and $I=BDE$ then $D=BE$ and $E=AC$.
+
+```{r}
+design <- df[,1:5]
+names(design) <- c("A","B","C","D", "E")
+
+all((design$A*design$C) == design$E)
+all((design$B * design$E) == design$D)
+```
+
+\subsection{b}
+
+\textbf{Complete Defining Relation:} $$I = ACE = BDE = ABCD$$
+
+
+\begin{center}
+\begin{tabular}{| l | l | l | l | l | l | l |}
+  \hline
+    $A$ & $A*ACE =CE$    & $A*BDE =ABDE$ & $A*ABCD=CBD$ \\ \hline
+    $B$ & $B*ACE = ABCE$ & $B*BDE = DE$  & $B*ABCD= ACD$  \\ \hline
+    $C$ & $C*ACE =AE$    & $C*BDE =BCDE$ & $C*ABCD=ABD$ \\ \hline
+    $D$ & $D*ACE =ACDE$  & $D*BDE =BE$   & $D*ABCD=ACB$ \\ \hline
+    $E$ & $E*ACE = AC$   & $E*BDE = BD$  & $E*ABCD= ABCDE$ \\ \hline
+    $AB$& $AB*ACE=BCE$   & $AB*BDE = ADE$& $AB*ABCD=CD$ \\ \hline
+    $AD$& $AD*ACE=CDE$   & $AD*BDE=ABE$  & $AD*ABCD=BC$ \\ \hline
+\end{tabular} 
+\end{center}
+
+\subsection{c}
+```{r}
+design$Yield <- df$Yield
+m <- lm(Yield ~ A + B + C + D + E, design)
+```
+\subsection{d}
+\subsection{e}
+
+\section{8.23}
+\section{8.37}
+\section{8.39}
+\section{8.48}
