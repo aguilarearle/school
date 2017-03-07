@@ -13,14 +13,33 @@ Earle Aguilar \\
 
 ```{r, echo=F}
 library(readxl)
+halfnormalplot <- function(y, label=F, n=length(y), fac.names=NULL,
+                           xlim=c(-.1, 2.5), main="Half-Normal Plot", 
+                           ...)
+  { # label the most singificant n effects 
+    m <- length(y)
+    x <- seq(0.5+0.25/m, 1.0-0.25/m, by=0.5/m)
+    x <-  qnorm(x)
+    y <-  sort(abs(y))
+    qqplot(x, y, xlab="half-normal quantiles", ylab="absolute effects",
+           xlim=xlim, main=main, ...)
+    if(is.null(fac.names)) fac.names <-  names(y)
+    else fac.names <-  rev( c(fac.names, rep("", length(y)-length(fac.names)) ) )
+    if(label) for(i in (m-n+1):m) text(x[i]+.1,y[i], fac.names[i], cex=0.8)  
+}
 
+as.level2 = function(x){
+  y = rep(0, length(x))
+  y[x == levels(x)[1]] <- -1
+  y[x == levels(x)[2]] <-  1
+  y
+}
 ```
 
 \section{7.21}
 \section{8.11}
 ```{r}
-df <- read_excel("~/vmshare/stats 101b datasets/CH 8 (P11).xlsx")
-
+df <- read_excel("/Users/Earle/Documents/Stats 101B Datasets/CH 8 (P11).xlsx")
 ```
 \subsection{a}
 If the design generators are $I=ACE$ and $I=BDE$ then $D=BE$ and $E=AC$.
@@ -28,7 +47,8 @@ If the design generators are $I=ACE$ and $I=BDE$ then $D=BE$ and $E=AC$.
 ```{r}
 design <- df[,1:5]
 names(design) <- c("A","B","C","D", "E")
-
+design$combination  <- c("e", "ad", "bde", "ab", "cd", "ace", "bc", "abcde")
+design
 all((design$A*design$C) == design$E)
 all((design$B * design$E) == design$D)
 ```
@@ -55,11 +75,127 @@ all((design$B * design$E) == design$D)
 ```{r}
 design$Yield <- df$Yield
 m <- lm(Yield ~ A + B + C + D + E, design)
+effects <- 2*m$coefficients[2:6]; effects
 ```
 \subsection{d}
+If we not interested in two and three factor interactions, since AB and AD are aliased with other two and three factor interactions,  then we can use AB and AD as an estimate of error. 
+```{r}
+anova(m)
+```
 \subsection{e}
-
+The residual plot is satisfactory. The Normal QQ plot of residuals shows that they are approximately normal.
+```{r}
+plot(m, 1)
+qqnorm(m$residuals)
+qqline(m$residuals)
+```
 \section{8.23}
+```{r}
+df <- read_excel("~/Stats 101B Datasets/CH 8 (P 23).xlsx")
+design <- df[,1:5]
+names(design) <- c("A","B","C","D", "E")
+```
+\subsection{a}
+Given generators $I=ABD$ and $I=BCE$ we get that $D=AB$ and $E=BC$. In addition the complete defining relation is $I=ABD=BCE=ACDE$
+\textbf{Treatmen Combination}
+```{r}
+design$combination  <- c("de", "ae", "b", "abd", "cd", 
+                         "ac", "bce", "abcde")
+design
+all((design$A*design$B) == design$D)
+all((design$B * design$C) == design$E)
+```
+\textbf{Aliases}
+\begin{center}
+\begin{tabular}{| l | l | l | l | l | l | l |}
+  \hline
+    $A$ & $A*ABD =BD$  & $A*BCE =ABCE$ & $A*ACDE=CDE$ \\ \hline
+    $B$ & $B*ABD =AD$  & $B*BCE = CE$  & $B*ACDE= ABCDE$  \\ \hline
+    $C$ & $C*ABD =ABCD$& $C*BCE =BE$   & $C*ACDE=ADE$ \\ \hline
+    $D$ & $D*ABD =AB$  & $D*BCE =BCDE$ & $D*ACDE=ACE$ \\ \hline
+    $E$ & $E*ABD =ABDE$& $E*BCE = BC$  & $E*ACDE= ACD$ \\ \hline
+    $AC$& $AC*ABD=BCD$ & $AC*BCE = ABE$& $AC*ACDE=DE$ \\ \hline
+    $AE$& $AE*ABD=BDE$ & $AE*BCE=ABC$  & $AE*ACDE=CD$ \\ \hline
+\end{tabular} 
+\end{center}
+\textbf{Effect Estimates}
+```{r}
+design$AC <- design$A*design$C
+design$AE <- design$A*design$E
+design$Avg_Annul_Cost <- df$`Avg Annual Cost`
+m <- lm(Avg_Annul_Cost ~ A+B+C+D+E+AC+AE, design)
+effects <- 2*m$coefficients[2:8]; effects
+```
+\subsection{b}
+This design was created by reversing the signs of column A.
+```{r}
+df <- read_excel("/Users/Earle/Documents/Stats 101B Datasets/CH8 (P.23b).xlsx")
+design <- df[,1:6]
+names(design) <- c("Blocks","A","B","C","D", "E")
+design$combination  <- c("de", "ae", "b", "abd", "cd", 
+                         "ac", "bce", "abcde", "ade", 
+                         "e", "ab", "bd", "acd", "c", 
+                         "abce", "bcde")
+```
+
+```{r}
+design$AB <- design$A*design$B
+design$AC <- design$A*design$C
+design$AD <- design$A*design$D
+design$AE <- design$A*design$E
+design$BD <- design$B*design$D
+design$DE <- design$D*design$E
+design$CD <- design$C*design$D
+design$Avg_Annul_Cost <- df$`Avg Annual Cost`
+m <- lm(Avg_Annul_Cost ~ A+B+C+D+E+AB+AC+AD+AE+BD+CD+DE, design)
+effects <- 2*m$coefficients[2:13]; effects
+```
+\subsection{c}
+This design was obtained by reversing the sign of all columns.
+```{r}
+df <- read_excel("~/Stats 101B Datasets/CH 8 (P.23c).xlsx")
+design <- df[,1:6]
+names(design) <- c("Blocks","A","B","C","D", "E")
+```
+
+```{r}
+design$AB <- design$A*design$B
+design$AC <- design$A*design$C
+design$AD <- design$A*design$D
+design$AE <- design$A*design$E
+design$BC <- design$B*design$C
+design$BD <- design$B*design$D
+design$BE <- design$B*design$E
+design$Avg_Annul_Cost <- df$`Avg Annual Cost`
+m <- lm(Avg_Annul_Cost ~ A+B+C+D+E+AB+AC+AD+AE+BC+BD+BE, design)
+effects <- 2*m$coefficients[2:13]; effects
+```
 \section{8.37}
+```{r}
+df <- read_excel("~/Stats 101B Datasets/CH 8 (p.37).xlsx")
+df$`Squeegee Pressure` <- as.factor(df$`Squeegee Pressure`)
+df$`Printing Speed` <- as.factor(df$`Printing Speed`)
+df$`Squeegee Angle` <- as.factor(df$`Squeegee Angle`)
+df$Temperature <- as.factor(df$Temperature)
+df$Viscosity <- as.factor(df$Viscosity)
+df$`Cleaning Interval` <- as.factor(df$`Cleaning Interval`)
+df$`Separation Speed` <- as.factor(df$`Separation Speed`)
+df$`Relative Humidity` <- as.factor(df$`Relative Humidity`)
+A <- as.level2(df$`Squeegee Pressure`)
+B <- as.level2(df$`Printing Speed`)
+C <- as.level2(df$`Squeegee Angle`)
+D <- as.level2(df$Temperature)
+E <- as.level2(df$Viscosity)
+F <- as.level2(df$`Cleaning Interval`)
+G <- as.level2(df$`Separation Speed`)
+H <- as.level2(df$`Relative Humidity`)
+design <- cbind(A,B,C,D,E,F,G,H)
+```
+
+\subsection{a}
+
+\subsection{b}
+\subsection{c}
+
 \section{8.39}
 \section{8.48}
