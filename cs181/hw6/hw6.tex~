@@ -1,0 +1,314 @@
+\documentclass[11pt, letterpaper, onecolumn]{article}
+
+% Imports
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath, amsthm, amsfonts,mathtools, framed, wasysym}
+\usepackage[shortcuts]{extdash} % Use \-/ for hyphenated words
+\usepackage{environ}
+\usepackage{fancyvrb}
+\usepackage[top=1.00in, bottom=1.00in, left=0.75in, right=0.75in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{accents}
+% Pseudocode enabler
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage{breqn}
+
+\usepackage[table]{xcolor}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% tikz
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+% Page
+\headsep=0.3in
+\linespread{1.15}
+\setlength\parindent{0pt}
+
+% Horizontal Rules
+\newcommand{\hwRuleWidth}{0.4pt}
+\renewcommand\headrulewidth{\hwRuleWidth}
+\renewcommand\footrulewidth{\hwRuleWidth}
+
+% Header and Footer
+\pagestyle{fancy}
+\lhead{\hwAuthor\ (\hwSection)}
+\chead{\hwClass\ (\hwInstructor): \hwTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+\newcommand{\enterProblemHeader}[2]{
+  \nobreak\extramarks{}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+}
+\newcommand{\exitProblemHeader}[2]{
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2}}{}\nobreak{}
+}
+
+% Counters
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\setcounter{partCounter}{1}
+\newcounter{hwProblemCounter}
+\newcounter{hwSubProblemCounter}
+\numberwithin{equation}{hwProblemCounter}
+\numberwithin{figure}{hwProblemCounter}
+
+% Environments
+\newenvironment{problem}[3] {
+  \setcounter{hwProblemCounter}{#2}
+  \setcounter{hwSubProblemCounter}{#3}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+
+  \large{\textbf{Problem #2.#3: #1}}\\
+}{
+  \exitProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+}
+
+\newcommand{\question}[2]{\textbf{(#1)\ }\ #2\\}
+
+\newenvironment{Proof}[1][Proof]
+  {\proof[#1]\leftskip=1cm\rightskip=1cm}
+  {\endproof}
+%-------------------------------------------------------------------------------
+% Assignmnet Variables
+%-------------------------------------------------------------------------------
+\newcommand{\hwTitle}{Homework 5}
+\newcommand{\hwDueDate}{March 3, 2017}
+\newcommand{\hwClass}{CS 181}
+\newcommand{\hwInstructor}{Amit Sahai}
+\newcommand{\hwAuthor}{}
+\newcommand{\hwSection}{804501476}
+
+% First Problem
+
+\setcounter{hwProblemCounter}{1}
+\setcounter{hwSubProblemCounter}{0}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+% TITLE
+%-------------------------------------------------------------------------------
+{\centering
+  \Large{\textbf{\hwTitle}}\\
+  \vspace{0.1in}\normalsize{\hwDueDate}\\
+  \vspace{0.1in}\textbf{\hwAuthor} (\hwSection)\\
+  \vspace{0.1in}\rule{\textwidth}{\hwRuleWidth}}\\
+
+
+%-------------------------------------------------------------------------------
+% Problem 1.0
+%------------------------------------------------------------------------------
+\begin{problem}{}{1}{0}
+  We emulate a TM with FRTM as follows: \\
+  \textbf{1) Seach Symbol:} We use two \blacksmiley{} to determine what the character
+  on the left is. \\
+  \textbf{2) The start state:} We write the input onto the tape and mark the
+  first one with \blacksmiley{}.   
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+      \hline
+         \blacksmiley{} &       &       &      &         & \\ \hline
+         $x_1$          & $x_2$ & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
+    \end{tabular} 
+  \end{center}
+  \textbf{3) Move Right:} First remove \blacksmiley{} from current position then move
+  right and write  \blacksmiley{} in new position. \\ \\ \textbf{For example:}
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+      \hline
+               & \blacksmiley{} &       &      &         & \\ \hline
+         $x_1$ & $x_2$          & $x_3$ & $x_4$ & $\dots$ & $x_n$  \\ \hline
+    \end{tabular} 
+  \end{center}
+  \textbf{4) Move Left:} We will determine the character on the left by guessing.
+  We will move left and write \blacksmiley{} to the first element. 
+  \\ \\ \textbf{For example:}
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+      \hline
+          \blacksmiley{} &       &       & \blacksmiley{} &         &       \\ \hline
+         $x_1$           & $x_2$ & $x_3$ & $x_4$ & $\dots$ & $x_n$ \\ \hline
+    \end{tabular} 
+  \end{center}
+$ $ \\
+We move the head right and check if the next element has a \blacksmiley{}. If not 
+move the head to the left again and begin to move right until the leftmost 
+\blacksmiley{} is encountered. We remove the it and move right, writing 
+\blacksmiley{} in the element under the new position.
+\\ \\ \textbf{For example:}
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+      \hline
+          &   \blacksmiley{}     &       & \blacksmiley{} &         &       \\ \hline
+         $x_1$           & $x_2$ & $x_3$ & $x_4$ & $\dots$ & $x_n$ \\ \hline
+    \end{tabular} 
+  \end{center}
+$ $ \\
+
+We continue to do this until we have two consecutive \blacksmiley{}. Once this is
+true we remove the \blacksmiley{} under the head and go left except this time 
+we stop when we reach \blacksmiley{}. This is the element to the left.
+
+\end{problem}
+\newpage
+%-------------------------------------------------------------------------------
+% Problem 2.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{2}{0}
+  
+  \textbf{Proof}  \\
+    Suppose $Subset_{TM}$ is decidable $ \implies \exists \ D$ decides
+    $Subset_{TM}$. We build a turing machine to decide
+    $EQ_{TM} = \{(<M_1>,<M_2>) \ | \ M_1 \ and \ M_2 \ are \ TMs \ and \ L(M_1) = L(M_2)\}$ \\ \\
+    
+    \includegraphics[scale=0.65]{cs_181_hw5_p_2.png}
+
+    Theorem 5.4 states that $EQ_{TM}$ is not decidable $\Rightarrow \Leftarrow$.
+    Therefore $Subset_{TM}$ is not decidable.
+\end{problem}
+
+%-------------------------------------------------------------------------------
+% Problem 3.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{3}{0}
+  \textbf{(a)}
+  We can include $L_1^{Diag}$ into the enumeration as such
+  ($L_1^{Diag}, L_1, L_2, \dots$) and let $\alpha_i$ be a lexicographical
+  enumeration of strings over $\{0,1\}$. We constructm
+   \begin{align}
+   L_2^{Diag} &= \{ \bar{x}_{ii} \ | \ \text{if} \ x_{ii} = 1\}
+  \end{align}
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+      \hline
+                  &$\alpha_1$             &$\alpha_2$             &$\alpha_3$             &$\alpha_4$              &$\alpha_5$             &$\alpha_6$              &$\alpha_7$  &$\dots$ \\ \hline      
+      $L_1^{diag}$ &\cellcolor{red}$x_{11}$ &$x_{12}$                &$x_{13}$                &$x_{14}$                &$x_{15}$                &$x_{16}$                &$x_{17}$     &$\dots$ \\ \hline
+      $L_1$       &$x_{21}$                &\cellcolor{red}$x_{22}$ &$x_{23}$                &$x_{24}$                &$x_{25}$                &$x_{26}$                &$x_{27}$     &$\dots$ \\ \hline
+      $L_2$       &$x_{31}$                &$x_{32}$                &\cellcolor{red}$x_{33}$ &$x_{34}$                &$x_{35}$                &$x_{36}$                &$x_{37}$     &$\dots$ \\ \hline
+      $L_3$       &$x_{41}$                &$x_{42}$                &$x_{43}$                &\cellcolor{red}$x_{44}$ &$x_{45}$                &$x_{46}$                &$x_{47}$     &$\dots$ \\ \hline
+      $L_4$       &$x_{51}$                &$x_{52}$                &$x_{53}$                &$x_{54}$                &\cellcolor{red}$x_{55}$ &$x_{56}$                &$x_{57}$     &$\dots$ \\ \hline
+      $L_5$       &$x_{61}$                &$x_{62}$                &$x_{63}$                &$x_{64}$                &$x_{65}$                &\cellcolor{red}$x_{66}$ &$x_{67}$     &$\dots$ \\ \hline
+      $L_6$       &$x_{71}$                &$x_{72}$                &$x_{73}$                &$x_{74}$                &$x_{75}$                &$x_{76}$                &\cellcolor{red}$x_{77}$    &$\dots$ \\ \hline
+    \end{tabular} 
+  \end{center}
+
+  \textbf{Claim:} $L_2^{Diag}$ is not in the table.
+  \begin{proof} $ $ \\
+    Towards contradiction suppose $L_2^{Diag}$ is in the table. Then $\exists$
+    $i$ s.t $L^{'} = x_{1i}x_{2i}x_{3i} \dots \in L_2^{Diag}$. Look at position $x_{ii}$.
+    If $x_{ii}$ is in $L^{'}$ then by definition it is not in
+    $L_2^{diag}$. Therfore $L_2^{Diag}$ is no in $L_i \ \forall \ i \ge i$ and
+    $L_2^{diag} \ne L_1^{diag}$.
+  \end{proof}
+  \textbf{(b)} \\ 
+  \textbf{Properties:} 
+  \begin{itemize} 
+  \item[1] $\forall i,j, \ i \ne j, \ L_i^{diag} \ne L_j^{diag}$
+  \item[2] $\forall j \ \l_i^{diag} \ne L_j$  
+  \end{itemize}
+  Using the method in the previous problem we can construct new $L_i^{Diag}$'s
+  and include them into the enumeration
+  $E=$($L_1^{Diag},L_2^{Diag},L_3^{Diag},\dots,L_1, L_2,L_3, \dots$). We also note that
+  by consruction of E,
+  $\mathcal{L}^{diag} = \{L_1^{diag},L_2^{diag},L_3^{diag}, \dots \} \subseteq E$ \\
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+      \hline
+                  &$\alpha_1$             &$\alpha_2$             &$\alpha_3$             &$\alpha_4$              &$\alpha_5$             &$\alpha_6$              &$\alpha_7$  &$\dots$ \\ \hline      
+      $L_1^{diag}$ &\cellcolor{red}$x_{11}$ &$x_{12}$                &$x_{13}$                &$x_{14}$                &$x_{15}$                &$x_{16}$                &$x_{17}$     &$\dots$ \\ \hline
+      $L_2^{diag}$ &$x_{21}$                &\cellcolor{red}$x_{22}$ &$x_{23}$                &$x_{24}$                &$x_{25}$                &$x_{26}$                &$x_{27}$     &$\dots$ \\ \hline
+      $L_3^{diag}$ &$x_{31}$                &$x_{32}$                &\cellcolor{red}$x_{33}$ &$x_{34}$                &$x_{35}$                &$x_{36}$                &$x_{37}$     &$\dots$ \\ \hline
+      \dots \\ \hline 
+      $L_1$       &$x_{41}$                &$x_{42}$                &$x_{43}$                &\cellcolor{red}$x_{44}$ &$x_{45}$                &$x_{46}$                &$x_{47}$     &$\dots$ \\ \hline
+      $L_2$       &$x_{51}$                &$x_{52}$                &$x_{53}$                &$x_{54}$                &\cellcolor{red}$x_{55}$ &$x_{56}$                &$x_{57}$     &$\dots$ \\ \hline
+      $L_3$       &$x_{61}$                &$x_{62}$                &$x_{63}$                &$x_{64}$                &$x_{65}$                &\cellcolor{red}$x_{66}$ &$x_{67}$     &$\dots$ \\ \hline
+      $L_4$       &$x_{71}$                &$x_{72}$                &$x_{73}$                &$x_{74}$                &$x_{75}$                &$x_{76}$                &\cellcolor{red}$x_{77}$    &$\dots$ \\ \hline
+    \end{tabular} 
+  \end{center}
+  \textbf{Claim: $\mathcal{L}^{diag}$ satisfies properties 1) and 2):} 
+  \begin{proof} $ $ \\
+    \textbf{Base case:} Let $E = (L_1, L_2, L_3, \dots)$ in class we showed that
+    $L_1^{diag}$ is not in E and satisfies properties 1) and 2) so we add it
+    $E = (L_1^{Diag},L_1, L_2,L_3, \dots)$. \\
+    \textbf{Inductive Step:} Assume properties are true for n, s.t
+    $E = (L_1^{Diag}, L_2^{Diag}, \dots , L_n^{diag},L_1, L_2,L_3, \dots)$ holds. Then
+    we can construct $L_{n+1}^{diag}$, by definition the first
+    $x_{11}x_{22} \dots x_{n-1n-1} = L_{n}^{diag}$. We add
+    $x_{n+1} = \{ \bar{x}_{nn} \ | \ \text{if} \ x_{nn} = 1\}$. Now
+    $L_{n+1}^{diag}$ holds for property 2) since $L_n^{diag}$ holds and the addition
+    of $x_{n+1}$ makes it so that $L_{n+1}^{diag} \ne L_n^{diag}$ Therefore
+    $L_{n+1}^{diag}$ is not equal to any language in the table.
+  \end{proof}
+  \textbf{(c)}
+  We can arrange the set $E^{'}$ constructed in the previous problem as such
+  $E^{'} = ( L_1, L_1^{diag}, L_2, L_2^{diag}, \dots)$, where we alternate
+  between the languages $L_i$ and the languages $L_i^{diag}$. We construct
+  $L^{superdiag} = \{\bar{x}_{ii} \ | \ \text{if} \ x_{ii} == 1\}$.
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+      \hline
+                  &$\alpha_1$             &$\alpha_2$             &$\alpha_3$              &$\alpha_4$             &$\alpha_5$      &$\alpha_6$              &$\alpha_7$  &$\dots$ \\ \hline
+      $L_1$       &\cellcolor{red}$x_{11}$ &$x_{12}$                &$x_{13}$                &$x_{14}$                &$x_{15}$        &$x_{16}$              &$x_{17}$     &$\dots$ \\ \hline
+      $L_1^{diag}$ &$x_{21}$                &\cellcolor{red}$x_{22}$ &$x_{23}$                &$x_{24}$                &$x_{25}$                &$x_{26}$                &$x_{27}$     &$\dots$ \\ \hline
+      $L_2$       &$x_{31}$                &$x_{32}$                &\cellcolor{red}$x_{33}$ &$x_{34}$                &$x_{35}$ &$x_{36}$                &$x_{37}$     &$\dots$ \\ \hline
+      $L_2^{diag}$ &$x_{41}$                &$x_{42}$                &$x_{43}$                &\cellcolor{red}$x_{44}$ &$x_{45}$                &$x_{46}$                &$x_{47}$     &$\dots$ \\ \hline
+      \dots&\dots&\dots&\dots&\dots&\dots&\dots&\dots&\dots\\ \hline 
+    \end{tabular} 
+  \end{center}
+  \textbf{Claim:} $L^{superdiag}$ is not in the set.
+  \begin{proof}
+    Towards contradiction suppose $L^{Superdiag} \in E$. Then $\exists$
+    $i$ s.t $L^{'} = x_{1i}x_{2i}x_{3i} \dots \in L^{superdiag}$. Look at position
+    $x_{ii}$. If $x_{ii}$ is in $L^{'}$ then by definition it is not in
+    $L^{Superdiag} \ \Rightarrow \Leftarrow$.  Therfore $L^{Superdiag} \notin E$. 
+  \end{proof}
+  \textbf{(d)}
+  We can append $L^{superdiag}$ to set $E^{'}$ of the previous problem and then
+  create $L_2^{superdiag} = \{ \bar{x}_{ii} \ | \ \text{if} \ x_{ii} = 1\}$. \\
+  \textbf{Claim:} $L_2^{superdiag}$ is not in the set.
+  \begin{proof}
+    Towards contradiction suppose $L_2^{Superdiag} \in E^{'}$. Then $\exists$
+    $i$ s.t $L^{'} = x_{1i}x_{2i}x_{3i} \dots \in L_2^{superdiag}$. Look at position
+    $x_{ii}$. If $x_{ii}$ is in $L^{'}$ then by definition it is not in
+    $L^{Superdiag} \ \Rightarrow \Leftarrow$.  Therfore $L^{Superdiag} \notin E^{'}$. 
+  \end{proof}
+\end{problem}
+\end{document}
+
+
+
+ 
+% \begin{align}
+% \end{align}
+% \frac{}{}
+
