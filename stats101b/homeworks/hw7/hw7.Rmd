@@ -11,7 +11,8 @@ Earle Aguilar \\
 
 
 
-```{r, echo=F}
+```{r, echo=F, message=F}
+library(DoE.base)
 library(readxl)
 halfnormalplot <- function(y, label=F, n=length(y), fac.names=NULL,
                            xlim=c(-.1, 2.5), main="Half-Normal Plot", 
@@ -28,59 +29,82 @@ halfnormalplot <- function(y, label=F, n=length(y), fac.names=NULL,
     if(label) for(i in (m-n+1):m) text(x[i]+.1,y[i], fac.names[i], cex=0.8)  
 }
 
-as.level2 = function(x){
-  y = rep(0, length(x))
-  y[x == levels(x)[1]] <- -1
-  y[x == levels(x)[2]] <-  1
-  y
-}
+
 ```
 
 \section{7.21}
+Given generators $I=ABCD$, $I=ACE$, $I=ABEF$ we create a dataframe of the factor combinations and produce the aliases below.
+```{r}
+
+mtx <- data.matrix(fac.design(2,6))
+dx <- scale(mtx, scale=F)
+dx <- sign(dx)
+df <- as.data.frame(dx)
+```
+
+\begin{center}
+\begin{tabular}{| l | l | l | l | l | l | l |}
+  \hline
+    $Block 1$ & $Block 2$ & $Block 3$ & $Block 4$ & $Block 5$ & $Block 6$ \\ \hline
+    $ef$      & $ad$      & $acf$     & $bcef$    & $bcdf$    & $cf$ \\ \hline
+    $ace$     & $bc$      & $bce$     & $cde$     & $be$      & $a$  \\ \hline
+    $cd$      & $abcde$   & $abef$    & $abcdf$   & $acde$    & $abce$ \\ \hline
+    $bde$     & $cdf$     & $(1)$     & $adef$    & $af$      & $bef$ \\ \hline
+    $bcf$     & $abf$     & $bdf$     & $bd$      & $abd$     & $acdef$ \\ \hline
+    $abcdef$  & $acef$    & $cdef$    & $ac$      & $def$     & $abdf$ \\ \hline
+    $adf$     & $bdef$    & $ade$     & $abe$     & $abcef$   & $bcde$ \\ \hline
+    $ab$      & $e$       & $abcd$    & $f$       & $c$       & $de$ \\ \hline
+\end{tabular} 
+\end{center}
+
 \section{8.11}
 ```{r}
-df <- read_excel("/Users/Earle/Documents/Stats 101B Datasets/CH 8 (P11).xlsx")
+#df <- read_excel("/Users/Earle/Documents/Stats 101B Datasets/CH 8 (P11).xlsx")
+df <- read_excel("~/vmshare/stats 101b datasets/CH 8 (P11).xlsx")
 ```
 \subsection{a}
-If the design generators are $I=ACE$ and $I=BDE$ then $D=BE$ and $E=AC$.
+If the design generators are $I=ACE$ and $I=BDE$. Then the individual products of the columns must produce the identity.
 
 ```{r}
-design <- df[,1:5]
-names(design) <- c("A","B","C","D", "E")
-design$combination  <- c("e", "ad", "bde", "ab", "cd", "ace", "bc", "abcde")
-design
-all((design$A*design$C) == design$E)
-all((design$B * design$E) == design$D)
+colnames(df)[1:5] <- c(LETTERS[1:5]); 
+
+df$A*df$C*df$E 
+df$B*df$D*df$E 
 ```
 
 \subsection{b}
 
 \textbf{Complete Defining Relation:} $$I = ACE = BDE = ABCD$$
 
+```{r}
+g <- lm(Yield ~ (A+B+C+D+E)^5, df)
+alias(g)
+```
 
 \begin{center}
 \begin{tabular}{| l | l | l | l | l | l | l |}
   \hline
-    $A$ & $A*ACE =CE$    & $A*BDE =ABDE$ & $A*ABCD=CBD$ \\ \hline
-    $B$ & $B*ACE = ABCE$ & $B*BDE = DE$  & $B*ABCD= ACD$  \\ \hline
-    $C$ & $C*ACE =AE$    & $C*BDE =BCDE$ & $C*ABCD=ABD$ \\ \hline
-    $D$ & $D*ACE =ACDE$  & $D*BDE =BE$   & $D*ABCD=ACB$ \\ \hline
-    $E$ & $E*ACE = AC$   & $E*BDE = BD$  & $E*ABCD= ABCDE$ \\ \hline
-    $AB$& $AB*ACE=BCE$   & $AB*BDE = ADE$& $AB*ABCD=CD$ \\ \hline
-    $AD$& $AD*ACE=CDE$   & $AD*BDE=ABE$  & $AD*ABCD=BC$ \\ \hline
+    $Effect$ & $Aliases$ \\ \hline
+    $A$ & $A+CE+BCD+ABDE$ \\ \hline
+    $B$ & $B+DE+ACD+ABCE$  \\ \hline
+    $C$ & $C+AE+ABD+BCDE$ \\ \hline
+    $D$ & $D+BE+ABC+ACDE$ \\ \hline
+    $E$ & $E+BD+AC+ABCDE$ \\ \hline
+    $AB$& $AB+CD+ADE+BCE$ \\ \hline
+    $AD$& $AD+BC+ABE+CDE$ \\ \hline
 \end{tabular} 
 \end{center}
 
 \subsection{c}
 ```{r}
-design$Yield <- df$Yield
-m <- lm(Yield ~ A + B + C + D + E, design)
+m <- lm(Yield ~ A + B + C + D + E, df)
 effects <- 2*m$coefficients[2:6]; effects
 ```
 \subsection{d}
-If we not interested in two and three factor interactions, since AB and AD are aliased with other two and three factor interactions,  then we can use AB and AD as an estimate of error. 
+From both of these ANOVA tables we can see that the sum of the sum of squares for $AB = 6.661$ and $AD=3.251$ are equal to the residual sum of squares $9.913$
 ```{r}
-anova(m)
+anova(lm(Yield ~ (A + B + C + D + E)^2, df))
+anova(lm(Yield ~ (A + B + C + D + E), df))
 ```
 \subsection{e}
 The residual plot is satisfactory. The Normal QQ plot of residuals shows that they are approximately normal.
@@ -89,113 +113,180 @@ plot(m, 1)
 qqnorm(m$residuals)
 qqline(m$residuals)
 ```
+
 \section{8.23}
 ```{r}
-df <- read_excel("~/Stats 101B Datasets/CH 8 (P 23).xlsx")
-design <- df[,1:5]
-names(design) <- c("A","B","C","D", "E")
+df <- read_excel("~/vmshare/stats 101b datasets/CH 8 (P 23).xlsx")
+colnames(df)[1:5] <- c(LETTERS[1:5])
 ```
 \subsection{a}
-Given generators $I=ABD$ and $I=BCE$ we get that $D=AB$ and $E=BC$. In addition the complete defining relation is $I=ABD=BCE=ACDE$
-\textbf{Treatmen Combination}
+Given generators $I=ABD$ and $I=BCE$ then the product of the columns must be the identity. In addition the complete defining relation is $I=ABD=BCE=ACDE$
 ```{r}
-design$combination  <- c("de", "ae", "b", "abd", "cd", 
-                         "ac", "bce", "abcde")
-design
-all((design$A*design$B) == design$D)
-all((design$B * design$C) == design$E)
+df$A*df$B*df$D
+df$B*df$C*df$E
 ```
-\textbf{Aliases}
-\begin{center}
-\begin{tabular}{| l | l | l | l | l | l | l |}
-  \hline
-    $A$ & $A*ABD =BD$  & $A*BCE =ABCE$ & $A*ACDE=CDE$ \\ \hline
-    $B$ & $B*ABD =AD$  & $B*BCE = CE$  & $B*ACDE= ABCDE$  \\ \hline
-    $C$ & $C*ABD =ABCD$& $C*BCE =BE$   & $C*ACDE=ADE$ \\ \hline
-    $D$ & $D*ABD =AB$  & $D*BCE =BCDE$ & $D*ACDE=ACE$ \\ \hline
-    $E$ & $E*ABD =ABDE$& $E*BCE = BC$  & $E*ACDE= ACD$ \\ \hline
-    $AC$& $AC*ABD=BCD$ & $AC*BCE = ABE$& $AC*ACDE=DE$ \\ \hline
-    $AE$& $AE*ABD=BDE$ & $AE*BCE=ABC$  & $AE*ACDE=CD$ \\ \hline
-\end{tabular} 
-\end{center}
-\textbf{Effect Estimates}
+
+\textbf{Effect Estimates up to second order}
 ```{r}
-design$AC <- design$A*design$C
-design$AE <- design$A*design$E
-design$Avg_Annul_Cost <- df$`Avg Annual Cost`
-m <- lm(Avg_Annul_Cost ~ A+B+C+D+E+AC+AE, design)
-effects <- 2*m$coefficients[2:8]; effects
+m <- lm(`Avg Annual Cost` ~ (A+B+C+D+E)^2, df)
+summary(m)
+effects <- coef(m)[!is.na(coef(m))]
+effects <- 2*effects[-1]; effects
+halfnormalplot(effects, label = T)
 ```
+
+Effects A and B seem to be significant.
+
 \subsection{b}
 This design was created by reversing the signs of column A.
 ```{r}
-df <- read_excel("/Users/Earle/Documents/Stats 101B Datasets/CH8 (P.23b).xlsx")
-design <- df[,1:6]
-names(design) <- c("Blocks","A","B","C","D", "E")
-design$combination  <- c("de", "ae", "b", "abd", "cd", 
-                         "ac", "bce", "abcde", "ade", 
-                         "e", "ab", "bd", "acd", "c", 
-                         "abce", "bcde")
+df <- read_excel("~/vmshare/stats 101b datasets/CH8 (P.23b).xlsx")
+colnames(df)[1:6] <- c("Block Order", LETTERS[1:5])
 ```
 
 ```{r}
-design$AB <- design$A*design$B
-design$AC <- design$A*design$C
-design$AD <- design$A*design$D
-design$AE <- design$A*design$E
-design$BD <- design$B*design$D
-design$DE <- design$D*design$E
-design$CD <- design$C*design$D
-design$Avg_Annul_Cost <- df$`Avg Annual Cost`
-m <- lm(Avg_Annul_Cost ~ A+B+C+D+E+AB+AC+AD+AE+BD+CD+DE, design)
-effects <- 2*m$coefficients[2:13]; effects
+m <- lm(`Avg Annual Cost` ~ (A+B+C+D+E)^3, df)
+summary(m)
+effects <- coef(m)[!is.na(coef(m))]
+effects <- 2*effects[-1]; effects
+halfnormalplot(effects, label = T, n=4)
 ```
+
+A and B are still significant according to the half-normal probability plot.
+
 \subsection{c}
 This design was obtained by reversing the sign of all columns.
 ```{r}
-df <- read_excel("~/Stats 101B Datasets/CH 8 (P.23c).xlsx")
-design <- df[,1:6]
-names(design) <- c("Blocks","A","B","C","D", "E")
+df <- read_excel("~/vmshare/Stats 101B Datasets/CH 8 (P.23c).xlsx")
+colnames(df)[1:6] <- c("Block Order", LETTERS[1:5])
 ```
 
 ```{r}
-design$AB <- design$A*design$B
-design$AC <- design$A*design$C
-design$AD <- design$A*design$D
-design$AE <- design$A*design$E
-design$BC <- design$B*design$C
-design$BD <- design$B*design$D
-design$BE <- design$B*design$E
-design$Avg_Annul_Cost <- df$`Avg Annual Cost`
-m <- lm(Avg_Annul_Cost ~ A+B+C+D+E+AB+AC+AD+AE+BC+BD+BE, design)
-effects <- 2*m$coefficients[2:13]; effects
+m <- lm(`Avg Annual Cost` ~ (A+B+C+D+E)^3, df)
+summary(m)
+effects <- coef(m)[!is.na(coef(m))]
+effects <- 2*effects[-1]; effects
+halfnormalplot(effects, label = T, n=4)
 ```
+
+A and B continue to be significant effects.
+
 \section{8.37}
 ```{r}
-df <- read_excel("~/Stats 101B Datasets/CH 8 (p.37).xlsx")
-df$`Squeegee Pressure` <- as.factor(df$`Squeegee Pressure`)
-df$`Printing Speed` <- as.factor(df$`Printing Speed`)
-df$`Squeegee Angle` <- as.factor(df$`Squeegee Angle`)
-df$Temperature <- as.factor(df$Temperature)
-df$Viscosity <- as.factor(df$Viscosity)
-df$`Cleaning Interval` <- as.factor(df$`Cleaning Interval`)
-df$`Separation Speed` <- as.factor(df$`Separation Speed`)
-df$`Relative Humidity` <- as.factor(df$`Relative Humidity`)
-A <- as.level2(df$`Squeegee Pressure`)
-B <- as.level2(df$`Printing Speed`)
-C <- as.level2(df$`Squeegee Angle`)
-D <- as.level2(df$Temperature)
-E <- as.level2(df$Viscosity)
-F <- as.level2(df$`Cleaning Interval`)
-G <- as.level2(df$`Separation Speed`)
-H <- as.level2(df$`Relative Humidity`)
-design <- cbind(A,B,C,D,E,F,G,H)
+#df <- read_excel("~/Stats 101B Datasets/CH 8 (p.37).xlsx")
+df <- read_excel("~/vmshare/stats 101b datasets/CH 8 (p.37).xlsx")
+colnames(df)[1:8] <- c(LETTERS[1:8])
+dx <- scale(df[1:8], scale = F)
+dx <- sign(dx)
+df[,1:8] <- dx
 ```
 
 \subsection{a}
+Given $I=ABCF$, $I=ABDG$, and $I=BCDEH$ for this design. We multiply the respective columns and expect for 
+them to equal the identity.
+
+```{r}
+df$A*df$B*df$C*df$F
+df$A*df$B*df$D*df$G
+df$B*df$C*df$D*df$E*df$H
+```
 
 \subsection{b}
+
+```{r}
+m <- lm(PVM ~ (A+B+C+D+E+F+G+H)^3,df)
+alias(m)
+```
+
+\begin{center}
+\begin{tabular}{| l | l | l | l | l | l | l |}
+  \hline
+    $Effect$ & $Aliases$ \\ \hline
+    $A$ & $A$ \\ \hline
+    $B$ & $B$ \\ \hline
+    $C$ & $C$\\ \hline
+    $D$ & $D$ \\ \hline
+    $E$ & $E$\\ \hline
+    $F$ & $F$\\ \hline
+    $G$ & $G$ \\ \hline
+    $H$ & $H$\\ \hline
+    $AB$& $AB+CF+DG$ \\ \hline
+    $AC$& $AC+BF$ \\ \hline
+    $AD$& $AD+BG$ \\ \hline
+    $AE$& $AE$\\ \hline
+    $AF$& $AF+BC$ \\ \hline
+    $AG$& $AG+BD$\\ \hline
+    $AH$& $AH$ \\ \hline
+    $BE$& $BE$\\ \hline
+    $BH$& $BH$  \\ \hline
+    $CD$& $CD + FG$\\ \hline
+    $CE$& $CE$\\ \hline
+    $CG$& $CG+DF$ \\ \hline
+    $CH$& $CH$ \\ \hline
+    $DE$& $DE$ \\ \hline 
+    $DH$& $DH$\\ \hline
+    $EF$& $EF$\\ \hline
+    $EG$& $EG$\\ \hline
+    $EH$& $EH$\\ \hline
+    $FH$& $FH$\\ \hline
+    $GH$& $GH$\\ \hline
+\end{tabular} 
+\end{center}
 \subsection{c}
 
+\textbf{PVM response:} D and F are significant responses according to the half-normal probability plot.
+```{r}
+m_pvn <- lm(PVM ~ (A+B+C+D+E+F+G+H)^3,df)
+effects <- coef(m_pvn)[!is.na(coef(m_pvn))]
+effects <- 2*effects[-1];effects
+halfnormalplot(effects, label=T, n=5)
+```
+\textbf{NPU response:} D and F are significant responses according to the half-normal probability plot.
+```{r}
+m_npu <- lm(NPU ~ (A+B+C+D+E+F+G+H)^3,df)
+effects <- coef(m_npu)[!is.na(coef(m_npu))]
+effects <- 2*effects[-1]; effects
+halfnormalplot(effects, label=T, n=5)
+```
+
+\subsection{d}
+\textbf{Residuals for PVN:}
+There is nothing evidently wrong with the residuals, there is one point that may be a outlier and its point 25.
+```{r}
+m_pvn <- lm(PVM ~ D+F, df)
+plot(m_pvn, 1)
+```
+
+\textbf{Residuals for NPU:}
+There is also nothing evidently wrong with the residuals in this model. We do have a outlier which is again point 25.
+```{r}
+m_npu <- lm(NPU ~ D+F, df)
+plot(m_npu, 1)
+```
+
+\subsection{e}
+The model suggest setting the temperature to $20^{o}$ and a cleaning interval of 8 strokes.
+```{r}
+summary(m_npu)
+```
+
 \section{8.39}
+\textbf{a}
+5 factors \newline
+\textbf{b}
+3 Basic design factors \newline
+\textbf{c}
+$I = ABD$ and $I=-ACE$ \newline
+\textbf{d}
+No \newline
+\textbf{e}
+$I=ABD=-ACE=-BCDE$ \newline
+\textbf{f}
+Resolution 3 
 \section{8.48}
+\textbf{a}
+$D=-ABC$ \newline
+\textbf{b}
+$E=BC$ \newline
+\textbf{c}
+Resolution 3

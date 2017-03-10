@@ -1,0 +1,258 @@
+\documentclass[11pt, letterpaper, onecolumn]{article}
+
+% Imports
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath, amsthm, amsfonts,mathtools, framed, wasysym}
+\usepackage[shortcuts]{extdash} % Use \-/ for hyphenated words
+\usepackage{environ}
+\usepackage{fancyvrb}
+\usepackage[top=1.00in, bottom=1.00in, left=0.75in, right=0.75in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{accents}
+% Pseudocode enabler
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage{breqn}
+
+\usepackage[table]{xcolor}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% tikz
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+% Page
+\headsep=0.3in
+\linespread{1.15}
+\setlength\parindent{0pt}
+
+% Horizontal Rules
+\newcommand{\hwRuleWidth}{0.4pt}
+\renewcommand\headrulewidth{\hwRuleWidth}
+\renewcommand\footrulewidth{\hwRuleWidth}
+
+% Header and Footer
+\pagestyle{fancy}
+\lhead{\hwAuthor\ (\hwSection)}
+\chead{\hwClass\ (\hwInstructor): \hwTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+\newcommand{\enterProblemHeader}[2]{
+  \nobreak\extramarks{}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+}
+\newcommand{\exitProblemHeader}[2]{
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2}}{}\nobreak{}
+}
+
+% Counters
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\setcounter{partCounter}{1}
+\newcounter{hwProblemCounter}
+\newcounter{hwSubProblemCounter}
+\numberwithin{equation}{hwProblemCounter}
+\numberwithin{figure}{hwProblemCounter}
+
+% Environments
+\newenvironment{problem}[3] {
+  \setcounter{hwProblemCounter}{#2}
+  \setcounter{hwSubProblemCounter}{#3}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+
+  \large{\textbf{Problem #2.#3: #1}}\\
+}{
+  \exitProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+}
+
+\newcommand{\question}[2]{\textbf{(#1)\ }\ #2\\}
+
+\newenvironment{Proof}[1][Proof]
+  {\proof[#1]\leftskip=1cm\rightskip=1cm}
+  {\endproof}
+%-------------------------------------------------------------------------------
+% Assignmnet Variables
+%-------------------------------------------------------------------------------
+\newcommand{\hwTitle}{Homework 6}
+\newcommand{\hwDueDate}{March 3, 2017}
+\newcommand{\hwClass}{CS 151B}
+\newcommand{\hwInstructor}{Amit Sahai}
+\newcommand{\hwAuthor}{Earle Aguilar}
+\newcommand{\hwSection}{804501476}
+
+% First Problem
+
+\setcounter{hwProblemCounter}{1}
+\setcounter{hwSubProblemCounter}{0}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+% TITLE
+%-------------------------------------------------------------------------------
+{\centering
+  \Large{\textbf{\hwTitle}}\\
+  \vspace{0.1in}\normalsize{\hwDueDate}\\
+  \vspace{0.1in}\textbf{\hwAuthor} (\hwSection)\\
+  \vspace{0.1in}\rule{\textwidth}{\hwRuleWidth}}\\
+
+
+%-------------------------------------------------------------------------------
+% Problem 1.0
+%------------------------------------------------------------------------------
+\begin{problem}{1}{5}{3}
+  There are $2^5$ bytes $* \frac{1}{4} \frac{word}{Bytes} = \frac{32}{4}$ words
+  $= 8$ words.
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 2.0
+%-------------------------------------------------------------------------------
+\begin{problem}{2}{5}{3}
+  $2^5$ entries $= 32$ entries.
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 3.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{5}{3}
+  
+  \begin{tabular}{|l|l|l|l|l|l|l|}
+  \hline
+Address & Address Binary                   & Tag    & Index & Offset & HIT/MISS & Replace \\ \hline
+0       & 00000000000000000000000000000000 & ...000 & 00000 & 00000  & MISS     & 0       \\ \hline
+4       & 00000000000000000000000000010000 & ...000 & 00000 & 10000  & HIT      & 0       \\ \hline
+16      & 00000000000000000000000000010000 & ...000 & 00000 & 10000  & HIT      & 0       \\ \hline
+132     & 00000000000000000000000010000100 & ...000 & 00100 & 00100  & MISS     & 0       \\ \hline
+232     & 00000000000000000000000011101000 & ...000 & 00111 & 01000  & MISS     & 0       \\ \hline
+160     & 00000000000000000000000010100000 & ...000 & 00101 & 00000  & MISS     & 0       \\ \hline
+1024    & 00000000000000000000010000000000 & ...000 & 00000 & 00000  & MISS     & 1       \\ \hline
+30      & 00000000000000000000000000011110 & ...001 & 00000 & 11110  & MISS     & 1       \\ \hline
+140     & 00000000000000000000000010001100 & ...000 & 00100 & 01100  & HIT      & 0       \\ \hline
+3100    & 00000000000000000000110000011100 & ...000 & 00000 & 11100  & MISS     & 1       \\ \hline
+180     & 00000000000000000000000010110100 & ...011 & 00101 & 10100  & HIT      & 0       \\ \hline
+2180    & 00000000000000000000100010000100 & ...010 & 00100 & 00100  & MISS     & 1       \\ \hline
+\end{tabular} \\
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 4.0
+%-------------------------------------------------------------------------------
+\begin{problem}{4}{5}{3}
+    We replace 4 blocks. 
+\end{problem}
+\begin{problem}{5}{5}{3}
+  Hit ratio $= \frac{4}{12}= \frac{1}{3}$
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 5.0
+%-------------------------------------------------------------------------------
+\begin{problem}{1}{5}{5}
+  We miss on address 0 and then the next time we miss is on address 32. So we miss
+  every other $\frac{32}{2}=16$ references so the \textbf{miss rate} is $\frac{1}{16}$. \\
+  As the cache gets smaller so do the block sizes therefore we have a
+  \textbf{higher miss rate}. \\
+  We are experiencing \textbf{cumpolsury misses} since we are only missing
+  when we reach a block we have not visited before.
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 6.0
+%-------------------------------------------------------------------------------
+\begin{problem}{2}{5}{5}
+  \textbf{$2^4$ Block Size:} Miss every other $\frac{16}{2}$ references so
+  the \textbf{miss rate} is $\frac{1}{8}$. \\
+  \textbf{$2^6$ Block Size:} Miss every other $\frac{64}{2}$ references so
+  the \textbf{miss rate} is $\frac{1}{32}$. \\
+  \textbf{$2^7$ Block Size:} Miss every other $\frac{128}{2}$ references so
+  the \textbf{miss rate} is $\frac{1}{64}$. \\
+  We are exposing \textbf{spatial locality.}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 7.0
+%-------------------------------------------------------------------------------
+\begin{problem}{2}{5}{6}
+  \textbf{AMAT for $P_1$:}
+  \begin{align}
+    0.66 + .08(70) = 6.26 \ ns
+  \end{align}
+  \textbf{AMAT for $P_2$:}
+  \begin{align}
+    0.90 + .06(70) = 5.10 \ ns
+  \end{align}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 8.0
+%-------------------------------------------------------------------------------
+\begin{problem}{4}{5}{6}
+  \textbf{AMAT for $P_1$ with $L_2$ cache:}
+  \begin{align}
+    0.66 + .08(5.62+.95(70)) = 6.43 \ ns
+  \end{align}
+  The AMAT is higher with an $L_2$ cache therefore it is not helping.
+\end{problem}
+
+%-------------------------------------------------------------------------------
+% Problem 9.0
+%-------------------------------------------------------------------------------
+\begin{problem}{Exam}{5}{1}
+  \section{a: AMAT for CPU}
+  \begin{align}
+    1+.30(10+.20(80)) &= 8.8 \ cycles
+  \end{align}
+  \section{b: TCPI}
+  \begin{align}
+    BCPI &= 1+.20(.60)(1) +.30(.50)(1) \\
+    &= 1.27 \\
+    MCPI &= 1(.10)(10+.20(80)) + .20(.30)(10+.20(80)) \\
+    &= 4.16 \\
+    TCPI &= 1.27 + 4.16 = 5.43
+  \end{align}
+  \newpage
+  \section{c}
+  Original $EX_{Time_1} = 5.43(10^6)(\frac{10^{-9}}{2}) = 2.72 \times 10^{-3}$ \\
+  \textbf{New TCPI, BCPI, MCPI} \\
+  \begin{align}
+    BCPI &= 1+ \frac{2}{9}(.60) + \frac{2}{9}(.25) &= 1.18 \\
+    MCPI &= 26 MR_{Inst} + \frac{2}{9}(.30)(26) = 1.73 + 26 MR_{Inst} \\
+    TCPI &= 2.91 + 26 MR_{Inst} \\
+    EX_{Time_2} &= 9 \times 10^5 (2.91 + 26 MR_{Inst})(\frac{10^{-9}}{2}) \\
+    2.72 \times 10^{-3} &= 9 \times 10^5 (2.91 + 26 MR_{Inst})(\frac{10^{-9}}{2}) \\
+    MR_{Inst} \le 12.05 \%
+  \end{align}
+  
+\end{problem}
+
+\end{document}
+
+
+
+ 
+% \begin{align}
+% \end{align}
+% \frac{}{}
+
