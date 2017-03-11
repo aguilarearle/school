@@ -147,21 +147,35 @@
           \item If $y = 4$ Accept.
           \item Run $R(x, <P>)$
             \begin{itemize}
-                \item[1.] $R(x, <P>): Accepts$ \ \ //$R$ thinks $L(N)=L(\bar{P})$
+                \item[1.] $R(x, <P>): Accepts$ 
                   \begin{itemize}
-                    \item Run $P(y) \implies L(N) = L(P) \Longrightarrow \Longleftarrow$
+                    \item Run $P(y)$
                   \end{itemize}
-                \item[2.] $R(x, <P>): Rejects$ \ \ //$R$ thinks $L(N) \ne L(\bar{P})$
+                \item[2.] $R(x, <P>): Rejects$ 
                   \begin{itemize}
-                    \item Run $\bar{P}(y) \implies L(N) = L(\bar{P}) \Longrightarrow \Longleftarrow$
-                  \end{itemize}
-                \item[3.] $R(x, <P>): Loops$  \ \ //$R$ thinks $L(N) \ne L(\bar{P})$
-                  \begin{itemize}
-                    \item But by construction $L(N) = {4} \in L(\bar{P}) \Longrightarrow \Longleftarrow$
+                    \item Run $\bar{P}(y)$
                   \end{itemize}
             \end{itemize}
       \end{itemize}  
-    \end{itemize}
+    \end{itemize}    
+  \textbf{Analysis:} 
+  \begin{itemize}
+    \setlength\itemsep{0em}
+    \item{Case 1:} $R(x, <P>): Accepts \implies L(N)=L(\bar{P})$.
+      \begin{itemize}
+        \item[-] By construction if $R$ accepts then we run 
+          $P(y) \implies L(N)=L(P) \Longrightarrow \Longleftarrow$
+      \end{itemize}
+    \item{Case 2:} $R(x, <P>): Rejects \implies L(N) \ne L(\bar{P})$.
+      \begin{itemize}
+        \item[-] By construction if $R$ rejects then we run 
+          $\bar{P}(y) \implies L(N)=L(\bar{P}) \Longrightarrow \Longleftarrow$
+      \end{itemize}
+    \item{Case 3:} $R(x, <P>): Loops \implies L(N) \ne L(\bar{P})$.
+      \begin{itemize}
+      \item[-] By construction  $L(N) = {4} \in L(\bar{P}) \Longrightarrow \Longleftarrow$
+      \end{itemize}
+  \end{itemize}
   \end{proof}
 \end{problem}
 \newpage
@@ -187,24 +201,40 @@
           \item If $y = \varepsilon$, accept.
           \item Run $R(x, <M>)$
             \begin{itemize}
-                \item[1.] $R(x, <M>): Accepts$ \ \ //$R$ thinks $L(N) \ne L(M)$ 
+                \item[1.] $R(x, <M>): Accepts$ 
                   \begin{itemize}
-                    \item Reject all $y \implies L(N) = 0 \Longrightarrow \Longleftarrow$
+                    \item Reject all $y$
                   \end{itemize}
-                \item[2.] $R(x, <M>): Rejects$ \ \ //$R$ thinks $L(N) = L(M)$
+                \item[2.] $R(x, <M>): Rejects$ 
                   \begin{itemize}
-                    \item Accept all $y \implies L(N) \ne 0 \Longrightarrow \Longleftarrow$
-                  \end{itemize}
-                \item[3.] $R(x, <M>): Loops$  \ \ //$R$ thinks $L(N) = L(N)$
-                  \begin{itemize}
-                    \item But by construction $L(N) = \{ \varepsilon \} \implies L(N) \ne 0 \Longrightarrow \Longleftarrow$
+                    \item Accept all $y$
                   \end{itemize}
             \end{itemize}
       \end{itemize}  
     \end{itemize}
+    
+      \textbf{Analysis:} 
+  \begin{itemize}
+    \setlength\itemsep{0em}
+    \item{Case 1:} $R(x, <M>): Accepts \implies L(N) \ne L(M) \implies L(N) \ne \emptyset$.
+      \begin{itemize}
+        \item[-] By construction if $R$ accepts then we reject all 
+          $y \implies L(N) = \emptyset \Longrightarrow \Longleftarrow$
+      \end{itemize}
+    \item{Case 2:} $R(x, <M>): Rejects \implies L(N) = L(M) \implies L(N) = \emptyset$.
+      \begin{itemize}
+        \item[-] By construction if $R$ rejects then we accept all 
+          $y \implies L(N) = \Sigma^{*} \Longrightarrow \Longleftarrow$
+      \end{itemize}
+    \item{Case 3:} $R(x, <M>): Loops \implies L(N) = L(M) \implies L(N) = \emptyset$.
+      \begin{itemize}
+      \item[-] By construction  
+        $L(N) = {\varepsilon} \implies L(N) \ne \emptyset \Longrightarrow \Longleftarrow$
+      \end{itemize}
+  \end{itemize}
   \end{proof}
 \end{problem}
-
+\newpage
 %-------------------------------------------------------------------------------
 % Problem 3.0
 %-------------------------------------------------------------------------------
