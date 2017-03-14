@@ -1,0 +1,283 @@
+\documentclass[11pt, letterpaper, onecolumn]{article}
+
+% Imports
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath, amsthm, amsfonts,mathtools, framed, wasysym}
+\usepackage[shortcuts]{extdash} % Use \-/ for hyphenated words
+\usepackage{environ}
+\usepackage{fancyvrb}
+\usepackage[top=1.00in, bottom=1.00in, left=0.75in, right=0.75in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{accents}
+% Pseudocode enabler
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage{breqn}
+
+\usepackage[table]{xcolor}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% tikz
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+% Page
+\headsep=0.3in
+\linespread{1.15}
+\setlength\parindent{0pt}
+
+% Horizontal Rules
+\newcommand{\hwRuleWidth}{0.4pt}
+\renewcommand\headrulewidth{\hwRuleWidth}
+\renewcommand\footrulewidth{\hwRuleWidth}
+
+% Header and Footer
+\pagestyle{fancy}
+\lhead{\hwAuthor\ (\hwSection)}
+\chead{\hwClass\ (\hwInstructor): \hwTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+\newcommand{\enterProblemHeader}[2]{
+  \nobreak\extramarks{}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+}
+\newcommand{\exitProblemHeader}[2]{
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2}}{}\nobreak{}
+}
+
+% Counters
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\setcounter{partCounter}{1}
+\newcounter{hwProblemCounter}
+\newcounter{hwSubProblemCounter}
+\numberwithin{equation}{hwProblemCounter}
+\numberwithin{figure}{hwProblemCounter}
+
+% Environments
+\newenvironment{problem}[3] {
+  \setcounter{hwProblemCounter}{#2}
+  \setcounter{hwSubProblemCounter}{#3}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+
+  \large{\textbf{Problem #2.#3: #1}}\\
+}{
+  \exitProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+}
+
+\newcommand{\question}[2]{\textbf{(#1)\ }\ #2\\}
+
+\newenvironment{Proof}[1][Proof]
+  {\proof[#1]\leftskip=1cm\rightskip=1cm}
+  {\endproof}
+%-------------------------------------------------------------------------------
+% Assignmnet Variables
+%-------------------------------------------------------------------------------
+\newcommand{\hwTitle}{Final}
+\newcommand{\hwDueDate}{March 17, 2017}
+\newcommand{\hwClass}{CS 181}
+\newcommand{\hwInstructor}{Amit Sahai}
+\newcommand{\hwAuthor}{}
+\newcommand{\hwSection}{804501476}
+
+% First Problem
+
+\setcounter{hwProblemCounter}{1}
+\setcounter{hwSubProblemCounter}{0}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+% TITLE
+%-------------------------------------------------------------------------------
+{\centering
+  \Large{\textbf{\hwTitle}}\\
+  \vspace{0.1in}\normalsize{\hwDueDate}\\
+  \vspace{0.1in}\textbf{\hwAuthor} (\hwSection)\\
+  \vspace{0.1in}\rule{\textwidth}{\hwRuleWidth}}\\
+
+
+%-------------------------------------------------------------------------------
+% Problem 1.0
+%------------------------------------------------------------------------------
+\begin{problem}{}{1}{0}
+  Prove
+  \begin{align}
+    L_1 \diamond L_2 &= \{xy \ | \ x \in L_1, y \in L_2, \ \text{and} \ |x|=2|y| \}
+  \end{align}
+  is not context free. \\
+  Let $L_1=\{0^{2n}1^{2n}\}$ and $L_2=\{0^n1^n\}$. Then,
+  \begin{align}
+     L_1 \diamond L_2 &= \{0^{2n}1^{2n}0^{n}1^{n} \ | \ x \in L_1, y \in L_2, \ \text{and} \ |x|=2|y| \}
+  \end{align}
+  \begin{proof} $ $ \\
+    Towards contradiction assume $L_1 \diamond L_2$ is context-free.
+    \begin{itemize}
+      \setlength\itemsep{0em}
+    \item[-] By the pumping lemma $\exists$ pumping length $p$.
+    \item[-] Let $w=0^{2p}1^{2p}0^{p}1^{p} \in L_1 \diamond L_2$ and $|w| \ge p$.
+    \item[-] By pumping lemma $0^{2p}1^{2p}0^{p}1^{p}=abcde$ s.t:
+      \begin{itemize}
+        \setlength\itemsep{0em}
+        \item[1.] $|bd| \ \ge \ 1$ 
+        \item[2.] $|bcd| \ \le \ p $
+      \end{itemize}
+    \item[Case 1:] $bcd=0^{\alpha}1^{\beta}$ (on the left side)
+      \begin{itemize}
+        \setlength\itemsep{0em}
+        \item[$\bullet$] We pump down then we have either:  
+          \begin{itemize}
+            \item[1.] $ace=0^{2p-\alpha}1^{2p}0^{p}1^{p} \notin L_1 \diamond L_2$,
+              since $2p-\alpha+2p =4p \implies \alpha=0$ and $1 \le \alpha \le p$
+              $\Longrightarrow \Longleftarrow$
+            \item[2.] $ace=0^{2p}1^{2p-\beta}0^{p}1^{p} \notin L_1 \diamond L_2$,
+              since $2p-\beta+2p =4p \implies \beta=0$ and $1 \le \beta \le p$
+              $\Longrightarrow \Longleftarrow$              
+            \item[3.] $ace=0^{2p-\alpha}1^{2p-\beta}0^{p}1^{p} \notin L_1 \diamond L_2$ ,
+              since $2p-\alpha + 2p - \beta = 4p \implies \alpha + \beta = 0$
+              and $1 \le \alpha + \beta \le p$ $\Longrightarrow \Longleftarrow$              
+          \end{itemize}          
+      \end{itemize}
+    \item[Case 2:] $bcd=0^{\alpha}1^{\beta}$ (on the right side)
+        \begin{itemize}
+        \setlength\itemsep{0em}
+        \item[$\bullet$] We pump up then we have either:  
+          \begin{itemize}
+            \item[1.] $ace=0^{2p}1^{2p}0^{p+\alpha}1^{p} \notin L_1 \diamond L_2$,
+              since $2(p+\alpha+p) = 4p \implies \alpha=0$ and $1 \le \alpha \le p$
+              $\Longrightarrow \Longleftarrow$
+            \item[2.] $ace=0^{2p}1^{2p}0^{p}1^{p+\beta} \notin L_1 \diamond L_2$,
+              since $2(p+\beta+p) =4p \implies \beta=0$ and $1 \le \beta \le p$
+              $\Longrightarrow \Longleftarrow$              
+            \item[3.] $ace=0^{2p}1^{2p}0^{p+\alpha}1^{p+\beta} \notin L_1 \diamond L_2$ ,
+              since $2(p+\alpha + p + \beta) = 4p \implies \alpha + \beta = 0$
+              and $1 \le \alpha + \beta \le p$ $\Longrightarrow \Longleftarrow$              
+          \end{itemize}          
+        \end{itemize}
+    \item[Case 3:] $bcd=1^{\alpha}0^{\beta}$ (middle)
+        \begin{itemize}
+        \setlength\itemsep{0em}
+          \item[$\bullet$] We pump down then we have either:  
+            \begin{itemize}
+            \item[1.] $ace=0^{2p}1^{2p-\alpha}0^{p}1^{p} \notin L_1 \diamond L_2$,
+              since $2p-\alpha+2p = 4p \implies \alpha=0$ and $1 \le \alpha \le p$
+              $\Longrightarrow \Longleftarrow$
+            \item[2.] $ace=0^{2p}1^{2p}0^{p-\beta}1^{p} \notin L_1 \diamond L_2$,
+              since $2(p-\beta+p) =4p \implies \beta=0$ and $1 \le \beta \le p$
+              $\Longrightarrow \Longleftarrow$
+            \item[3.] $ace=0^{2p}1^{2p-\alpha}0^{p-\beta}1^{p} \notin L_1 \diamond L_2$,
+              since $2p-\alpha+2p =2(p-\beta + p) \implies \beta=\alpha$. This
+              is true if $\alpha = \beta = 0$ but $1 \le \beta \le p$
+              $\Longrightarrow \Longleftarrow$. We can also have that $\alpha = \beta$
+              is true if $p$ is even and each is half of $p$. However this destroys
+              symmetry in $L_1$ and $L_2$, $0^{2p}1^{2p-\alpha} \notin L_1$ and
+              $0^{p-\beta}1^{p} \notin L_2$ $\Longrightarrow \Longleftarrow$.
+          \end{itemize}          
+        \end{itemize}        
+    \end{itemize}
+  \end{proof}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 2.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{2}{0}
+  \section{(a)}
+  Show that 
+  \begin{align}
+    HALT = \{(\langle M \rangle,x) \ | \ M \ \text{halts on input} \ x \}
+  \end{align}
+  is oracle decidable.
+  \begin{proof} $ $ \\
+    We construct OBTM $O(\langle M \rangle,x)$:
+    \begin{itemize}
+      \setlength\itemsep{0em}
+      \item[-] $O$ writes $\langle M \rangle$ to machine tape and $w$ to input tape.
+      \item[-] $O$ enters query state:
+        \begin{itemize}
+          \setlength\itemsep{0em}          
+          \item[1:] $x \in L(M)$ then accept.
+          \item[2:] $x \notin L(M)$ the reject.
+        \end{itemize}
+    \end{itemize}
+    The query is immediate therefore if $x \notin L(M)$, we can reject without
+    looping. Therefore $O$ always terminates thus it is a decider for HALT.
+  \end{proof}
+  \section{(b)}
+  Show that 
+  \begin{align}
+    NEQ = \{(\langle M_1 \rangle,\langle M_2 \rangle) \ | L(M_1) \ne L(M_2) \}
+  \end{align}
+  is oracle recognizable.  
+  \begin{proof} $ $ \\
+    We construct OBTM $O( \langle M_1 \rangle,\langle M_2 \rangle)$: \\
+    In class we showed that a multiple tapes can be simulated with a single tape
+    so we split the regular tape into 4 tapes $w_1$, $w_2$, $w_3$, and $w_4$.
+    \begin{itemize}
+      \setlength\itemsep{0em}
+    \item[1] Write $\langle M_1 \rangle$ onto $w_1$
+    \item[2] Write $\langle M_2 \rangle$ onto $w_2$
+    \item[3] Will keep a binary count starting at 0 in $w_3$.
+      \begin{itemize}
+        \setlength\itemsep{0em}
+        \item[-] We are assuming that all strings can be converted to binary.
+      \end{itemize}
+   \item[4] Will maintain a tuple starting at $(0,0)$ in $w_4$   
+    \end{itemize}
+    We will have 4 states $S_1$, $S_{oracle}$, $S_3$, $S_4$
+    \begin{itemize}
+    \item[$S_1$:]  Write contents of tape $w_1$ onto the machine tape and contents
+      of $w_3$ onto the input tape. 
+    \item[$S_{oracle}$:] Enter query state and write the contents of the first cell
+      in the input tape onto $w_4$ and move head right. 
+    \item[$S_3$:] Clear the machine tape and write the contents of $w_2$ onto
+      machine tape. Clear input tape and write $w_3$ onto input tape. 
+    \item[$S_4$:] Reset tape $w_4$ to (0,0) and increment tape $w_3$ by one.   
+    \end{itemize}
+    We will begin in state $S_1$ and transition to $S_{oracle}$. Then we transition
+    to $S_3$ and back to $S_{oracle}$. If the contents of tape $w_4=(1,1)$ we
+    transition onto $S_4$. 
+  \end{proof}
+  \section{(c)}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 3.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{3}{0}
+\end{problem}
+\end{document}
+
+
+
+ 
+% \begin{align}
+% \end{align}
+% \frac{}{}
+

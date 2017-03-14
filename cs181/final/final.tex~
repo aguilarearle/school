@@ -1,0 +1,303 @@
+\documentclass[11pt, letterpaper, onecolumn]{article}
+
+% Imports
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath, amsthm, amsfonts,mathtools, framed, wasysym}
+\usepackage[shortcuts]{extdash} % Use \-/ for hyphenated words
+\usepackage{environ}
+\usepackage{fancyvrb}
+\usepackage[top=1.00in, bottom=1.00in, left=0.75in, right=0.75in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{accents}
+% Pseudocode enabler
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage{breqn}
+
+\usepackage[table]{xcolor}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% tikz
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+% Page
+\headsep=0.3in
+\linespread{1.15}
+\setlength\parindent{0pt}
+
+% Horizontal Rules
+\newcommand{\hwRuleWidth}{0.4pt}
+\renewcommand\headrulewidth{\hwRuleWidth}
+\renewcommand\footrulewidth{\hwRuleWidth}
+
+% Header and Footer
+\pagestyle{fancy}
+\lhead{\hwAuthor\ (\hwSection)}
+\chead{\hwClass\ (\hwInstructor): \hwTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+\newcommand{\enterProblemHeader}[2]{
+  \nobreak\extramarks{}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+}
+\newcommand{\exitProblemHeader}[2]{
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2}}{}\nobreak{}
+}
+
+% Counters
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\setcounter{partCounter}{1}
+\newcounter{hwProblemCounter}
+\newcounter{hwSubProblemCounter}
+\numberwithin{equation}{hwProblemCounter}
+\numberwithin{figure}{hwProblemCounter}
+
+% Environments
+\newenvironment{problem}[3] {
+  \setcounter{hwProblemCounter}{#2}
+  \setcounter{hwSubProblemCounter}{#3}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+
+  \large{\textbf{Problem #2.#3: #1}}\\
+}{
+  \exitProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+}
+
+\newcommand{\question}[2]{\textbf{(#1)\ }\ #2\\}
+
+\newenvironment{Proof}[1][Proof]
+  {\proof[#1]\leftskip=1cm\rightskip=1cm}
+  {\endproof}
+%-------------------------------------------------------------------------------
+% Assignmnet Variables
+%-------------------------------------------------------------------------------
+\newcommand{\hwTitle}{Homework 6}
+\newcommand{\hwDueDate}{March 3, 2017}
+\newcommand{\hwClass}{CS 181}
+\newcommand{\hwInstructor}{Amit Sahai}
+\newcommand{\hwAuthor}{}
+\newcommand{\hwSection}{804501476}
+
+% First Problem
+
+\setcounter{hwProblemCounter}{1}
+\setcounter{hwSubProblemCounter}{0}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+% TITLE
+%-------------------------------------------------------------------------------
+{\centering
+  \Large{\textbf{\hwTitle}}\\
+  \vspace{0.1in}\normalsize{\hwDueDate}\\
+  \vspace{0.1in}\textbf{\hwAuthor} (\hwSection)\\
+  \vspace{0.1in}\rule{\textwidth}{\hwRuleWidth}}\\
+
+
+%-------------------------------------------------------------------------------
+% Problem 1.0
+%------------------------------------------------------------------------------
+\begin{problem}{}{1}{0}
+  Prove
+  \begin{align}
+    COMP_{TM} &= \{ <M_1 , M_2> \ | \ L(M_1) = \overline{ L(M_2)}\}
+  \end{align}
+  
+  \begin{proof}
+    Towards contradiciton assume $COMP_{TM}$ is recognizable
+    \begin{itemize}
+      \setlength\itemsep{0em}
+      \item $\exists$ turing machine $R$ which recognizes $COMP_{TM}$.
+      \item Build turing machine $N$
+      \item $N(y)$:
+      \begin{itemize}
+          \item Let $x = <N>$ // By Recursion Theorem
+          \item Let $<P>$ be a turing machine that recognizes prime numbers.
+          \item If $y = 4$ Accept.
+          \item Run $R(x, <P>)$
+            \begin{itemize}
+                \item[1.] $R(x, <P>): Accepts$ 
+                  \begin{itemize}
+                    \item Run $P(y)$
+                  \end{itemize}
+                \item[2.] $R(x, <P>): Rejects$ 
+                  \begin{itemize}
+                    \item Run $\bar{P}(y)$
+                  \end{itemize}
+            \end{itemize}
+      \end{itemize}  
+    \end{itemize}    
+  \textbf{Analysis:} 
+  \begin{itemize}
+    \setlength\itemsep{0em}
+    \item{Case 1:} $R(x, <P>): Accepts \implies L(N)=L(\bar{P})$.
+      \begin{itemize}
+        \item[-] By construction if $R$ accepts then we run 
+          $P(y) \implies L(N)=L(P) \Longrightarrow \Longleftarrow$
+      \end{itemize}
+    \item{Case 2:} $R(x, <P>): Rejects \implies L(N) \ne L(\bar{P})$.
+      \begin{itemize}
+        \item[-] By construction if $R$ rejects then we run 
+          $\bar{P}(y) \implies L(N)=L(\bar{P}) \Longrightarrow \Longleftarrow$
+      \end{itemize}
+    \item{Case 3:} $R(x, <P>): Loops \implies L(N) \ne L(\bar{P})$.
+      \begin{itemize}
+      \item[-] By construction  $L(N) = {4} \in L(\bar{P}) \Longrightarrow \Longleftarrow$
+      \end{itemize}
+  \end{itemize}
+  \end{proof}
+\end{problem}
+\newpage
+%-------------------------------------------------------------------------------
+% Problem 2.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{2}{0}
+  Prove
+  \begin{align}
+    NEQ_{TM} &= \{<M_1, M_2> \ | \ L(M_1) \ne L(M_2) \}
+  \end{align}
+
+   \begin{proof}
+    Towards contradiciton assume $NEQ_{TM}$ is recognizable
+    \begin{itemize}
+      \setlength\itemsep{0em}
+      \item $\exists$ turing machine $R$ which recognizes $NEQ_{TM}$.
+      \item Build turing machine $N$
+      \item $N(y)$:
+      \begin{itemize}
+          \item Let $x = <N>$ // By Recursion Theorem
+          \item Let $<M>$ be a turing machine that rejects everything.            
+          \item If $y = \varepsilon$, accept.
+          \item Run $R(x, <M>)$
+            \begin{itemize}
+                \item[1.] $R(x, <M>): Accepts$ 
+                  \begin{itemize}
+                    \item Reject all $y$
+                  \end{itemize}
+                \item[2.] $R(x, <M>): Rejects$ 
+                  \begin{itemize}
+                    \item Accept all $y$
+                  \end{itemize}
+            \end{itemize}
+      \end{itemize}  
+    \end{itemize}
+    
+      \textbf{Analysis:} 
+  \begin{itemize}
+    \setlength\itemsep{0em}
+    \item{Case 1:} $R(x, <M>): Accepts \implies L(N) \ne L(M) \implies L(N) \ne \emptyset$.
+      \begin{itemize}
+        \item[-] By construction if $R$ accepts then we reject all 
+          $y \implies L(N) = \emptyset \Longrightarrow \Longleftarrow$
+      \end{itemize}
+    \item{Case 2:} $R(x, <M>): Rejects \implies L(N) = L(M) \implies L(N) = \emptyset$.
+      \begin{itemize}
+        \item[-] By construction if $R$ rejects then we accept all 
+          $y \implies L(N) = \Sigma^{*} \Longrightarrow \Longleftarrow$
+      \end{itemize}
+    \item{Case 3:} $R(x, <M>): Loops \implies L(N) = L(M) \implies L(N) = \emptyset$.
+      \begin{itemize}
+      \item[-] By construction  
+        $L(N) = {\varepsilon} \implies L(N) \ne \emptyset \Longrightarrow \Longleftarrow$
+      \end{itemize}
+  \end{itemize}
+  \end{proof}
+\end{problem}
+\newpage
+%-------------------------------------------------------------------------------
+% Problem 3.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{3}{0}
+  A certified language is a language over $\{0,1\}$ s.t there exists a turing
+  machine M satisfying the following conditions:
+  \begin{itemize}
+  \setlength\itemsep{0em}    
+  \item $\forall \ x \in L, \ \exists \ y \in \{0,1\}^{*} \ s.t \ M(x,y): accepts$
+  \item $\forall \ x \notin L, \ and \ \forall \ y \in \{0,1\}^{*} \ s.t \ M(x,y): Rejects$  
+  \end{itemize}
+  \section{a: Show $Halt_{\varepsilon}$ is a certified language}
+  Let $L^{'} = \{w \ | \ w \text{ is the number of steps in TM which halts on } \varepsilon \}$
+  and let $y \in L^{'}$. \\
+  We construct $M(x,y)$:
+  \begin{itemize}
+    \setlength\itemsep{0em}    
+    \item Run $x(\varepsilon)$ one step at at time.
+      \begin{itemize}
+        \setlength\itemsep{0em}    
+        \item If $x(\varepsilon)$ is in accept state after y steps: \textbf{accept}
+        \item If the number of steps in $x(\varepsilon)$ is greater than y: \textbf{reject}
+      \end{itemize}
+  \end{itemize}
+  The machine satisfies property 1) if $x \in L$ then $\exists \ y \in L^{'}$ which
+  contains the number of steps to compute $x(\varepsilon)$. \\
+  The machine also satisfies property 2) since if $x \notin L$ then
+  there is no solution to $x(\varepsilon)$ since $x$ does not halt. Therefore
+  $M(x,y)$ will reject for all $y$.
+  \section{b)}
+  The number of inputs to machine x is infinite and each one of these inputs
+  produces a different number of steps for a computationl path. Therfore the
+  number of steps is also infinite so we would never be able to verify if
+  $x \in Halt_{all}$
+  \section{c)}
+  \begin{proof}
+  Assume for contradiction that $Halt_{all}$ is certifiable then $\exists$ M
+  that certifies it. \\
+  Construct N(x):
+  \begin{itemize}
+  \setlength\itemsep{0em}    
+  \item Let $z = <N>$ / / by Recursion Theorem
+  \item Run M(z,x)
+    \begin{itemize}
+        \item[1] M:accepts $\implies$ M certifies N, so N halts.
+          \begin{itemize}
+            \item Loop $\Longrightarrow \Longleftarrow$
+          \end{itemize}
+        \item[2] M:rejects $\implies$ M does not certify N, so N loops.
+          \begin{itemize}
+            \item Halt $\Longrightarrow \Longleftarrow$
+          \end{itemize}
+    \end{itemize}
+  \end{itemize}
+  Therefore $Halt_{all}$ is not certifiable.
+  \end{proof}
+\end{problem}
+\end{document}
+
+
+
+ 
+% \begin{align}
+% \end{align}
+% \frac{}{}
+
