@@ -238,6 +238,7 @@
   is oracle recognizable.  
   \begin{proof} $ $ \\
     We construct OBTM $O( \langle M_1 \rangle,\langle M_2 \rangle)$: \\
+    \textbf{Tapes:} \\
     In class we showed that a multiple tapes can be simulated with a single tape
     so we split the regular tape into 4 tapes $w_1$, $w_2$, $w_3$, and $w_4$.
     \begin{itemize}
@@ -251,7 +252,8 @@
       \end{itemize}
    \item[4] Will maintain a tuple starting at $(0,0)$ in $w_4$   
     \end{itemize}
-    We will have 4 states $S_1$, $S_{oracle}$, $S_3$, $S_4$
+    \textbf{States:}\\
+    We will have states $S_1$, $S_{oracle}$, $S_3$, $S_4$, $q_{accept}$
     \begin{itemize}
     \item[$S_1$:]  Write contents of tape $w_1$ onto the machine tape and contents
       of $w_3$ onto the input tape. 
@@ -261,11 +263,30 @@
       machine tape. Clear input tape and write $w_3$ onto input tape. 
     \item[$S_4$:] Reset tape $w_4$ to (0,0) and increment tape $w_3$ by one.   
     \end{itemize}
-    We will begin in state $S_1$ and transition to $S_{oracle}$. Then we transition
-    to $S_3$ and back to $S_{oracle}$. If the contents of tape $w_4=(1,1)$ we
-    transition onto $S_4$. 
+    \textbf{Transitions:}
+    \begin{align}
+      \delta(S_1, w_4=(0,0)) &\to (S_{oracle}) \\
+      \delta(S_{oracle},  w_4=(x,0)) &\to (S_3), \ x \in \{0,1\} \\
+      \delta(S_3,  w_4=(x,y)) &\to (S_4) , \ \text{if} \ x=y \\
+      \delta(S_3,  w_4=(x,y)) &\to (q_{accept}) \ \text{if} \ x\ne y \\
+      \delta(S_4,  w_4) &\to (S_1) 
+    \end{align}
+    This is still an OBTM as we have not changed the function of query
+    and do not misuse the input and machine tapes. We make use of the regular
+    tape like a tape of any TM and supplied states which allow us to recogize
+    NEQ by determining whether the binary representations of strings is ever accepted
+    by one an rejected by the other if so we will accept. If not the machine will
+    continue to process strins and potentially loop if these two machines
+    indeed accept the same language.
   \end{proof}
   \section{(c)}
+  The language:
+  \begin{align}
+    Infinite = \{\langle M \rangle \ | \ |L(M)| = \infty \}
+  \end{align}
+  is not oracle recognizable. An OBTM that would try to recognize this language
+  would have to check and infinite amount of strings to determine whether they all
+  belong to $M$ and so it would never halt.
 \end{problem}
 %-------------------------------------------------------------------------------
 % Problem 3.0
