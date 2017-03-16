@@ -12,6 +12,9 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{accents}
+\usepackage{diagbox}
+
+
 % Pseudocode enabler
 \usepackage{listings}
 \usepackage{color}
@@ -250,7 +253,7 @@
         \setlength\itemsep{0em}
         \item[-] We are assuming that all strings can be converted to binary.
       \end{itemize}
-   \item[4] Will maintain a tuple starting at $(0,0)$ in $w_4$   
+   \item[4] Will maintain a tuple starting at $(\$,\$)$ in $w_4$   
     \end{itemize}
     \textbf{States:}\\
     We will have states $S_1$, $S_{oracle}$, $S_3$, $S_4$, $q_{accept}$
@@ -258,17 +261,18 @@
     \item[$S_1$:]  Write contents of tape $w_1$ onto the machine tape and contents
       of $w_3$ onto the input tape. 
     \item[$S_{oracle}$:] Enter query state and write the contents of the first cell
-      in the input tape onto $w_4$ and move head right. 
+      in the input tape onto $w_4$ and move head of $w_4$ right. 
     \item[$S_3$:] Clear the machine tape and write the contents of $w_2$ onto
       machine tape. Clear input tape and write $w_3$ onto input tape. 
-    \item[$S_4$:] Reset tape $w_4$ to (0,0) and increment tape $w_3$ by one.   
+    \item[$S_4$:] Reset tape $w_4$ to (\$,\$) and increment tape $w_3$ by one.   
     \end{itemize}
     \textbf{Transitions:}
     \begin{align}
-      \delta(S_1, w_4=(0,0)) &\to (S_{oracle}) \\
-      \delta(S_{oracle},  w_4=(x,0)) &\to (S_3), \ x \in \{0,1\} \\
-      \delta(S_3,  w_4=(x,y)) &\to (S_4) , \ \text{if} \ x=y \\
+      \delta(S_1, w_4=(\$,\$)) &\to (S_{oracle}) \\
+      \delta(S_{oracle},  w_4=(x,\$)) &\to (S_3), \ x \in \{0,1\} \\
+      \delta(S_3,  w_4=(x,\$)) &\to (S_{oracle}) \\
       \delta(S_3,  w_4=(x,y)) &\to (q_{accept}) \ \text{if} \ x\ne y \\
+      \delta(S_3,  w_4=(x,y)) &\to (S_4) \ \text{if} \ x = y \\
       \delta(S_4,  w_4) &\to (S_1) 
     \end{align}
     This is still an OBTM as we have not changed the function of query
@@ -412,28 +416,218 @@
 %-------------------------------------------------------------------------------
 % Problem 4.0
 %------------------------------------------------------------------------------
+\newcommand{\mybs}{\backslashbox}
 \begin{problem}{}{4}{0}
   Show that 
   \begin{align}
     ALICE = \{(M,R) \ | \ (M,R) \ \text{is recognizable}\}
   \end{align}
   is undecidable. \\
-  We notice that this is an instance of the tiling problem.
+  We can convert this problem into a tiling problem and we also convert a turing machine into the tiling, \\
+
+  \textbf{Tiles:} have the following elements within them
   \begin{itemize}
-  \item[1] \textbf{Not sure if this should be established:}
+    \setlength\itemsep{0em}
+  \item[1] $w_i \in \{ON,OFF\}$
+  \item[2] $q_i \in Q$ if head is in cell or $\blacksmiley{}$ if head is not in cell.
+  \item[3] $r$, the result of $i \ \% \ M$, where $\%$ is the modulo operator and i is the 
+    position of the head on the tape.
   \end{itemize}
-  
+  There are boundry tiles which are marked by an $X$. \newpage
   \textbf{Rules:}
+
+  Initial State: For simpicity assume $\textvisiblespace= \textvisiblespace \backslash \blacksmiley{}$\\
+
   \begin{center}
-    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
-      \hline
-      &  &  &  & & & & & \\ \hline      
-      &  &  &  & & & & & \\ \hline
-      &  &  &  & & & & & \\ \hline
-      &  &  &  & & & & & \\ \hline     
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline      
+      $X$&\mybs{$\textvisiblespace$}{$q_0$}&$\textvisiblespace$ \\ \hline
+      $X$&$X$&$X$ \\ \hline
+    \end{tabular}  
+    \quad
+    \quad
+    \quad
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline      
+      \mybs{$\textvisiblespace$}{$q_0$}&$\textvisiblespace$&$\textvisiblespace$ \\ \hline
+      $X$&$X$&$X$ \\ \hline
+    \end{tabular}
+    \quad
+    \quad
+    \quad 
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline      
+      $\textvisiblespace$&$\textvisiblespace$&$\textvisiblespace$ \\ \hline
+      $X$&$X$&$X$ \\ \hline
     \end{tabular} 
   \end{center}
 
+  The rules $(b_1, \dots, b_n) \to (c_1, \dots, c_n) $ in Alice in Turing Land correspond to tiling rules where different $n$ will create a different tiling size. These tiling rules correspond to a set of transitions for a TM. For simplicity assume that $w_i = w_i \backslash \blacksmiley,r$ we always start with the head in a position where $r=0$. \\
+  
+  Transition Right:
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline
+      $w_{i-1}$&$w_{i}$&$w_{i+1}^{'}$&$w_{i+2}^{'}$&$\cdots$&$w_{i+n}^{'}$   \\ \hline      
+      $w_{i-1}$&$w_{i}$&$w_{i+1}^{'}$&$w_{i+2}^{'}$&$\cdots$&\mybs{$w_{i+n}$}{$q_{i+n}$}  \\ \hline
+      $\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$ \\ \hline
+      $w_{i-1}$&$w_{i}$&$w_{i+1}^{'}$&$w_{i+2}^{'}$&$\cdots$&$w_{i+n}$  \\ \hline
+      $w_{i-1}$&$w_{i}$&$w_{i+1}^{'}$&\mybs{$w_{i+2}$}{$q_{i+2}$}&$\cdots$&$w_{i+n}$\\ \hline      
+      $w_{i-1}$&$w_{i}$&\mybs{$w_{i+1}$}{$q_{i+1}$}&$w_{i+2}$&$\cdots$&$w_{i+n}$\\ \hline
+      $w_{i-1}$&\mybs{$w_{i}$}{0, $q_i$}&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$ \\ \hline
+    \end{tabular}
+  \end{center}
+    \begin{align}
+    \begin{cases}
+      \delta(w_{i}, q_{i}) \to (w_i, q_{i+1}, R) \\
+      \delta(w_{i+1}, q_{i+1}) \to (w_{i+1}^{'}, q_{i+2}, R) \\
+      \delta(w_{i+2}, q_{i+2}) \to (w_{i+2}^{'}, q_{i+3}, R) \\
+      \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+      \delta(w_{i+(n-1)}, q_{i+(n-1)}) \to (w_{i+(n-1)}^{'}, q_{i+n}, R) \\
+      \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) \\
+    \end{cases}
+  \end{align}
+
+  \newpage
+  Transition Left:
+
+   \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline
+      $w_{i-n}^{'}$&$\cdots$&$w_{i-2}^{'}$&$w_{i-1}^{'}$&$w_{i}$&$w_{i+1}$   \\ \hline      
+      \mybs{$w_{i-n}$}{$q_{i-n}$}&$\cdots$&$w_{i-2}^{'}$&$w_{i-1}^{'}$&$w_{i}$& $w_{i+1}$ \\ \hline
+      $\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$ \\ \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}^{'}$&$w_{i-1}^{'}$&$w_i$&$w_{i+1}$  \\ \hline
+      $w_{i-n}$&$\cdots$&\mybs{$w_{i-2}^{'}$}{$q_{i-2}$}&$w_{i-1}^{'}$&$w_i$&$w_{i+1}$\\ \hline      
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&\mybs{$w_{i-1}$}{$q_{i-1}$}&$w_{i}$&$w_{i+1}$\\ \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&\mybs{$w_{i}$}{0, $q_{i}$}&$w_{i+1}$ \\ \hline
+    \end{tabular} 
+  \end{center}
+
+  \begin{align}
+    \begin{cases}
+      \delta(w_{i}, q_{i}) \to (w_i, q_{i-1}, L) \\
+      \delta(w_{i-1}, q_{i-1}) \to (w_{i-1}^{'}, q_{i-2}, L) \\
+      \delta(w_{i-2}, q_{i-2}) \to (w_{i-2}^{'}, q_{i-3}, L) \\
+      \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+      \delta(w_{i-(n-1)}, q_{i-(n-1)}) \to (w_{i-(n-1)}^{'}, q_{i-n}, L) \\
+      \delta(w_{i-n}, q_{i-n}) \to (w_{i-n}^{'}, q_{i-(n+1)}, L) \\
+    \end{cases}
+  \end{align}
+
+
+  Edge Cases: \\
+  
+  Head in left corner
+
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline
+      $w_{i}$&$w_{i+1}^{'}$&$w_{i+2}^{'}$&$\cdots$&$w_{i+n}^{'}$   \\ \hline      
+      $w_{i}$&$w_{i+1}^{'}$&$w_{i+2}^{'}$&$\cdots$&\mybs{$w_{i+n}$}{$q_{i+n}$}  \\ \hline
+      $\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$ \\ \hline
+      $w_{i}$&$w_{i+1}^{'}$&$w_{i+2}^{'}$&$\cdots$&$w_{i+n}$  \\ \hline
+      $w_{i}$&$w_{i+1}^{'}$&\mybs{$w_{i+2}$}{$q_{i+2}$}&$\cdots$&$w_{i+n}$\\ \hline      
+      $w_{i}$&\mybs{$w_{i+1}$}{$q_{i+1}$}&$w_{i+2}$&$\cdots$&$w_{i+n}$\\ \hline
+      \mybs{$w_{i}$}{0, $q_i$}&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$ \\ \hline
+    \end{tabular} 
+  \end{center}
+
+  \begin{align}
+    \begin{cases}
+      \delta(w_{i}, q_{i}) \to (w_i, q_{i+1}, R) \\
+      \delta(w_{i+1}, q_{i+1}) \to (w_{i+1}^{'}, q_{i+2}, R) \\
+      \delta(w_{i+2}, q_{i+2}) \to (w_{i+2}^{'}, q_{i+3}, R) \\
+      \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+      \delta(w_{i+(n-1)}, q_{i+(n-1)}) \to (w_{i+(n-1)}^{'}, q_{i+n}, R) \\
+      \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) \\
+    \end{cases}
+  \end{align}
+
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline
+      $w_{i}$&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$  \\ \hline
+      $w_{i}$&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$\\ \hline      
+      $w_{i}$&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$\\ \hline
+      \mybs{$w_{i}$}{0, $q_i$}&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$ \\ \hline
+    \end{tabular} 
+  \end{center}
+
+    \begin{align}
+    \begin{cases}
+      \delta(w_{i}, q_{i}) \to (w_i, q_{i-1}, L) \\
+      \delta(w_{i-1}, q_{i-1}) \to (w_{i-1}^{'}, q_{i-2}, L) \\
+      \delta(w_{i-2}, q_{i-2}) \to (w_{i-2}^{'}, q_{i-3}, L) \\
+      \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+      \delta(w_{i-(n-1)}, q_{i-(n-1)}) \to (w_{i-(n-1)}^{'}, q_{i-n}, L) \\
+      \delta(w_{i-n}, q_{i-n}) \to (w_{i-n}^{'}, q_{i-(n+1)}, L) \\
+    \end{cases}
+  \end{align}
+
+  Head in right corner:
+
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline
+      $w_{i-n}^{'}$&$\cdots$&$w_{i-2}^{'}$&$w_{i-1}^{'}$&$w_{i}$ \\ \hline      
+      \mybs{$w_{i-n}$}{$q_{i-n}$}&$\cdots$&$w_{i-2}^{'}$&$w_{i-1}^{'}$&$w_{i}$ \\ \hline
+      $\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$ \\ \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}^{'}$&$w_{i-1}^{'}$&$w_i$  \\ \hline
+      $w_{i-n}$&$\cdots$&\mybs{$w_{i-2}^{'}$}{$q_{i-2}$}&$w_{i-1}^{'}$&$w_i$ \\ \hline      
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&\mybs{$w_{i-1}$}{$q_{i-1}$}&$w_{i}$ \\ \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&\mybs{$w_{i}$}{0, $q_{i}$} \\ \hline
+    \end{tabular} 
+  \end{center}
+  
+    \begin{align}
+    \begin{cases}
+      \delta(w_{i}, q_{i}) \to (w_i, q_{i-1}, L) \\
+      \delta(w_{i-1}, q_{i-1}) \to (w_{i-1}^{'}, q_{i-2}, L) \\
+      \delta(w_{i-2}, q_{i-2}) \to (w_{i-2}^{'}, q_{i-3}, L) \\
+      \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+      \delta(w_{i-(n-1)}, q_{i-(n-1)}) \to (w_{i-(n-1)}^{'}, q_{i-n}, L) \\
+      \delta(w_{i-n}, q_{i-n}) \to (w_{i-n}^{'}, q_{i-(n+1)}, L) \\
+    \end{cases}
+  \end{align}
+
+  \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&$w_i$  \\ \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&$w_i$ \\ \hline      
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&$w_{i}$ \\ \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&\mybs{$w_{i}$}{0, $q_{i}$} \\ \hline
+    \end{tabular} 
+  \end{center}
+
+  \begin{align}
+    \begin{cases}
+      \delta(w_{i}, q_{i}) \to (w_i, q_{i+1}, R) \\
+      \delta(w_{i+1}, q_{i+1}) \to (w_{i+1}^{'}, q_{i+2}, R) \\
+      \delta(w_{i+2}, q_{i+2}) \to (w_{i+2}^{'}, q_{i+3}, R) \\
+      \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+      \delta(w_{i+(n-1)}, q_{i+(n-1)}) \to (w_{i+(n-1)}^{'}, q_{i+n}, R) \\
+      \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) \\
+    \end{cases}
+  \end{align}
+  
+  Head occupyiung corner after transition:
+  
+   \begin{center}
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline     
+      \mybs{$w_{i}$}{r, $q_i$}&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$\\ \hline
+      $w_{i}$&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$ \\ \hline
+    \end{tabular} 
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
+      \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&\mybs{$w_{i}$}{r, $q_{i}$} \\ \hline
+      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&$w_{i}$ \\ \hline
+    \end{tabular} 
+  \end{center}
+
+  In class we showed that if D decides Tiling then we can decide $M(\varepsilon)$ halts. Therfore since we can convert Alice in Turing Land into a Tiling problem and convert a turing machine into this tiling then we cannot decide Alice in turing land.
 \end{problem}
 
 \end{document}
