@@ -292,6 +292,121 @@
 % Problem 3.0
 %-------------------------------------------------------------------------------
 \begin{problem}{}{3}{0}
+  \section{(a)}
+  Show that
+  \begin{align}
+    CLOSEBY = \{( \langle M_1 \rangle, \langle M_2 \rangle ) \ | \ \forall x \in L(M_1) \ \exists y \in L(M_2): ||x-y|| \le 1 \}
+  \end{align}
+  is undecidable.
+  \begin{proof} 
+    Assume for contradiction $\exists$ a decider D for CLOSEBY, create a TM N:
+    \begin{itemize}
+      \setlength\itemsep{0em}
+    \item $N(w)$:
+      \begin{itemize}
+      \item[-] Let $u = \langle N \rangle$, by Recursion Theorem.
+      \item[-] Let $\langle M \rangle$ be a TM that only accepts $\varepsilon$.
+      \item[-] Run $D(u, \langle M \rangle)$:
+        \begin{itemize}
+        \item[1:] $D(u, \langle M \rangle)$: Accepts
+          \begin{itemize}
+          \item[$\cdot$] Accept all $w$
+          \end{itemize}
+        \item[2:] $D(u, \langle M \rangle)$: Rejects
+          \begin{itemize}
+          \item[$\cdot$] Accept $w$ iff $w=\varepsilon$
+          \end{itemize}
+        \end{itemize}
+      \end{itemize}
+    \end{itemize}
+    
+    \textbf{Analysis:}
+    \begin{itemize}
+      \setlength\itemsep{0em}
+    \item[-] Case 1: $D(u, \langle M \rangle)$: \textbf{Accepts}
+      $\implies L(N) = L(M) = \{\varepsilon \}$. This is true since the length of
+      $\varepsilon$ is zero $\implies$ the only string in $L(N)$ is $\varepsilon$.
+      However we accept all $w$
+      $\implies L(N) = \{0,1\}^{*}$ and this is contradiction.
+    \item[-] Case 2: $D(u, \langle M \rangle)$: \textbf{Rejects}
+      $\implies L(N) \ne L(M)$, since $L(M)= \{\varepsilon \}$. However we
+      only accept $\varepsilon \implies L(N) = \{\varepsilon \}$ and this is a contradiction.
+    \end{itemize}
+  \end{proof}
+  \section{(b)}
+  Show that
+  \begin{align}
+    CLOSEBY = \{( \langle M_1 \rangle, \langle M_2 \rangle ) \ | \ \forall x \in L(M_1) \ \exists y \in L(M_2): ||x-y|| \le 1 \}
+  \end{align}
+  is unrecognizable.
+  \begin{proof}
+  Assume for contradiction $\exists$ a recognizer R for CLOSEBY, create a TM N:
+    \begin{itemize}
+      \setlength\itemsep{0em}
+    \item $N(w)$:
+      \begin{itemize}
+      \item[-] Let $u = \langle N \rangle$, by Recursion Theorem.
+      \item[-] Let $\langle M \rangle$ be a TM that only accepts $\varepsilon$.
+      \item[-] if $w = \varepsilon$ accept.
+      \item[-] Run $R(u, \langle M \rangle)$:
+        \begin{itemize}
+        \item[1:] $R(u, \langle M \rangle)$: Accepts
+          \begin{itemize}
+          \item[$\cdot$] Accept all $w$
+          \end{itemize}
+        \item[2:] $R(u, \langle M \rangle)$: Rejects
+          \begin{itemize}
+          \item[$\cdot$] Accept $w$ iff $w=\varepsilon$
+          \end{itemize}
+        \end{itemize}
+      \end{itemize}
+    \end{itemize}
+
+    \textbf{Analysis:}
+    \begin{itemize}
+      \setlength\itemsep{0em}
+    \item[-] Case 1: $R(u, \langle M \rangle)$: \textbf{Accepts}
+      $\implies L(N) = L(M) = \{\varepsilon \}$. This is true since the length of
+      $\varepsilon$ is zero $\implies$ the only string in $L(N)$ is $\varepsilon$.
+      However we accept all $w$
+      $\implies L(N) = \{0,1\}^{*}$. $\Longrightarrow \Longleftarrow$
+    \item[-] Case 2: $R(u, \langle M \rangle)$: \textbf{Rejects}
+      $\implies L(N) \ne L(M)$, since $L(M)= \{\varepsilon \}$. However we
+      only accept $\varepsilon \implies L(N) = \{\varepsilon \}$. $\Longrightarrow \Longleftarrow$
+    \item[-] Case 3: $R(u, \langle M \rangle)$: \textbf{Loops} $\implies L(N) \ne L(M)$, since $L(M)= \{\varepsilon \}$.
+      But by construction $L(N) = \{\varepsilon\}. \Longrightarrow \Longleftarrow$
+    \end{itemize}  
+  \end{proof}
+  \newpage
+  \section{(c)}
+  Show that
+  \begin{align}
+    LEQ-HALT = \{( \langle M \rangle, \langle N \rangle )
+    \ | \ \forall x \in \Sigma^{*}: M(x) \ \text{halts in fewer steps than} \ N(x) \}
+  \end{align}
+  is unrecognizable.
+  \begin{proof}
+    Assume for contradiction $LEQ-HALT$ is regular $\implies exists$ an
+    enumarator E for $LEQ-HALT$.
+    We construct M:
+    \begin{itemize}
+      \setlength\itemsep{0em}
+    \item M(w):
+      \begin{itemize}
+      \item[-] Let $z = \langle x \rangle$, by Recursion Theorem.
+      \item[-] $task_A =$ run $E(\varepsilon)$.
+      \item[-] $task_B =$ look at the sequence of produced by E.
+        Wait until we find a tuple of form $(z,\langle N \rangle)$ is found.
+      \item[-] run $task_A$ and $task_B$ in parallel.
+        \begin{itemize}
+          \item[$\cdot$] When $task_B$ finishes, run N(w).
+        \end{itemize}
+      \end{itemize}
+    \end{itemize}
+    This is a contradicition because $\langle N \rangle$ now takes longer
+    than $\langle N \rangle$ despite
+    $(\langle M \rangle,\langle N \rangle) \in LEQ-HALT$.
+  \end{proof}
 \end{problem}
 \end{document}
 
