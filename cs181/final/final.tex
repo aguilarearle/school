@@ -630,6 +630,98 @@
   In class we showed that if D decides Tiling then we can decide $M(\varepsilon)$ halts. Therfore since we can convert Alice in Turing Land into a Tiling problem and convert a turing machine into this tiling then we cannot decide Alice in turing land.
 \end{problem}
 
+\newpage
+%-------------------------------------------------------------------------------
+% Problem 5.0
+%------------------------------------------------------------------------------
+\begin{problem}{}{5}{0}
+  First I will create a function
+  \begin{align}
+    Pattern(i,j,b) &= b^{i \times j}
+  \end{align}
+  This function takes 3 paraments
+  \begin{itemize}
+    \setlength\itemsep{0em}
+  \item[1] $i$ - the width of a block.
+  \item[2] $j$ - the length of a block.
+  \item[3] $b$ - the base we will use to produce the patterns.
+  \end{itemize}
+  It will produce patterns and map them to a block with dimensions $i \times j$.
+  For example:
+  \begin{align}
+    Pattern(2,2,2) &= \bigg\{
+    \begin{tabular}{|l|l|}
+      \hline     
+      0 & 0 \\ \hline
+      0 & 0 \\ \hline
+    \end{tabular} \ \
+    \begin{tabular}{|l|l|}
+      \hline     
+      1 & 0 \\ \hline
+      0 & 0 \\ \hline
+    \end{tabular} \ \
+    \begin{tabular}{|l|l|}
+      \hline     
+      0 & 1 \\ \hline
+      0 & 0 \\ \hline
+    \end{tabular} \ \
+    \begin{tabular}{|l|l|}
+      \hline     
+      1 & 1 \\ \hline
+      0 & 0 \\ \hline
+    \end{tabular} \ \
+    \cdots \ \
+    \begin{tabular}{|l|l|}
+      \hline     
+      0 & 1 \\ \hline
+      1 & 1 \\ \hline
+    \end{tabular} \ \
+    \begin{tabular}{|l|l|}
+      \hline     
+      1 & 1 \\ \hline
+      1 & 1 \\ \hline
+    \end{tabular}
+    \bigg\}
+  \end{align} 
+  \section{(a)}
+  \begin{lstlisting}[mathescape]
+    Weaver 1:
+    for i from 1 $\to \infty$: // Tile size $1 \times i$
+        for p from 0 $\to 2^{i}$: /* Here we traverse the pattern encoded with binary digits*/
+  \end{lstlisting}
+  
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+      \hline     
+      $\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$\\ \hline
+      4&&&&&&&&&&&&&&&$\bullet$&$\cdots$\\ \hline
+      3&&&&&&&$\bullet$&$\bullet$&$\bullet$&$\bullet$&$\bullet$&$\bullet$&$\bullet$&$\bullet$&&$\cdots$\\ \hline
+      2&&&$\bullet$&$\bullet$&$\bullet$&$\bullet$&&&&&&&&&&$\cdots$ \\ \hline
+      1&$\bullet$&$\bullet$&&&&&&&&&&&&&&$\cdots$\\ \hline
+      &0&1&00&01&10&11&000&001&010&011&100&101&110&111&0000&$\cdots$ \\ \hline
+    \end{tabular} 
+  \end{center}
+  
+  \section{(b)}
+  \begin{lstlisting}[mathescape]
+    Weaver 2:
+    for i from 1 $\to \infty$:
+        for j from 1 $\to i$
+            for p from 0 $\to 2^{i\times j}$: /* Here we traverse the pattern encoded with binary digits*/
+  \end{lstlisting}
+  \section{(c)}
+    \begin{lstlisting}[mathescape]
+    Weaver 3:
+    for i from 1 $\to \infty$:
+        for j from 1 $\to i$:
+            for c in {$c_i$}:
+                for p from 0 $\to c^{i\times j}$: /* Here we traverse the pattern encoded with binary digits*/
+  \end{lstlisting}
+  \section{(d)}
+\end{problem}
+
+
+
 \end{document}
 
 
