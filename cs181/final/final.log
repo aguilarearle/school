@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.10.28)  17 MAR 2017 10:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.10.28)  17 MAR 2017 11:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1142,17 +1142,17 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 300--301
+Underfull \hbox (badness 10000) in paragraph at lines 301--302
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 311.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 312.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 311.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 312.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1168,12 +1168,12 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 426--428
+Underfull \hbox (badness 10000) in paragraph at lines 427--429
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 429--431
+Underfull \hbox (badness 10000) in paragraph at lines 430--432
 
  []
 
@@ -1185,52 +1185,52 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 [7]
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 445
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 446
 .
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 445
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 446
 .
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 445--446
+Underfull \hbox (badness 10000) in paragraph at lines 446--447
 
  []
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 450
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 451
 .
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 450
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 451
 .
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 458
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 459
 .
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 458
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 459
 .
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 458
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 459
 .
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 466
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 467
 .
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 466
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 467
 .
 
 
-LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 466
+LaTeX Warning: Command \textvisiblespace invalid in math mode on input line 467
 .
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 471--472
+Underfull \hbox (badness 10000) in paragraph at lines 472--473
 
  []
 
@@ -1241,7 +1241,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [8]
-Underfull \hbox (badness 10000) in paragraph at lines 525--526
+Underfull \hbox (badness 10000) in paragraph at lines 526--527
 
  []
 
@@ -1280,7 +1280,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [13]
-Underfull \hbox (badness 10000) in paragraph at lines 771--772
+Underfull \hbox (badness 10000) in paragraph at lines 772--773
 
  []
 
@@ -1290,7 +1290,14 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[14] (./final.aux) ) 
+[14]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[15] (./final.aux) ) 
 Here is how much of TeX's memory you used:
  24330 strings out of 495020
  463973 string characters out of 6181323
@@ -1298,7 +1305,7 @@ Here is how much of TeX's memory you used:
  27087 multiletter control sequences out of 15000+600000
  13301 words of font info for 53 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 48i,18n,66p,10387b,1177s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 48i,18n,66p,10387b,1741s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cme
 x10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pf
@@ -1314,10 +1321,10 @@ fonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt
 10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm1
 0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/wasy/wasy10.pfb>
-Output written on final.pdf (14 pages, 199292 bytes).
+Output written on final.pdf (15 pages, 201545 bytes).
 PDF statistics:
- 117 PDF objects out of 1000 (max. 8388607)
- 84 compressed objects within 1 object stream
+ 120 PDF objects out of 1000 (max. 8388607)
+ 86 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -265,7 +265,8 @@
       the input tape write the result onto $w_4$ and move head of $w_4$ right. 
     \item[$S_3$:] Clear the machine tape and write the contents of $w_2$ onto
       machine tape. Clear input tape and write $w_3$ onto input tape. 
-    \item[$S_4$:] Reset tape $w_4$ to (\$,\$) and increment tape $w_3$ by one.   
+    \item[$S_4$:] Reset tape $w_4$ to (\$,\$) and increment value of tape $w_3$
+      by one.   
     \end{itemize}
     \textbf{Transitions:}
     \begin{align}
@@ -399,8 +400,8 @@
       \setlength\itemsep{0em}
     \item M(w):
       \begin{itemize}
-      \item[-] Let $z = \langle x \rangle$, by Recursion Theorem.
-      \item[-] $task_A =$ run $E(\varepsilon)$.
+      \item[-] Let $z = \langle M \rangle$, by Recursion Theorem.
+      \item[-] $task_A =$ run $E(\varepsilon)$. 
       \item[-] $task_B =$ look at the sequence of produced by E.
         Wait until we find a tuple of form $(z,\langle N \rangle)$ is found.
       \item[-] run $task_A$ and $task_B$ in parallel.
@@ -409,9 +410,9 @@
         \end{itemize}
       \end{itemize}
     \end{itemize}
-    This is a contradiction because $\langle N \rangle$ now takes longer
-    than $\langle N \rangle$ despite
-    $(\langle M \rangle,\langle N \rangle) \in LEQ-HALT$.
+    The enumerator is producing a sequence $(\langle M \rangle,\langle N \rangle) \in LEQ-HALT$.
+    However by construction $\langle M \rangle$ now takes longer to halt than $\langle N \rangle$.
+    $\Longrightarrow \Longleftarrow$
   \end{proof}
 \end{problem}
 
@@ -770,6 +771,7 @@
 %------------------------------------------------------------------------------
 \begin{problem}{Extra Credit}{6}{0}
   \section{a}
+  
   We can apply cantors diagonalization argument on the width of the rugs and show
   that the weaver will always miss a rug of a specific width.
   
@@ -789,9 +791,14 @@
   Let
   
   \begin{align}
-    w_{Diag} &= (x_{11}-1)(x_{22}-1)(x_{33}-1)(x_{44}-1)(x_{55}-1) \dots (x_{nn}-1) 
+    w_{Diag} &= 0.(x_{11}-1)(x_{22}-1)(x_{33}-1)(x_{44}-1)(x_{55}-1)  
   \end{align}
-  
+  \textbf{Claim:} $w_{Diag}$ is not in the table.
+  \begin{proof}
+    Towards contradiction suppose $w_{Diag}$ is in the table. Then $\exists \ i$ 
+    s.t $w^{'}=x_{1i}x_{2i}x_{3i} \dots = w_{Diag}$. Look at position $x_{ii}$.
+    If $x_{ii}$ is in $w^{'}$ then it is not in $w_{Diag}$. $\Longrightarrow \Longleftarrow$
+  \end{proof}
   \section{b}
   We can map $\mathbb{R} \to \mathbb{R}^2$ as such
   \begin{align}
@@ -799,10 +806,22 @@
     Width \ &= 0.a_1a_3a_5\dots  \\
     Length \ &= 0.a_2a_4a_6 \dots \\
   \end{align}
+  On a specific day we weave a rug wuth a length and width dictated by the
+  odd and even intergers in the real represention of the day. 
   We calculate the set of patterns for a set of colors as follows
   \begin{align}
     c_k^{\lceil i \rceil \times \lceil j \rceil}
   \end{align}
+  Then we perform the triangle scheduling.
+  \begin{lstlisting}[mathescape]
+    
+    Weaver 4:
+    for i,j in $day_k$: // j is the width
+            for c from 1 $\to i$: // Colors
+                for p in $pattern(i,j,c)$: 
+                    weave rug for pattern $p_i$            
+  \end{lstlisting}
+  
   
   %Map a day to a length and a width i.e day 0.34234234234
   %to length = 0.324324 , width = 0.4324
