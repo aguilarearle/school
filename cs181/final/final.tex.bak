@@ -265,7 +265,8 @@
       the input tape write the result onto $w_4$ and move head of $w_4$ right. 
     \item[$S_3$:] Clear the machine tape and write the contents of $w_2$ onto
       machine tape. Clear input tape and write $w_3$ onto input tape. 
-    \item[$S_4$:] Reset tape $w_4$ to (\$,\$) and increment tape $w_3$ by one.   
+    \item[$S_4$:] Reset tape $w_4$ to (\$,\$) and increment value of tape $w_3$
+      by one.   
     \end{itemize}
     \textbf{Transitions:}
     \begin{align}
@@ -278,7 +279,7 @@
     \end{align}
     This is still an OBTM as we have not changed the function of query
     and do not misuse the input and machine tapes. We make use of the regular
-    tape like a tape of any TM and supplied states which allow us to recogize
+    tape like a tape of any TM and supplied states which allow us to recognize
     NEQ by determining whether a binary representations of a string is ever accepted
     by one an rejected by the other, if so we will accept. If not the machine will
     continue to increment counter and process the counter as strings and
@@ -339,6 +340,7 @@
       only accept $\varepsilon \implies L(N) = \{\varepsilon \}$ and this is a contradiction.
     \end{itemize}
   \end{proof}
+  \newpage
   \section{(b)}
   Show that
   \begin{align}
@@ -393,14 +395,14 @@
   is unrecognizable.
   \begin{proof}
     Assume for contradiction $LEQ-HALT$ is regular $\implies exists$ an
-    enumarator E for $LEQ-HALT$.
+    enumerator E for $LEQ-HALT$.
     We construct M:
     \begin{itemize}
       \setlength\itemsep{0em}
     \item M(w):
       \begin{itemize}
-      \item[-] Let $z = \langle x \rangle$, by Recursion Theorem.
-      \item[-] $task_A =$ run $E(\varepsilon)$.
+      \item[-] Let $z = \langle M \rangle$, by Recursion Theorem.
+      \item[-] $task_A =$ run $E(\varepsilon)$. 
       \item[-] $task_B =$ look at the sequence of produced by E.
         Wait until we find a tuple of form $(z,\langle N \rangle)$ is found.
       \item[-] run $task_A$ and $task_B$ in parallel.
@@ -409,9 +411,9 @@
         \end{itemize}
       \end{itemize}
     \end{itemize}
-    This is a contradicition because $\langle N \rangle$ now takes longer
-    than $\langle N \rangle$ despite
-    $(\langle M \rangle,\langle N \rangle) \in LEQ-HALT$.
+    The enumerator is producing a sequence $(\langle M \rangle,\langle N \rangle) \in LEQ-HALT$.
+    However by construction $\langle M \rangle$ now takes longer to halt than $\langle N \rangle$.
+    $\Longrightarrow \Longleftarrow$
   \end{proof}
 \end{problem}
 
@@ -425,7 +427,9 @@
     ALICE = \{(M,R) \ | \ (M,R) \ \text{is recognizable}\}
   \end{align}
   is undecidable. \\
-  We can convert this problem into a tiling problem and we also convert a turing machine into the tiling, \\
+  
+  We can convert the rules for Alice in Turing Land into tiling rules and we also convert a
+  Turing machine to follow the rules of the tiling problem. \\
 
   \textbf{Tiles:} have the following elements within them
   \begin{itemize}
@@ -434,11 +438,13 @@
   \item[2] $q_i \in Q$ if head is in cell or $\blacksmiley{}$ if head is not in cell.
   \item[3] $r$, the result of $i \ \% \ M$, where $\%$ is the modulo operator and i is the 
     position of the head on the tape.
+  \item[4] Boundary tiles which are marked by an $X$.
   \end{itemize}
-  There are boundry tiles which are marked by an $X$. \newpage
+  \newpage
+  
   \textbf{Rules:}
 
-  Initial State: For simpicity assume $\textvisiblespace= \textvisiblespace \backslash \blacksmiley{}$\\
+  Initial State: For simplicity assume $\textvisiblespace= \textvisiblespace \backslash \blacksmiley{}$\\
 
   \begin{center}
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
@@ -486,7 +492,7 @@
       \delta(w_{i+2}, q_{i+2}) \to (w_{i+2}^{'}, q_{i+3}, R) \\
       \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
       \delta(w_{i+(n-1)}, q_{i+(n-1)}) \to (w_{i+(n-1)}^{'}, q_{i+n}, R) \\
-      \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) \\
+      \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) 
     \end{cases}
   \end{align}
 
@@ -545,7 +551,7 @@
       \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) \\
     \end{cases}
   \end{align}
-
+  \\ \\
   \begin{center}
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
       \hline
@@ -566,7 +572,7 @@
       \delta(w_{i-n}, q_{i-n}) \to (w_{i-n}^{'}, q_{i-(n+1)}, L) \\
     \end{cases}
   \end{align}
-
+  \\
   Head in right corner:
 
   \begin{center}
@@ -592,7 +598,7 @@
       \delta(w_{i-n}, q_{i-n}) \to (w_{i-n}^{'}, q_{i-(n+1)}, L) \\
     \end{cases}
   \end{align}
-
+  \\ \\
   \begin{center}
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
       \hline
@@ -614,25 +620,46 @@
     \end{cases}
   \end{align}
   
-  Head occupyiung corner after transition:
+  Head occupying corner after transition:
   
-   \begin{center}
+  \begin{center}
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
       \hline     
-      \mybs{$w_{i}$}{r, $q_i$}&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$\\ \hline
-      $w_{i}$&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$ \\ \hline
+      \mybs{$w_{i+n}$}{r, $q_{i+n}$}&$w_{i+(n+1)}$&$w_{i+(n+2)}$&$\cdots$&$w_{i+(n+m)}$\\ \hline
+      $w_{i+n}$&$w_{i+(n+1)}$&$w_{i+(n+2)}$&$\cdots$&$w_{i+(n+m)}$ \\ \hline
     \end{tabular}
-    \quad
+  
+    \begin{align}
+      \begin{cases}      
+        \delta(w_{i}, q_{i}) \to (w_i, q_{i+1}, R) \\
+        \delta(w_{i+1}, q_{i+1}) \to (w_{i+1}^{'}, q_{i+2}, R) \\
+        \delta(w_{i+2}, q_{i+2}) \to (w_{i+2}^{'}, q_{i+3}, R) \\
+        \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+        \delta(w_{i+(n-1)}, q_{i+(n-1)}) \to (w_{i+(n-1)}^{'}, q_{i+n}, R) 
+      \end{cases}
+    \end{align}
+    
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
       \hline
-      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&\mybs{$w_{i}$}{r, $q_{i}$} \\ \hline
-      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&$w_{i}$ \\ \hline
+      $w_{i-(n+m)}$&$\cdots$&$w_{i-(n+2)}$&$w_{i-(n+1)}$&\mybs{$w_{i-n}$}{r, $q_{i-n}$} \\ \hline
+      $w_{i-(n+m)}$&$\cdots$&$w_{i-(n+2)}$&$w_{i-(n+1)}$&$w_{i-n}$ \\ \hline
     \end{tabular} 
   \end{center}
 
-   In class we showed that if D decides Tiling then we can decide $M(\varepsilon)$ halts.
-   Therfore since we can convert Alice in Turing Land into a Tiling problem and convert
-   a turing machine into a tiling instance then we cannot decide Alice in turing land.
+    \begin{align}
+    \begin{cases}
+      \delta(w_{i}, q_{i}) \to (w_i, q_{i-1}, L) \\
+      \delta(w_{i-1}, q_{i-1}) \to (w_{i-1}^{'}, q_{i-2}, L) \\
+      \delta(w_{i-2}, q_{i-2}) \to (w_{i-2}^{'}, q_{i-3}, L) \\
+      \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+      \delta(w_{i-(n-1)}, q_{i-(n-1)}) \to (w_{i-(n-1)}^{'}, q_{i-n}, L) \\
+    \end{cases}
+  \end{align}
+
+   In class we showed that if D decides the tiling then we can decide
+   $M(\varepsilon)$ halts. Therefore since we can the rules of Alice in Turing
+   Land into tiling rules and convert a Turing machine into a tiling instance
+   then we cannot decide Alice in Turing land.
 \end{problem}
 
 \newpage
@@ -644,7 +671,7 @@
   \begin{align}
     Pattern(i,j,b) 
   \end{align}
-  This function takes 3 paraments
+  This function takes 3 parameters
   \begin{itemize}
     \setlength\itemsep{0em}
   \item[1] $i$ - the width of a block.
@@ -689,11 +716,13 @@
     \bigg\}
   \end{align} 
   \section{(a)}
-  We perform triangle scheduling 
+  We perform triangle scheduling on the length of the rug vs the pattern of
+  the carpet.
   The graph is numbered with the order in which we build a rug with a specific
-  pattern. This allows us to not fall into the dimension of lenghts. Since
-  $i$ and $j$ are countibly infinite then $2^{i \times j}$ is also countibaly
-  infinite.
+  pattern. This allows us to not traverse one dimension up to $\infty$. In addition
+  since $i$ is countably infinite then $2^{1 \times i}$ is also countably
+  infinite, therfore we also will not weave rugs for lenght $i$ for an infinite
+  amount of time. Therefore we weave in one infinite day.
   \begin{lstlisting}[mathescape]
     Weaver 1:
     for i from 1 $\to \infty$: // Tile size $1 \times i$
@@ -713,38 +742,112 @@
       $P_{i}$&$P_1$&$P_2$&$P_3$&$P_4$&$P_5$&$P_6$&$P_7$&$P_8$&$P_9$&$P_{10}$&$P_{11}$&$P_{12}$&$P_{13}$&$P_{14}$&$P_{15}$&$\cdots$ \\ \hline
     \end{tabular} 
   \end{center}
-  
+  \newpage
   \section{(b)}
   We are extending the triangle scheduling to one more dimension $j$, the width
-  of a rug. This triangle scheduling is on 3 dimensions. Creating a plane and then
-  we triangulate that plane. 
-  
+  of a rug. This triangle scheduling is on 3 dimensions. Creating a triangular
+  plane and then we triangulate that plane. Once again this allows us to not
+  spend all the time along one dimension and $j$ is also countably infinite so
+  $2^{i\times j}$ is also countably infinite. Therfore we can weave in one infinite
+  day.
   \begin{lstlisting}[mathescape]
     Weaver 2:
     for i from 1 $\to \infty$:
         for j from 1 $\to i$
             for p in  $pattern(i,j,2)$:
-                weave rug $p_i$
+                weave rug for pattern $p_i$
   \end{lstlisting}
   
-  \section{(c)}  
+  \section{(c)}
+  Here we take the example in part a) and now extend the base chosen in the
+  $pattern$ function to be of the set $c_i$ of colors. Here once again the colors
+  are countably infinite so the possible patterns for a specific length $i$
+  is also countably infinte. Since we are performing triangle scheduling then
+  we can weave in one infinite day.
   \begin{lstlisting}[mathescape]
     Weaver 3:
     for i from 1 $\to \infty$: 
-        for c in {$c_i$}: // Colors
+        for c in 1 $\to i$: // Colors
             for p in $pattern(1,i,c)$: 
-                weave rug $p_i$        
+                weave rug for pattern $p_i$        
   \end{lstlisting}
   \section{(d)}
-  
+  We continue to extend the example to one more dimension. Here we add
+  the weavers dimension and perform triangle scheduling. The number of weavers 
+  is countably infinte therfore we will not traverse the weaver dimension 
+  for an infinite amount of time. 
   \begin{lstlisting}[mathescape]
+    
     Weaver 4:
     for i from 1 $\to \infty$: // i is the weaver $w_i$
         for j from 1 $\to i$: // j is the width
             for k from 1 $\to j$: // k is the length
-                for p in $pattern(j,k,2)$:
-                    weave rug $p_i$            
+                for c from 1 $\to k$: // Colors
+                    for p in $pattern(j,k,c)$: 
+                        weave rug for pattern $p_i$            
   \end{lstlisting}
+\end{problem}
+
+\newpage
+%-------------------------------------------------------------------------------
+% Problem Extra Credit
+%------------------------------------------------------------------------------
+\begin{problem}{Extra Credit}{6}{0}
+  \section{a}
+  
+  We can apply cantors diagonalization argument on the width of the rugs and show
+  that the weaver will always miss a rug of a specific width.
+  
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+      \hline
+       &$pos_1$&$pos_2$&$pos_3$&$pos_4$&$pos_5$&$pos_6$&$pos_7$&$\cdots$ \\ \hline
+      $w_1$&\cellcolor{red}$x_{11}$&$x_{12}$&$x_{13}$&$x_{14}$&$x_{15}$&$x_{16}$&$x_{17}$&$\cdots$ \\ \hline
+      $w_2$&$x_{21}$&\cellcolor{red}$x_{22}$&$x_{23}$&$x_{24}$&$x_{25}$&$x_{26}$&$x_{27}$&$\cdots$  \\ \hline
+      $w_3$&$x_{31}$&$x_{32}$&\cellcolor{red}$x_{33}$&$x_{34}$&$x_{35}$&$x_{36}$&$x_{37}$&$\cdots$  \\ \hline
+      $w_4$&$x_{41}$&$x_{42}$&$x_{43}$&\cellcolor{red}$x_{44}$&$x_{45}$&$x_{46}$&$x_{47}$&$\cdots$  \\ \hline
+      $w_5$&$x_{51}$&$x_{52}$&$x_{53}$&$x_{54}$&\cellcolor{red}$x_{55}$&$x_{56}$&$x_{57}$&$\cdots$  \\ \hline
+      $w_6$&$x_{61}$&$x_{62}$&$x_{63}$&$x_{64}$&$x_{65}$&\cellcolor{red}$x_{66}$&$x_{67}$&$\cdots$  \\ \hline
+      $\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$&$\cdots$\\ \hline
+    \end{tabular} 
+  \end{center}
+  Let
+  
+  \begin{align}
+    w_{Diag} &= (x_{11}-1)(x_{22}-1)(x_{33}-1)(x_{44}-1)(x_{55}-1)  
+  \end{align}
+  \textbf{Claim:} $w_{Diag}$ is not in the table.
+  \begin{proof}
+    Towards contradiction suppose $w_{Diag}$ is in the table. Then $\exists \ i$ 
+    s.t $w^{'}=x_{1i}x_{2i}x_{3i} \dots = w_{Diag}$. Look at position $x_{ii}$.
+    If $x_{ii}$ is in $w^{'}$ then it is not in $w_{Diag}$. $\Longrightarrow \Longleftarrow$
+  \end{proof}
+  \section{b}
+  We can map $\mathbb{R} \to \mathbb{R}^2$ as such
+  \begin{align}
+    Day \ &= 0.a_1a_2a_3a_4a_5a_6\dots \\
+    Width \ &= 0.a_1a_3a_5\dots  \\
+    Length \ &= 0.a_2a_4a_6 \dots \\
+    Day &\to (Length, Width)
+  \end{align}
+  On a specific day we weave a rug with a length and width derived from the
+  odd and even intergers in the real represention of the day. 
+  We calculate the set of patterns for a set of colors as follows
+  \begin{align}
+    c_k^{\lceil i \rceil \times \lceil j \rceil}
+  \end{align}
+  Then we perform the triangle scheduling.
+  \begin{lstlisting}[mathescape]
+    
+    Weaver 4:
+    for i,j in $day_k$: // j is the width
+            for c from 1 $\to i$: // Colors
+                for p in $pattern(i,j,c)$: 
+                    weave rug for pattern $p_i$            
+  \end{lstlisting}
+   
+  This will allow us to deliver the order in one infinite year.
+  
 \end{problem}
 
 

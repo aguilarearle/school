@@ -340,6 +340,7 @@
       only accept $\varepsilon \implies L(N) = \{\varepsilon \}$ and this is a contradiction.
     \end{itemize}
   \end{proof}
+  \newpage
   \section{(b)}
   Show that
   \begin{align}
@@ -491,7 +492,7 @@
       \delta(w_{i+2}, q_{i+2}) \to (w_{i+2}^{'}, q_{i+3}, R) \\
       \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
       \delta(w_{i+(n-1)}, q_{i+(n-1)}) \to (w_{i+(n-1)}^{'}, q_{i+n}, R) \\
-      \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) \\
+      \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) 
     \end{cases}
   \end{align}
 
@@ -550,7 +551,7 @@
       \delta(w_{i+n}, q_{i+n}) \to (w_{i+n}^{'}, q_{i+(n+1)}, R) \\
     \end{cases}
   \end{align}
-
+  \\ \\
   \begin{center}
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
       \hline
@@ -571,7 +572,7 @@
       \delta(w_{i-n}, q_{i-n}) \to (w_{i-n}^{'}, q_{i-(n+1)}, L) \\
     \end{cases}
   \end{align}
-
+  \\
   Head in right corner:
 
   \begin{center}
@@ -597,7 +598,7 @@
       \delta(w_{i-n}, q_{i-n}) \to (w_{i-n}^{'}, q_{i-(n+1)}, L) \\
     \end{cases}
   \end{align}
-
+  \\ \\
   \begin{center}
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
       \hline
@@ -621,19 +622,39 @@
   
   Head occupying corner after transition:
   
-   \begin{center}
+  \begin{center}
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
       \hline     
-      \mybs{$w_{i}$}{r, $q_i$}&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$\\ \hline
-      $w_{i}$&$w_{i+1}$&$w_{i+2}$&$\cdots$&$w_{i+n}$ \\ \hline
+      \mybs{$w_{i+n}$}{r, $q_{i+n}$}&$w_{i+(n+1)}$&$w_{i+(n+2)}$&$\cdots$&$w_{i+(n+m)}$\\ \hline
+      $w_{i+n}$&$w_{i+(n+1)}$&$w_{i+(n+2)}$&$\cdots$&$w_{i+(n+m)}$ \\ \hline
     \end{tabular}
-    \quad
+  
+    \begin{align}
+      \begin{cases}      
+        \delta(w_{i}, q_{i}) \to (w_i, q_{i+1}, R) \\
+        \delta(w_{i+1}, q_{i+1}) \to (w_{i+1}^{'}, q_{i+2}, R) \\
+        \delta(w_{i+2}, q_{i+2}) \to (w_{i+2}^{'}, q_{i+3}, R) \\
+        \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+        \delta(w_{i+(n-1)}, q_{i+(n-1)}) \to (w_{i+(n-1)}^{'}, q_{i+n}, R) 
+      \end{cases}
+    \end{align}
+    
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l |}
       \hline
-      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&\mybs{$w_{i}$}{r, $q_{i}$} \\ \hline
-      $w_{i-n}$&$\cdots$&$w_{i-2}$&$w_{i-1}$&$w_{i}$ \\ \hline
+      $w_{i-(n+m)}$&$\cdots$&$w_{i-(n+2)}$&$w_{i-(n+1)}$&\mybs{$w_{i-n}$}{r, $q_{i-n}$} \\ \hline
+      $w_{i-(n+m)}$&$\cdots$&$w_{i-(n+2)}$&$w_{i-(n+1)}$&$w_{i-n}$ \\ \hline
     \end{tabular} 
   \end{center}
+
+    \begin{align}
+    \begin{cases}
+      \delta(w_{i}, q_{i}) \to (w_i, q_{i-1}, L) \\
+      \delta(w_{i-1}, q_{i-1}) \to (w_{i-1}^{'}, q_{i-2}, L) \\
+      \delta(w_{i-2}, q_{i-2}) \to (w_{i-2}^{'}, q_{i-3}, L) \\
+      \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \cdots \\
+      \delta(w_{i-(n-1)}, q_{i-(n-1)}) \to (w_{i-(n-1)}^{'}, q_{i-n}, L) \\
+    \end{cases}
+  \end{align}
 
    In class we showed that if D decides the tiling then we can decide
    $M(\varepsilon)$ halts. Therefore since we can the rules of Alice in Turing
@@ -700,8 +721,8 @@
   The graph is numbered with the order in which we build a rug with a specific
   pattern. This allows us to not traverse one dimension up to $\infty$. In addition
   since $i$ is countably infinite then $2^{1 \times i}$ is also countably
-  infinite, therfore we also will not weave rugs for lenght $i$ for an infinate
-  amount of time.
+  infinite, therefore we also will not weave rugs for length $i$ for an infinite
+  amount of time. Therefore we weave in one infinite day.
   \begin{lstlisting}[mathescape]
     Weaver 1:
     for i from 1 $\to \infty$: // Tile size $1 \times i$
@@ -726,8 +747,8 @@
   We are extending the triangle scheduling to one more dimension $j$, the width
   of a rug. This triangle scheduling is on 3 dimensions. Creating a triangular
   plane and then we triangulate that plane. Once again this allows us to not
-  spend all the time along one dimension and $j$ is also countably infinate so
-  $2^{i\times j}$ is also countably infinite. Therfore we can weave in one infinate
+  spend all the time along one dimension and $j$ is also countably infinite so
+  $2^{i\times j}$ is also countably infinite. Therefore we can weave in one infinite
   day.
   \begin{lstlisting}[mathescape]
     Weaver 2:
@@ -740,8 +761,8 @@
   \section{(c)}
   Here we take the example in part a) and now extend the base chosen in the
   $pattern$ function to be of the set $c_i$ of colors. Here once again the colors
-  are countably infinate so the possible patterns for a specific length $i$
-  is also countably infinte. Since we are performing triangle scheduling then
+  are countably infinite so the possible patterns for a specific length $i$
+  is also countably infinite. Since we are performing triangle scheduling then
   we can weave in one infinite day.
   \begin{lstlisting}[mathescape]
     Weaver 3:
@@ -752,7 +773,9 @@
   \end{lstlisting}
   \section{(d)}
   We continue to extend the example to one more dimension. Here we add
-  the weavers dimension and perform triangle scheduling.
+  the weavers dimension and perform triangle scheduling. The number of weavers 
+  is countably infinite therefore we will not traverse the weaver dimension 
+  for an infinite amount of time. 
   \begin{lstlisting}[mathescape]
     
     Weaver 4:
@@ -791,7 +814,7 @@
   Let
   
   \begin{align}
-    w_{Diag} &= 0.(x_{11}-1)(x_{22}-1)(x_{33}-1)(x_{44}-1)(x_{55}-1)  
+    w_{Diag} &= (x_{11}-1)(x_{22}-1)(x_{33}-1)(x_{44}-1)(x_{55}-1)  
   \end{align}
   \textbf{Claim:} $w_{Diag}$ is not in the table.
   \begin{proof}
@@ -805,9 +828,10 @@
     Day \ &= 0.a_1a_2a_3a_4a_5a_6\dots \\
     Width \ &= 0.a_1a_3a_5\dots  \\
     Length \ &= 0.a_2a_4a_6 \dots \\
+    Day &\to (Length, Width)
   \end{align}
-  On a specific day we weave a rug wuth a length and width dictated by the
-  odd and even intergers in the real represention of the day. 
+  On a specific day we weave a rug with a length and width derived from the
+  odd and even integers in the real representation of the day. 
   We calculate the set of patterns for a set of colors as follows
   \begin{align}
     c_k^{\lceil i \rceil \times \lceil j \rceil}
@@ -821,12 +845,8 @@
                 for p in $pattern(i,j,c)$: 
                     weave rug for pattern $p_i$            
   \end{lstlisting}
-  
-  
-  %Map a day to a length and a width i.e day 0.34234234234
-  %to length = 0.324324 , width = 0.4324
-  %Take the cieling of these and trim. color ^(ceiling[i] \time ceiling[j])
-  
+   
+  This will allow us to deliver the order in one infinite year.
   
 \end{problem}
 
