@@ -4,9 +4,12 @@ output: pdf_document
 ---
 
 ```{r}
+library(devtools)
+devtools:install_github('rstudio/markdown')
 library(stringr)
 library(ggplot2)
-setwd("/Users/Earle/Downloads/")
+#setwd("/Users/Earle/Downloads/")
+setwd("~/Downloads")
 df <- read.csv("heal_analytics_challenge/usage.csv")
 ```
 
@@ -74,7 +77,7 @@ plot(df$humidity[-ix], df$temp_c[-ix], xlab= "Humidity", ylab="Temperature (Cels
 The following plot has temperature vs humidity and the observations are filled with the weather type. Analysis of the graph shows that there is demishing variation and the max temp aslo decreases as humidity increases.. From this we can hypothesize the weather 1 corresponds to humidity between (7%, 62%) and temperature that can be as high as (34,40+) degrees celcius. Weather 2 is dense near the (63%, 82%) humidity region and the temperature can be as reach temperatures around (28,33) degrees celcius. Weather 3 is centered around the (83%, 100%) humidity region. Tempereatures can be as high as (26,29) degrees celcius. Weather 4 only has 1 observation and it corresponds 86% humidity and 8.2 degrees celcius. 
 
 ```{r}
-pl <- ggplot(data=test,aes(x = humidity,y=temp_c)) 
+pl <- ggplot(data=df,aes(x = humidity,y=temp_c)) 
 pl + geom_point(aes( color=weather))  + scale_colour_gradient(high='red',low = "blue")
 ```
 
@@ -94,23 +97,27 @@ test = subset(df, sample == FALSE)
 
 I will be performing linear regression to create my model. I decided to create a preliminary model which includes most the factors in the dataframe and their two factor-interactions. The Anova output suggest that the main effects and some of the two-factor interactions are significant.
 
-
 ```{r}
 model1 <- lm(count~ (year + hour + day + month + humidity + weather + temp_c + workday + vacation + quarter)^2, train)
 anova(model1)
 ```
 
-
+I've reduced the model to the most significant effects and determine the validity of this model.
 
 ```{r}
+library(alr3)
 model2 <- lm(count ~ year*(hour + day + month + temp_c) + hour*(day+ month + humidity+weather + temp_c+workday+month) + month*(humidity + temp_c+day) + humidity*weather, train)
 anova(model2)
 ```
 
+The residual plots 
 ```{r}
-library(alr3)
-mmps(model2)
 plot(model2)
+mmps(model2)
+```
+
+```{r}
+
 powerTransform(model2)
 model3 <- lm(count^(1/4) ~ year*(hour + day + month + temp_c) + hour*(day+ month + humidity+weather + temp_c+workday+month) + month*(humidity + temp_c+day) + humidity*weather, train)
 mmps(model3)
