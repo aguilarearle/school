@@ -1,0 +1,140 @@
+---
+title: "Analytics_challenge"
+output: pdf_document
+---
+
+```{r}
+library(stringr)
+library(ggplot2)
+setwd("/Users/Earle/Downloads/")
+df <- read.csv("heal_analytics_challenge/usage.csv")
+```
+
+
+\section{1. Summarize and Interpret Data}
+
+\subsection{a}
+```{r}
+date_time <- str_split_fixed(df$time_date, " ", 2)
+date_time <- as.data.frame(date_time)
+colnames(date_time) <- c("date", "time")
+hour <- date_time$time
+month <- months(as.Date(date_time$date, '%Y-%m-%d'))
+day <- weekdays(as.Date(date_time$date, '%Y-%m-%d'))
+split_date <- str_split_fixed(date_time$date, "-", 2)
+year <- data.frame(year=split_date[,1])
+df <- cbind(df, year, month, day, hour)
+df <- df[complete.cases(df),]
+ix <- which(df$temp_c == -200)
+df <- df[-ix,] #TODO maybe replace/delete
+df$day <- factor(df$day, levels= c( "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday") )
+df$month <- factor(df$month, levels=c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December") )
+```
+
+\subsection{b}
+There is no indication of a relationship between the time and weather type
+```{r}
+plot(df$hour, factor(df$weather), xlab= "Time", ylab="Weather")
+```
+
+There is a point that corresponds to a temperature of -200. We will omit it from the graphical analyis, but requires further investigation in subsection \textbf{e}. The temperature flucattes from low to high values in a non-linear fashion. The median temperatures reach a maximum around between 13:00:00 - 17:00:00 and they decrease to approximately 20 degrees celcius. 
+
+```{r}
+plot(df$hour, df$temp_c, xlab= "Time", ylab="Temperatyre (Celsius)")
+``` 
+
+
+The relationship between time and humidity also fluccuates.
+
+```{r}
+plot(df$hour, df$humidity, xlab= "Time", ylab="Humidity")
+```
+
+
+There is no indication of a relationship between weather and temp_c. TODO maybe the fact that the point are diminishing in count.
+```{r}
+plot(as.factor(df$weather[-ix]), df$temp_c[-ix], xlab= "Weather", ylab="Temperature (Celsius)")
+```
+
+The plot shows the amount of observations as the weather changes from 1-4 diminishes, but there are no other indications of a relationship.
+
+```{r}
+plot(factor(df$weather), df$humidity, xlab= "Weather", ylab="Humidity")
+```
+
+There seems to be a relationship between humidity and temperature. As the humidity increases the temperature lowers. 
+
+```{r}
+plot(df$humidity[-ix], df$temp_c[-ix], xlab= "Humidity", ylab="Temperature (Celsius)")
+```
+\subsection{c}
+\textbf{Numerical:} Temperature, Humidity, Year
+\texbf{Categorical:} Month, Day, Hour, Count, Weather, Vacation, Quarter, Workday 
+\subsection{d}
+The following plot has temperature vs humidity and the observations are filled with the weather type. Analysis of the graph shows that there is demishing variation and the max temp aslo decreases as humidity increases.. From this we can hypothesize the weather 1 corresponds to humidity between (7%, 62%) and temperature that can be as high as (34,40+) degrees celcius. Weather 2 is dense near the (63%, 82%) humidity region and the temperature can be as reach temperatures around (28,33) degrees celcius. Weather 3 is centered around the (83%, 100%) humidity region. Tempereatures can be as high as (26,29) degrees celcius. Weather 4 only has 1 observation and it corresponds 86% humidity and 8.2 degrees celcius. 
+
+```{r}
+pl <- ggplot(data=test,aes(x = humidity,y=temp_c)) 
+pl + geom_point(aes( color=weather))  + scale_colour_gradient(high='red',low = "blue")
+```
+
+\subsection{e}
+The data contained na values which I discarded to do the analysis above. In addition there was one reading of -200 degrees celsius which is most likely an error and should be discarded. 
+\subsection{f}
+
+\section{2. Analyze Widget usage rates and create predictive model}
+
+```{r}
+library(caTools)
+set.seed(101) 
+sample <- sample.split(df$count, SplitRatio = 0.70) 
+train = subset(df, sample == TRUE)
+test = subset(df, sample == FALSE)
+```
+
+I will be performing linear regression to create my model. I decided to create a preliminary model which includes most the factors in the dataframe and their two factor-interactions. The Anova output suggest that the main effects and some of the two-factor interactions are significant.
+
+
+```{r}
+model1 <- lm(count~ (year + hour + day + month + humidity + weather + temp_c + workday + vacation + quarter)^2, train)
+anova(model1)
+```
+
+
+
+```{r}
+model2 <- lm(count ~ year*(hour + day + month + temp_c) + hour*(day+ month + humidity+weather + temp_c+workday+month) + month*(humidity + temp_c+day) + humidity*weather, train)
+anova(model2)
+```
+
+```{r}
+library(alr3)
+mmps(model2)
+plot(model2)
+powerTransform(model2)
+model3 <- lm(count^(1/4) ~ year*(hour + day + month + temp_c) + hour*(day+ month + humidity+weather + temp_c+workday+month) + month*(humidity + temp_c+day) + humidity*weather, train)
+mmps(model3)
+plot(model3)
+```
+
+
+```{r}
+count.predictions <- predict(model3,test)
+
+results <- cbind(count.predictions,test$count) 
+colnames(results) <- c('pred','real')
+results <- as.data.frame(results)
+```
+
+
+\subsection{a}
+```{r}
+library(lattice)
+library(car)
+xyplot(count~hour|day,data = df,scales=list(x=list(rot=45)))
+xyplot(count~day,data=df)
+xyplot(count~month,data=df, scales=list(x=list(rot=45)))
+```
+\subsection{b}
+\subsection{c}
+\subsection{d}
