@@ -1,11 +1,9 @@
 ---
-title: "Analytics_challenge"
+title: "Widget Use Report"
 output: pdf_document
 ---
 
-```{r}
-library(devtools)
-devtools:install_github('rstudio/markdown')
+```{r,echo=F}
 library(stringr)
 library(ggplot2)
 #setwd("/Users/Earle/Downloads/")
@@ -17,7 +15,7 @@ df <- read.csv("heal_analytics_challenge/usage.csv")
 \section{1. Summarize and Interpret Data}
 
 \subsection{a}
-```{r}
+```{r, echo=F}
 date_time <- str_split_fixed(df$time_date, " ", 2)
 date_time <- as.data.frame(date_time)
 colnames(date_time) <- c("date", "time")
@@ -29,65 +27,73 @@ year <- data.frame(year=split_date[,1])
 df <- cbind(df, year, month, day, hour)
 df <- df[complete.cases(df),]
 ix <- which(df$temp_c == -200)
-df <- df[-ix,] #TODO maybe replace/delete
+df <- df[-ix,] 
 df$day <- factor(df$day, levels= c( "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday") )
 df$month <- factor(df$month, levels=c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December") )
+df$vacation <- factor(df$vacation)
+df$quarter <- factor(df$quarter)
+df$workday <- factor(df$workday)
+df$weather <- factor(df$weather)
+head(df)
 ```
 
 \subsection{b}
-There is no indication of a relationship between the time and weather type
+There is no indication of a relationship between the time and weather type. Weather types seem to be uniformly distributed.
 ```{r}
-plot(df$hour, factor(df$weather), xlab= "Time", ylab="Weather")
+plot(df$hour,df$weather, xlab= "Time", ylab="Weather")
 ```
 
-There is a point that corresponds to a temperature of -200. We will omit it from the graphical analyis, but requires further investigation in subsection \textbf{e}. The temperature flucattes from low to high values in a non-linear fashion. The median temperatures reach a maximum around between 13:00:00 - 17:00:00 and they decrease to approximately 20 degrees celcius. 
+\newpage
 
+There is a point that corresponds to a temperature of -200. We will omit it from the graphical analysis, but requires further investigation in subsection \textbf{e}. The temperature fluctuates from low to high values in a non-linear fashion. The relationship is sinusoidal.
 ```{r}
 plot(df$hour, df$temp_c, xlab= "Time", ylab="Temperatyre (Celsius)")
 ``` 
 
 
-The relationship between time and humidity also fluccuates.
+The relationship between time and humidity is also sinusoidal.
 
 ```{r}
 plot(df$hour, df$humidity, xlab= "Time", ylab="Humidity")
 ```
 
 
-There is no indication of a relationship between weather and temp_c. TODO maybe the fact that the point are diminishing in count.
+There is no indication of a relationship between weather and temp_c. 
+
 ```{r}
-plot(as.factor(df$weather[-ix]), df$temp_c[-ix], xlab= "Weather", ylab="Temperature (Celsius)")
+plot(df$weather, df$temp_c, xlab= "Weather", ylab="Temperature (Celsius)")
 ```
 
-The plot shows the amount of observations as the weather changes from 1-4 diminishes, but there are no other indications of a relationship.
+As the weather begins to change from 1-3 the median humidity also increases. There is only 1 observation for weather 4 so we cannot determine what the accurate relationship at this point.
 
 ```{r}
-plot(factor(df$weather), df$humidity, xlab= "Weather", ylab="Humidity")
+plot(df$weather, df$humidity, xlab= "Weather", ylab="Humidity")
 ```
-
-There seems to be a relationship between humidity and temperature. As the humidity increases the temperature lowers. 
+\newpage
+There is a relationship between humidity and temperature. From the graph we can see that as the humidity increases the temperature lowers. 
 
 ```{r}
-plot(df$humidity[-ix], df$temp_c[-ix], xlab= "Humidity", ylab="Temperature (Celsius)")
+plot(df$humidity, df$temp_c, xlab= "Humidity", ylab="Temperature (Celsius)")
 ```
 \subsection{c}
-\textbf{Numerical:} Temperature, Humidity, Year
-\texbf{Categorical:} Month, Day, Hour, Count, Weather, Vacation, Quarter, Workday 
+\textbf{Numerical:} Temperature, Humidity, Year \newline
+\textbf{Categorical:} Month, Day, Hour, Count, Weather, Vacation, Quarter, Workday 
 \subsection{d}
-The following plot has temperature vs humidity and the observations are filled with the weather type. Analysis of the graph shows that there is demishing variation and the max temp aslo decreases as humidity increases.. From this we can hypothesize the weather 1 corresponds to humidity between (7%, 62%) and temperature that can be as high as (34,40+) degrees celcius. Weather 2 is dense near the (63%, 82%) humidity region and the temperature can be as reach temperatures around (28,33) degrees celcius. Weather 3 is centered around the (83%, 100%) humidity region. Tempereatures can be as high as (26,29) degrees celcius. Weather 4 only has 1 observation and it corresponds 86% humidity and 8.2 degrees celcius. 
+
+The following plot has temperature vs humidity and the observations are filled with the weather type. Analysis of the graph shows that there is diminishing variation and that the max temp also decreases as humidity increases. From this we can hypothesize the weather 1 corresponds to humidity between (7%, 62%) and temperature that can be as high as (34,40+) degrees Celsius. Weather 2 is dense near the (63%, 82%) humidity region and the temperature can be as reach temperatures around (28,33) degrees Celsius. Weather 3 is centered around the (83%, 100%) humidity region. Temperatures can be as high as (26,29) degrees Celsius. Weather 4 only has 1 observation and it corresponds 86% humidity and 8.2 degrees Celsius. 
 
 ```{r}
 pl <- ggplot(data=df,aes(x = humidity,y=temp_c)) 
-pl + geom_point(aes( color=weather))  + scale_colour_gradient(high='red',low = "blue")
+pl + geom_point(aes( color=weather))  
 ```
 
 \subsection{e}
-The data contained na values which I discarded to do the analysis above. In addition there was one reading of -200 degrees celsius which is most likely an error and should be discarded. 
-\subsection{f}
+
+The data contained na values which I discarded to do the analysis above. In addition there was one reading of -200 degrees Celsius which is most likely an error and should be discarded. 
 
 \section{2. Analyze Widget usage rates and create predictive model}
 
-```{r}
+```{r,echo=F}
 library(caTools)
 set.seed(101) 
 sample <- sample.split(df$count, SplitRatio = 0.70) 
@@ -98,50 +104,99 @@ test = subset(df, sample == FALSE)
 I will be performing linear regression to create my model. I decided to create a preliminary model which includes most the factors in the dataframe and their two factor-interactions. The Anova output suggest that the main effects and some of the two-factor interactions are significant.
 
 ```{r}
-model1 <- lm(count~ (year + hour + day + month + humidity + weather + temp_c + workday + vacation + quarter)^2, train)
+model1 <- lm(count~ (hour + day + month + humidity +
+                      weather + temp_c +workday + vacation+ quarter + year)^2, train)
 anova(model1)
 ```
 
 I've reduced the model to the most significant effects and determine the validity of this model.
 
-```{r}
+```{r, message=F, warning =F}
 library(alr3)
-model2 <- lm(count ~ year*(hour + day + month + temp_c) + hour*(day+ month + humidity+weather + temp_c+workday+month) + month*(humidity + temp_c+day) + humidity*weather, train)
+model2 <-lm(count ~ year*(temp_c+hour+day+month) +
+               hour*(humidity+weather+temp_c+workday+day+month) +
+               month*(humidity + temp_c) + humidity*weather+day*month, train)
 anova(model2)
 ```
 
-The residual plots 
+Since I am also modeling interaction terms any interactions and their main effects are going to be highly correlated. The variance inflation factor will not work due to aliasing in the terms so I will reduce the model by removing interactions between measures of time. Additionally the output from summary of the model shows a few NA's. I read up on this and found it may be due to something called "Dummy Variable Trap" and the main suggestion was to drop one of the categorical variables.
+
 ```{r}
-plot(model2)
-mmps(model2)
+model2 <-lm(count ~ year*(temp_c) +
+              hour*(humidity+temp_c+workday) +
+               month*(humidity + temp_c) + day, train)
 ```
 
+The residual plot has a trend line and signs of heteroskedasticity. 
 ```{r}
+plot(model2, 1:2)
+```
 
+I use the powerTransform function to transform the response variable. The function suggests 0.273, so I used $\frac{1}{4}$ to for my transform.
+```{r}
 powerTransform(model2)
-model3 <- lm(count^(1/4) ~ year*(hour + day + month + temp_c) + hour*(day+ month + humidity+weather + temp_c+workday+month) + month*(humidity + temp_c+day) + humidity*weather, train)
-mmps(model3)
-plot(model3)
+model3 <-lm(count^(.25) ~ year*(temp_c) +
+              hour*(humidity+temp_c+workday) +
+               month*(humidity + temp_c)  + day , train)
 ```
 
-
+The trend line in the residual plot is no longer there and the variance is approximately constant. The marginal model plots are approximately fitted as well.
 ```{r}
-count.predictions <- predict(model3,test)
+plot(model3,1:2)
+mmps(model3)
+```
 
-results <- cbind(count.predictions,test$count) 
+The final mode consists of the main terms and some two factor interactions. I transformed the response variable according to the powerTransform to the power of $\frac{1}{4}$. According to the anova output; time, temperature, hour:workday, year, month are all highly significant and have high sum of squares.
+
+\textbf{Prediction}
+
+I predict the rest of the data and calculate the root mean square error:
+
+```{r, echo=F}
+count.predictions <- predict(model3,test)
+results <- cbind(count.predictions,(test$count)^.25) 
 colnames(results) <- c('pred','real')
 results <- as.data.frame(results)
+mse <- mean((results$real-results$pred)^2)
+mse^2
 ```
 
-
 \subsection{a}
+
+The following plot shows the widget usage per hour given a day. From the graph we can see that on weekdays the peak times are 7:00:00-8:00:00 and 17:00:00-18:00:00. On the weekends the peak times are 12:00:00-17:00:00.
+
 ```{r}
 library(lattice)
 library(car)
 xyplot(count~hour|day,data = df,scales=list(x=list(rot=45)))
+```
+
+The plot shows that Monday, Tuesday, and Wednesday are the most popular days of the week.
+```{r}
 xyplot(count~day,data=df)
+```
+
+The plot shows that September and October are the most popular months of the year.
+```{r}
 xyplot(count~month,data=df, scales=list(x=list(rot=45)))
 ```
+
 \subsection{b}
+According to the model which suggested that the interaction between time and workday was significant there is less usage on the weekends and this is also evident in the graph of usage as a function of days. 
+
+The following graph shows that usage is lower on holidays.
+```{r}
+xyplot(count~vacation,data=df)
+```
+
 \subsection{c}
-\subsection{d}
+According to the model temperature also has an effect on usage. The model suggest that the interaction between temperature and months and days is significant.
+The following graph shows that widget usage increases as temperature increases on most days.
+```{r}
+xyplot(count~ temp_c| hour,data=df)
+```
+
+The same is true when we plot for months usage increases as temperature increases.
+```{r}
+xyplot(count~ temp_c| month,data=df)
+```
