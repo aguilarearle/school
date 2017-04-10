@@ -126,6 +126,10 @@ let rec (powerset : 'a list -> 'a list list) =
              [] -> [[]]
            | h::t -> (append_to_list h (powerset t)) 
 
+let _ = assert((powerset []) = [[]] )
+let _ = assert((powerset [1]) = [[1];[]] )
+let _ = assert((powerset [1;2]) = [[1;2];[2];[1];[]])
+let _ = assert((powerset [1;2;3]) = [[1;2;3];[2;3];[1;3];[3];[1;2];[2];[1];[]])	      
 
 (* Problem 2 *)
 
@@ -141,7 +145,11 @@ let rec (partition : ('a -> bool) -> 'a list -> 'a list * 'a list) =
                            ([],[]) -> if pred then ([h],[]) else ([],[h])
                          | (f,s) -> if pred then (h::f, s) else (f, h::s)
                                       
-                            
+let _ = assert(( partition (function x -> x mod 2 = 0) [1;2;3;4;5;6;7;8;9]) = ([2; 4; 6; 8], [1; 3; 5; 7; 9]))
+let _ = assert(( partition (function x -> x mod 2 = 1) [1;2;3;4;5;6;7;8;9]) = ([1; 3; 5; 7; 9], [2; 4; 6; 8]))	      
+let _ = assert(( partition (function x -> member x [0;1;2;3;5;8;13;24] = true) [1;2;3;4;5;6;7;8;9]) = ([1;2;3;5;8], [4;6;7;9]))
+let _ = assert((partition (function x -> x < 0 ) [1;2;3;4;5;6;7;8;9]) = ([], [1; 2; 3; 4; 5; 6; 7; 8; 9]))
+let _ = assert((partition (function x -> x > 0 ) [1;2;3;4;5;6;7;8;9]) = ([1; 2; 3; 4; 5; 6; 7; 8; 9],[]))	      
 
 let rec (whle : ('a -> bool) -> ('a -> 'a) -> 'a -> 'a) =
   function cond ->
@@ -150,11 +158,26 @@ let rec (whle : ('a -> bool) -> ('a -> 'a) -> 'a -> 'a) =
                              let pred = cond x in
                              match pred with
                                true -> (whle cond func (func x))
-                             | false -> x 
-                             
+                             | false -> x
+
+let _ = assert((whle (function x -> x > 0) (function x -> x + 1) 0) = 0)
+let _ = assert((whle (function x -> x < 10) (function x -> x + 1) 10) = 10)	      
+let _ = assert((whle (function x -> x < 10) (function x -> x + 1) 0) = 10)
+let _ = assert((whle (function x -> x > 0) (function x -> x - 1) 10) = 0)
+let _ = assert((whle (function x -> x < 10) (function x -> x * 3) 3) = 27)
+let _ = assert((whle (function x -> x*2 < 20) (function x -> 2*x + 1 ) 1) = 15)	      					  
+
+	      
 let rec (pow : int -> ('a -> 'a) -> ('a -> 'a)) =
   function n ->
            function func ->
                     match n with
                       0 -> (function v -> v)
                     | _ -> (function v -> (func ((pow (n-1) func) v) ))
+
+let _ = assert( ((pow 0 (function x -> 2*x)) 2) = 2 )			     
+let _ = assert( ((pow 1 (function x -> 2*x)) 2) = 4 )			     
+let _ = assert( ((pow 2 (function x -> 2*x)) 2) = 8 )			     
+let _ = assert( ((pow 3 (function x -> 2*x)) 2) = 16 )			     			     
+let _ = assert( ((pow 4 (function x -> 2*x)) 2) = 32 )			     
+let _ = assert( ((pow 5 (function x -> 2*x)) 2) = 64 )			     			     
