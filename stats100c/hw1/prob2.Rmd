@@ -1,0 +1,20 @@
+---
+title: 
+output: pdf_document
+---
+
+
+```{r}
+library(MASS)
+a <- read.table("http://www.stat.ucla.edu/~nchristo/statistics100c/restaurant.txt",
+                header = T)
+x <- matrix(c(rep(1,100),a$food,a$decor, a$ser), nrow=100, ncol=4)
+x_transpose_x <- (t(x) %*% x) ;x_transpose_x 
+y <- matrix(a$cost)
+beta_hat = ginv(x_transpose_x) %*% t(x) %*% y;beta_hat
+lm(cost ~ ., data= a)
+H <- x %*% ginv(x_transpose_x) %*% t(x)
+H[1:5,1:5]
+
+```
+
