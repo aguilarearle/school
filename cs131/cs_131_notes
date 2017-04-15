@@ -1,0 +1,309 @@
+CS 131
+
+-------------------------------------------------------------------------------
+1. Lecture 1 (April 3)
+  * What does “safe” mean?
+    - Memory errors in C/C++ code are the major source of security 
+      vulnerabilities.
+      a) I.e buffer overflows, dangling pointers, null dereference 
+  * Most languages other than C/C++ are memory safe.
+    - No possibility for the above memory errors.
+    - More generally, no way to get into an undefined state.
+    - How can we achieve this?
+        a) Pointers are not exposed by the language.
+        b) Memory cannot be explicitly freed.
+        c) Memory safety checks are performed during execution.
+          ∙ Array bounds checks, null pointer checks.
+  * OCaml
+    - Functional Programming: encourages a style of programming where variable 
+      never reassigned after intialization.
+      a) No "side effects"
+        ∙ A function is a pure (mathematical) function: every time you call
+          it with the same argument value, it returns the same result.  
+          ~ Why is this a good thing?
+              * Easy parallelism
+              * Greatly simplifies program reasoning.
+                  - Don't have to worry about something getting overwritten.
+    - Much simpler language design
+  * Can download it at ocaml.org
+  * What can you do with ocaml
+  	- Arithmetic
+      a) i.e 42 + 8 ;;
+    - Variables assignment usign "let"
+      a) let x = 42 + 8;;
+      b) immutable - can't change the value after the fact.
+    - Define Functions
+      a) "function" var "->" body 
+      b) i.e let double = (function z -> z * 2);;
+        ∙ call function like this: double 45 
+      c) Can also call function like this let double z = z * 2 and it will 
+         infer that you are trying to declare a function.
+    - Recursion
+      a) let rec factorial = 
+           (function n -> if n=0 then 1 else n*(factorial (n-1))) 
+    - Pattern Matching
+__________________________________________________    
+CODE  a) i.e let rec factorial n = 
+               match n with 
+                 0 -> 1
+               | _ -> n * (factorial (n-1))
+__________________________________________________
+    - Write a function:
+_________________________________________________     
+CODE  a) let rec isEven n = 
+         match n with
+           0 -> True
+         | 1 -> False
+         | _ -> isEven(n-2)
+__________________________________________________    
+CODE  b) let rec isEven n = 
+        match n with
+          0 -> True
+        | 1 -> False
+        | _ -> isEven(if n > 0 then n-2 else n+2)
+__________________________________________________          
+    - Lists
+      a) I.e [];; empty list
+      b) i.e [1;2;3];;
+      c) ["hi"; "there"]
+      d) [[1;2;3]; [4;5;6]]
+      e) [(function x -> 2*x); (function x -> 4*x)]
+      f) Sum elements of list
+____________________________________          
+CODE    ∙ let rec sumLst l = 
+             match l with
+                 [] -> 0
+             | h::t -> h + sumLst(t)
+____________________________________  
+
+-------------------------------------------------------------------------------
+2. Lecture 2 (April 5)
+  * A grammar for the subset of Ocaml we've seen 
+    - E ::= C | X | E OP E 
+         | function P -> E
+         | if E then E else E
+         | match E with P -> E '|' ... '|' P -> E
+         | [] | E :: E
+         | let P = E in E
+
+      a) C ::= 0 | 1 | 2 | ... | true | false
+      b) X ::= Variable Names
+      c) OP ::= + | - | * | < | ...
+      d) P ::= C | _ | X | P::P
+  * Lists
+    - h::t is checking whether l is a list and then returns a name for the 
+      first element of the list "h" and a name for the rest of the list "t"     
+      a) We can also specify what to name in the list
+        ∙ let l = [1;2;3]
+        ∙ h::t = l
+          * h = 1, t = [2;3]
+        ∙ h1::h2::t = l
+          * h1 = 1, h2=2, t = [3]
+
+    - We create a function called every other that returns every other element
+___________________________________________________________    
+CODE  a) let rec everyOther l =
+            match l with 
+              [] -> []
+            | first::_::rest -> first :: (everyOther rest)
+            | _  -> l
+___________________________________________________________            
+    - Declaring Local Variables
+      a) Example
+        ∙ let double n = n * 2
+        ∙ let quadruple n = (double n) + (double n)
+         * This is inefficient we can make this function better
+_______________________________
+CODE     * let quadruble n = 
+            let d = (double n)
+            in d + d;
+_______________________________
+       b) We can declare more than one just nest them
+  * Tuples  
+    - Can be used to pass multiple arguments to a function
+CODE    a) Example: let add (x,y) = x + y
+CODE    b) Example: let swap = 
+                     function (x,y) -> (y,x);; 
+
+    - Create a function zip which given two list returns a list of tuples
+______________________________________________________        
+CODE    a) let zip (l1, l2)
+      	   match (l1,l2) with 
+      	     ([],[]) -> []
+      	   | (h1::t1,h2::t2) -> (h1,h2) :: zip(t1,t2)
+______________________________________________________
+    - Try to write unzip take a list of pairs and create two lists.
+  * Functions are just like any other expression
+    - can be passed to other functions
+    - can be stored in variables/lists
+    - can be returned from functions
+CODE  a) Example: let quadruple x = double(double x);;
+CODE  b) Example: let fourthPower x = square(square x);;
+CODE  c) Example: let twice (f,x) = f(f x)
+CODE  d) Example: let quadruple x = twice(double x)
+      e) We can change twice 
+CODE    ∙ let twice = function f -> (function x -> f(f x)) 
+        ∙ we can use it to change quadruple
+          * let quadruple = twice double
+    - "fun"
+      a) Does what we did in e), use a function within a function.
+CODE    ∙ let twice = fun f x -> f(f x)
+    - Functions can also be returned
+      a) twice' takes one argument f and returns a new function that takes
+         the second argument x and does the computation
+CODE    ∙  let twice' = function f -> (function x -> f(f x))
+        ∙ Shorthand 
+CODE   	  * let twice' = fun f x -> f(f x)
+CODE   	  * let twice' f x = f(f x)
+
+    - Example:
+    	let rec incLst l = 
+    		match l with
+    			[] -> []
+    		   | h::t -> (h+1)::(incLst t)
+   	- Example:
+   		let rec exclaimLst l =
+   		    match l with 
+   		    	[] -> []
+   		      | h::t -> (h ^ "!")::(exclaimLst t)
+    - Example 
+    	let rec map f l
+    	    match l with 
+    	        [] -> []
+    	       | h::t -> (f h)::(map f t)
+      ∙ We can rewrtie incLst and exclaimLst like this:
+        * let incLst = map (function x -> x+1)
+        * let exclaimLst = map (function x -> x ^ "!") 
+    - What if we want to increment each element in a list of lists.
+      ∙ map (map (function x -> x+1)) 
+    - We want to filter a list that contains elements that satisfy a condition
+      ∙ List.filter (function x -> x > 2) 
+      ∙ List.filter (function x -> x mod 2 = 0)
+    - let rec filter p l = 
+    	match l with
+    		[] -> []
+    	   | h::t -> 
+    	   		let rest = filter p t 
+    	   		in if p h then h::rest else rest
+
+-------------------------------------------------------------------------------
+3. Lecture 3.
+  * map 
+    - ('a -> 'b) -> ('a list -> 'b list)
+    - Note if we have ('a -> 'b) * 'a list -> 'b list
+      ∙ Forces a tuple to be sent, unlike currying which wont require that. 
+    - Functional programming is the correct paradigm for large programs that
+      need parallelism.
+CODE- let incBy l n = List.map (function x -> x + n) l;; 
+      ∙ Will increase the list by a specified number. 
+  * Map does not always help since it always returns a list what if we
+   	 want a number.
+   	- For example:
+      ∙ let rec prodList l = 
+    		match l with 
+    			[] -> 1
+    	  	| h::t -> h * prodlist(t)
+      ∙ let rec sumList l = 
+    		match l with 
+    			[] -> 0
+    	  	| h::t -> h + sumlist(t)
+
+   	- We want to fold the list into a number.
+   	  ∙ let rec (combineInts: (int -> int -> int) -> int list -> int -> int) =
+   	  	    fun f l b -> 
+   	  		match l with
+   	  			[] -> b
+   	  		  | h::t -> f h (combineInts f t b)
+
+   	  ∙ Usage:
+   	    a) combineInts (fun x y -> x + y) [1;2;3;4] 0;;
+   	    b) sumList l = combine(func x y -> x+y) l 0;;
+
+   	  ∙ Formally combineInts f (x1;...;xn) b = f x1 (f x2 (... (f xn b) ... ))
+  * Aside: We can also write the result above as such
+    - combineInts (+) [1;2;3;4] 1;;
+    - Note for product use "( * )" not "(*)" since "(*" is the start of the comment. 
+   	- Note be careful about non commutative operators.
+  * Use combineInts to calculate the length of the list
+    - let lengths l = combineInts (function x y ->  y + 1) l 0;
+      ∙ x is the element of the list and y is the result of the base case.
+  * CombineInts is more general
+    - let rec fold_right =
+   	  	    fun f l b -> 
+   	  		match l with
+   	  			[] -> b
+   	  		  | h::t -> f h (fold_right f t b)
+   	- type: ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
+   	  ∙ 'a stands for the type of the elements of the list
+   	  ∙ 'b stands for the type of the result of our list.
+    - let allpos l = fold_right 
+     			(fun elem restIsPos ->  (elem>0) && restIsPos) l true;;
+    - We can generalize allpos to a function which checks if all elements of 
+       a list satisfy a condition.
+      ∙ let all p l = fold_right (fun elem rest -> (p elem) && rest) l true;
+    - Lets write "@" (append) with fold_right
+      ∙ First lets write it recursively
+        a) let rec append l1 l2 = 
+         		match l1 with 
+         			[] -> l2
+         		| h::t -> h::(append t l2)
+      ∙ let append l1 l2 = fold_right (fun elem appendedRest -> elem::appendedRest) l1 l2;
+    - Create a function to duplicate the list
+	  ∙ let dupList l = fold_right (fun elem dupRest -> elem::elem::dupRest) l []
+  * fold_right/left2
+  	- let dotProd l1 l2 = 
+  		list.fold.right2 (fun e1 e2 restDotProd -> e1*e2 + restDotProd) l1 l2 0;   
+  * What have we learned so far?
+  	- Key control structures: Recursion and pattern matching
+  	- Key data strauctures: Lists and tuples
+  	- First-class function: a little of both. 
+    - MISSING:
+      ∙ user defined types.
+      ∙ privacy/protection/encapsulations
+
+  * Ocaml lets you define your own datatypes 
+  	- Similar to structs in C or classes in Java
+  	- differencees datatypes are designed for 
+  	  ∙ immutability
+  	  ∙ 
+
+  * Datatype that represents signs
+    - type sign = Pos | Neg | Zero;;
+    - ocaml requires that datatypes be lowercase and their values start with
+      a upper case.
+    - Does not do anything yet, we need to write functions that use "sign"
+      ∙ let signOF n = 
+      		match n with 
+      			0 -> zero
+      		  | _ -> if n>0 then Pos else Neg;;		
+    - Now we get a sign and return an int
+      ∙ let signToInt s = 
+      		match s with
+      			pos -> 1 
+      		  | neg -> -1
+      		  | zero -> 0;;
+    - Create a type that represents two dimensional points
+      ∙ type point = Pt of float * float
+      ∙ Pt is now a constructor, Pt itself is not a point.
+    - Write a funct to negate a point
+      ∙ let negate p = 
+      		match p with
+      			pt (x,y) -> Pt (-. x, -. y);;
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
