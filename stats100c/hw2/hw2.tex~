@@ -99,8 +99,8 @@
 %-------------------------------------------------------------------------------
 % Assignmnet Variables
 %-------------------------------------------------------------------------------
-\newcommand{\hwTitle}{Homework 1}
-\newcommand{\hwDueDate}{April 19, 2017}
+\newcommand{\hwTitle}{Homework 2}
+\newcommand{\hwDueDate}{April XX, 2017}
 \newcommand{\hwClass}{Statistics 100C}
 \newcommand{\hwInstructor}{Nicolas Christou}
 \newcommand{\hwAuthor}{Earle Aguilar}
@@ -128,85 +128,37 @@
 %-------------------------------------------------------------------------------
 % Problem 1.0
 %------------------------------------------------------------------------------
-
 \begin{problem}{}{1}{0}
   \begin{align}
-    SSE &= \msum_{i=1}^n e_i^2 = (Y-X\beta)^{'}(Y-X\beta) \\
-        &= Y^{'}Y - Y^{'}X \betah - \betah^{'}X^{'}Y + \betah^{'}X^{'}X\betah \\
-  \end{align}
-  
-  Substitude $\betah = (X^{'}X)^{-1}X^{'}Y$ to the last term
-
-  \begin{align}
-    SSE &= Y^{'}Y-Y^{'}X\betah -\betah^{'}X^{'}Y+\betah^{'}X^{'}X((X^{'}X)^{-1}X^{'}Y) \\
-        &= Y^{'}Y-Y^{'}X\betah -\betah^{'}X^{'}Y + \betah^{'}X^{'}Y \\
-    \Aboxed{SSE &= Y^{'}Y-\betah^{'}X^{'}Y}
+    Q &=\pmatb \betah \\ \hat{Y} \pmate = \pmatb (X^{'}X)^{-1}X^{'}Y \\ (I-H)Y \pmate \\
+    Q &= LY
   \end{align}
   
   \begin{align}
-    SSE &= Y^{'}Y-Y^{'}X\betah -\betah^{'}X^{'}Y+\betah^{'}X^{'}X((X^{'}X)^{-1}X^{'}Y) \\
-        &= Y^{'}Y-Y^{'}X\betah -\betah^{'}X^{'}Y + \betah^{'}X^{'}HY \\
-    \Aboxed{SSE &= Y^{'}Y-\betah^{'}X^{'}\hat{Y}}
+    Var(Q) &= Var(LY) = L Var(Y) L^{'} \\
+           &= \sigma^2 L L^{'} \\
+           &=\sigma^2 \pmatb (X^{'}X)^{-1}X^{'} \\ (I-H)\pmate 
+    \pmatb (X^{'}X)^{-1}X^{'} & (I-H) \pmate \\
+           &= \sigma^2 \pmatb (X^{'}X)^{-1} & (X^{'}X)^{-1}X^{'}(I-H) \\ (I-H)X(X^{'}X)^{-1} & (I-H) \pmate  \\
+    Var(Q) &= \sigma^2 \pmatb (X^{'}X)^{-1} & 0 \\ 0 & (I-H)\pmate
   \end{align}
-  
-  \begin{align}
-    SSE &= Y^{'}Y-Y^{'}X\betah -\betah^{'}X^{'}Y+\betah^{'}X^{'}X((X^{'}X)^{-1}X^{'}Y) \\
-        &= Y^{'}Y-Y^{'}X\betah -\betah^{'}X^{'}Y + \betah^{'}X^{'}Y \\
-    SSE &= Y^{'}Y-\betah^{'}X^{'}Y
-  \end{align}
-  Substitude normal equations $X^{'}Y=X^{'}X\betah$ \\
-    \begin{align}
-    SSE &= Y^{'}Y-Y^{'}X\betah -\betah^{'}X^{'}Y+\betah^{'}X^{'}X((X^{'}X)^{-1}X^{'}Y) \\
-        &= Y^{'}Y-Y^{'}X\betah -\betah^{'}X^{'}Y + \betah^{'}X^{'}Y \\
-    \Aboxed{SSE &= Y^{'}Y-\betah^{'}X^{'}X\betah}
-  \end{align}
+Therefore $\hat{Y}$ and $e$ are independent.
 \end{problem}
 %-------------------------------------------------------------------------------
 % Problem 2.0
 %-------------------------------------------------------------------------------
 \begin{problem}{}{2}{0}
-  \begin{align}
-    X &=
-    \begin{pmatrix} 
-      1         &x_{11}&x_{12}&\cdots&.001x_{1i}&\cdots&x_{1k}\\
-      1         &x_{21}&x_{22}&\cdots&.001x_{2i}&\cdots&x_{2k}\\
-      \vdots    &\vdots&\vdots&\ddots&\vdots    &      &\vdots\\
-      1         &x_{i1}&x_{i2}&\cdots&.001x_{ii}&\cdots&x_{ik}\\
-      \vdots    &\vdots&\vdots&      &\vdots    &\ddots&\vdots\\
-      1         &x_{n1}&x_{n2}&\cdots&.001x_{ni}&\cdots&x_{nk} 
-    \end{pmatrix}
-\end{align}
-
-\begin{align}
-  X^{'}X &=
-      \begin{pmatrix}  
-        n                 &\sum x_{i1}               &\sum x_{i2}               &\cdots&.001\sum\sum x_{ji}        &\cdots&\sum x_{ik}\\
-        \sum x_{i1}        &\sum x_{i1}^2             &\sum x_{i1}x_{i2}          &\cdots&.001\sum x_{i1} \sum x_{ji} &\cdots&\sum x_{i1} x_{ik} \\
-        \sum x_{i2}        &\sum x_{i1}x_{i2}          &\sum x_{i2}^2             &\cdots&.001\sum x_{i2}\sum x_{ji}  &      &\sum x_{i2} x_{ik} \\
-        \vdots            &\vdots                   &\vdots                   &\ddots&\vdots                    &       &\vdots\\
-        .001\sum\sum x_{ji}&.001\sum x_{i1}\sum x_{ji} &.001\sum x_{i2}\sum x_{ji}&\cdots&(.001)^2\sum x_{ii}^2       &\cdots&.001\sum x_{ik} x_{ji} \\
-        \vdots            &\vdots                   &\vdots                   &      &\vdots                    &\ddots&\vdots\\
-        \sum x_{ik}        &\sum x_{i1}x_{ik}          &\sum x_{i1}x_{ik}         &\cdots&.001\sum x_{ik} x_{ji}      &\cdots&\sum x_{ik}^2 
-      \end{pmatrix}
-\end{align}
-
-\begin{align}
-  \betah_{i_{new}} &= ((.001)^2X_{ii}^{'} X_{ii})^{-1}(.001X_{ii}^{'})Y \\
-  \betah_{i_{new}} &= 1000 (X_{ii}^{'} X_{ii})^{-1}X_{ii}^{'}Y \\
-  \betah_{i_{new}} &= 1000 \betah_i
-\end{align}
-
-\begin{align}
-  Var(\betah_{i_{new}} ) &= Var( 1000 \betah_i) \\
-  &= (1000)^2(\sigma (X_{ii}^{'} X_{ii})^{-1})
-\end{align}
 \end{problem}
 
 %-------------------------------------------------------------------------------
 % Problem 3.0
 %-------------------------------------------------------------------------------
 \begin{problem}{}{3}{0}
-  \includegraphics[scale=0.90]{prob2.pdf}
+  We have that $S^2 = \frac{\msum_{i=1}^n (y_i-\bar{y})^2}{n-1}$ and 
+  $S_e^2 = \frac{e^{'}e}{n-k-1}=
+  \frac{\msum_{i=1}^n(y_i-\bar{y})^2-\msum_{i=1}^n(\hat{y_i}-\bar{y})^2}{n-k-1}$
+  \begin{align}
+  \end{align}
 \end{problem}
 %-------------------------------------------------------------------------------
 % Problem 4.0

@@ -1,0 +1,237 @@
+\documentclass[11pt, letterpaper, onecolumn]{article}
+
+% Imports
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath, amsthm, amsfonts,mathtools, framed}
+\usepackage[shortcuts]{extdash} % Use \-/ for hyphenated words
+\usepackage{environ}
+\usepackage{fancyvrb}
+\usepackage[top=1.00in, bottom=1.00in, left=0.75in, right=0.75in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{accents}
+% Pseudocode enabler
+\usepackage{listings}
+\usepackage{color}
+
+\usepackage{pdfpages}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% tikz
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+% Page
+\headsep=0.3in
+\linespread{1.15}
+\setlength\parindent{0pt}
+
+% Horizontal Rules
+\newcommand{\hwRuleWidth}{0.4pt}
+\renewcommand\headrulewidth{\hwRuleWidth}
+\renewcommand\footrulewidth{\hwRuleWidth}
+
+% Header and Footer
+\pagestyle{fancy}
+\lhead{\hwAuthor\ (\hwSection)}
+\chead{\hwClass\ (\hwInstructor): \hwTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+\newcommand{\enterProblemHeader}[2]{
+  \nobreak\extramarks{}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+}
+\newcommand{\exitProblemHeader}[2]{
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2} (continued)}{Problem \arabic{#1}.\arabic{#2} continued on next page\ldots}\nobreak{}
+  \nobreak\extramarks{Problem \arabic{#1}.\arabic{#2}}{}\nobreak{}
+}
+
+% Counters
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\setcounter{partCounter}{1}
+\newcounter{hwProblemCounter}
+\newcounter{hwSubProblemCounter}
+\numberwithin{equation}{hwProblemCounter}
+\numberwithin{figure}{hwProblemCounter}
+
+% Environments
+\newenvironment{problem}[3] {
+  \setcounter{hwProblemCounter}{#2}
+  \setcounter{hwSubProblemCounter}{#3}
+  \setcounter{partCounter}{1}
+  \enterProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+
+  \large{\textbf{Problem #2.#3: #1}}\\
+}{
+  \exitProblemHeader{hwProblemCounter}{hwSubProblemCounter}
+}
+
+\newcommand{\question}[2]{\textbf{(#1)\ }\ #2\\}
+
+\newenvironment{Proof}[1][Proof]
+  {\proof[#1]\leftskip=1cm\rightskip=1cm}
+  {\endproof}
+%-------------------------------------------------------------------------------
+% Assignmnet Variables
+%-------------------------------------------------------------------------------
+\newcommand{\hwTitle}{Homework 2}
+\newcommand{\hwDueDate}{April XX, 2017}
+\newcommand{\hwClass}{Statistics 100C}
+\newcommand{\hwInstructor}{Nicolas Christou}
+\newcommand{\hwAuthor}{Earle Aguilar}
+\newcommand{\hwSection}{804501476}
+% First Problem
+\setcounter{hwProblemCounter}{1}
+\setcounter{hwSubProblemCounter}{0}
+
+%-------------------------------------------------------------------------------
+\begin{document}
+%-------------------------------------------------------------------------------
+% TITLE
+%-------------------------------------------------------------------------------
+{\centering
+  \Large{\textbf{\hwTitle}}\\
+  \vspace{0.1in}\normalsize{\hwDueDate}\\
+  \vspace{0.1in}\textbf{\hwAuthor} (\hwSection)\\
+  \vspace{0.1in}\rule{\textwidth}{\hwRuleWidth}}\\
+
+
+\newcommand{\msum}{\displaystyle \sum}
+\newcommand{\betah}{\hat{\beta}}
+\newcommand{\pmatb}{\begin{pmatrix}}
+\newcommand{\pmate}{\end{pmatrix}}
+%-------------------------------------------------------------------------------
+% Problem 1.0
+%------------------------------------------------------------------------------
+\begin{problem}{}{1}{0}
+  \begin{align}
+    Q &=\pmatb \betah \\ \hat{Y} \pmate = \pmatb (X^{'}X)^{-1}X^{'}Y \\ (I-H)Y \pmate \\
+    Q &= LY
+  \end{align}
+  
+  \begin{align}
+    Var(Q) &= Var(LY) = L Var(Y) L^{'} \\
+           &= \sigma^2 L L^{'} \\
+           &=\sigma^2 \pmatb (X^{'}X)^{-1}X^{'} \\ (I-H)\pmate 
+    \pmatb (X^{'}X)^{-1}X^{'} & (I-H) \pmate \\
+           &= \sigma^2 \pmatb (X^{'}X)^{-1} & (X^{'}X)^{-1}X^{'}(I-H) \\ (I-H)X(X^{'}X)^{-1} & (I-H) \pmate  \\
+    Var(Q) &= \sigma^2 \pmatb (X^{'}X)^{-1} & 0 \\ 0 & (I-H)\pmate
+  \end{align}
+Therefore $\hat{Y}$ and $e$ are independent.
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 2.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{2}{0}
+\end{problem}
+
+%-------------------------------------------------------------------------------
+% Problem 3.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{3}{0}
+  We have that $S^2 = \frac{\msum_{i=1}^n (y_i-\bar{y})^2}{n-1}$ and 
+  $S_e^2 = \frac{e^{'}e}{n-k-1}=
+  \frac{\msum_{i=1}^n(y_i-\bar{y})^2-\msum_{i=1}^n(\hat{y_i}-\bar{y})^2}{n-k-1}$
+  \begin{align}
+    R_a^2 &= \frac{S^2-s_e^2}{S^2} \\
+          &= \frac{n-1}{\msum_{i=1}^n(y_i-\bar{y})^2} 
+            \bigg[\frac{\msum_{i=1}^n(y_i-\bar{y})^2}{n-1} - 
+            \frac{\msum_{i=1}^n(y_i-\bar{y})^2}{n-k-1} + 
+            \frac{\msum_{i=1}^n(\hat{y_i}-\bar{y})^2}{n-k-1} \bigg] \\
+          &= \frac{n-1}{\msum_{i=1}^n(y_i-\bar{y})^2} 
+            \bigg[\frac{(n-k-1)\msum_{i=1}^n(y_i-\bar{y})^2 -
+            (n-1)\msum_{i=1}^n(y_i-\bar{y})^2 + 
+            (n-1)\msum_{i=1}^n(\hat{y_i}-\bar{y})^2}{(n-1)(n-k-1)}\bigg] \\
+          &= \bigg[\frac{(n-k-1) - (n-1) + 
+            (n-1)\frac{\msum_{i=1}^n(\hat{y_i}-\bar{y})^2}{\msum_{i=1}^n(y_i-\bar{y})^2}}{n-k-1}\bigg] \\
+          &= 1 - \frac{(n-1) - (n-1)R^2}{n-k-1} \\
+    \Aboxed{R_a^2 &= 1 - \frac{n-1}{n-k-1}(1-R^2)}
+  \end{align}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 4.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{4}{0}
+\end{problem}
+% -------------------------------------------------------------------------------
+% Problem 5.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{5}{0}
+  \begin{align}
+    (Y-Xc)^{'}(Y-Xc) - (Y-X\betah)^{'}(Y-X\betah) \\
+    Y^{'}Y-Y^{'}Xc-c^{'}X^{'}Y+c^{'}X^{'}Xc-Y^{'}Y - Y^{'}Y + Y^{'}X\betah +
+    \betah^{'}X^{'}Y - \betah^{'}X^{'}X\betah \\
+  \end{align}
+We use the normal equations to substitute for $Y^{'}X$ and $X^{'}Y$.
+  \begin{align}
+    -\betah^{'}X^{'}Xc-c^{'}X^{'}X\betah + c^{'}X^{'}Xc + \betah X^{'}X \betah +
+    \betah^{'}X^{'}X\betah - \betah X^{'}X \betah \\\
+    c^{'}X^{'}Xc -\betah^{'}X^{'}Xc-c^{'}X^{'}X\betah + \betah^{'}X^{'}X\betah \\
+    (c^{'}X^{'}X-\betah^{'}X^{'}X) (c-\betah) \\
+    (c^{'}- \betah^{'})X^{'}X (c-\betah) \\
+    \Aboxed{(c- \betah)^{'}X^{'}X (c-\betah)}
+  \end{align}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 6.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{6}{0}
+  \section{a}
+  \begin{align}
+    \betah &= \pmatb \betah_0 \\ \betah_1 \\ \betah_2 \pmate = (X^{'}X)^{-1}X^{'}Y \\
+           &= \pmatb 2 & 0 & 0 \\ 0 & 3 & -1 \\ 0 & -1 & 1 \pmate \pmatb 4 \\ -2 \\ 5 \pmate \\
+    \pmatb \betah_0 \\ \betah_1 \\ \betah_2 \pmate &= \pmatb 8 \\ -11 \\ 7\pmate
+  \end{align}
+\section{b}
+\begin{align}
+  X = 
+  \pmatb
+  1 & 3  & 1   & -1  & 1   \\
+  1 & 4  & 1   & 1   & -1  \\
+  1 & 5  & -1  & 1   & 1   \\
+  1 & 6  & 0.5 & 0.2 & 0.3 \\
+  1 & 8  & 0.8 & 0.1 & 0.1 \\
+  1 & 9  & 0.3 & 0.5 & 0.2 \\
+  1 & 10 & 0.2 & 0.3 & 0.5 \\
+  1 & 13 & 0.1 & 0.6 & 0.3 \\
+  \pmate
+\end{align}
+$x_2 + x_3 + x_4 = 1 \implies$ matrix is not full rank and we cannot invert $X^{'}X$.
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 7.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{7}{0}
+\end{problem}
+\end{document}
+
+
+ 
+% \begin{align}
+% \end{align}
+% \frac{}{}
