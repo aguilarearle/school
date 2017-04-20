@@ -148,6 +148,20 @@ Therefore $\hat{Y}$ and $e$ are independent.
 % Problem 2.0
 %-------------------------------------------------------------------------------
 \begin{problem}{}{2}{0}
+  \begin{align}
+    \betah_c &= \betah - (X^{'}X)^{-1}c^{'}[c(X^{'}X)^{-1}c^{'}]^{-1} (c\betah -\gamma) \\
+  \end{align}
+  let $A=(X^{'}X)^{-1}c^{'}[c(X^{'}X)^{-1}c^{'}]^{-1}$
+  \begin{align}
+    Var(\betah_c) &=Var(\betah) - Var(A(c\betah -\gamma)) \\
+    Var(\betah_c) &=Var(\betah) - AVar(c\betah -\gamma)A^{'} \\
+    Var(\betah_c) &=Var(\betah) - A[cVar(\betah)c^{'} - Var(\gamma)]A^{'} \\
+    Var(\betah_c) &=Var(\betah) - AcVar(\betah)c^{'}A^{'} + AVar(\gamma)A^{'} \\
+    Var(\betah_c) &=Var(\betah) - AcVar(\betah)c^{'}A^{'} + AVar(c\beta)A^{'} \\
+    Var(\betah_c) &=\sigma^2 (X^{'}X)^{-1} - Ac[\sigma^2 (X^{'}X)^{-1}]c^{'}A^{'} \\
+    Var(\betah_c) &=\sigma^2 (X^{'}X)^{-1} - 
+                    \sigma^2 (X^{'}X)^{-1}c^{'}[c^{'}(X^{'}X)^{-1}c]^{-1}c(X^{'}X)^{-1}
+  \end{align}
 \end{problem}
 
 %-------------------------------------------------------------------------------
@@ -177,6 +191,15 @@ Therefore $\hat{Y}$ and $e$ are independent.
 % Problem 4.0
 %-------------------------------------------------------------------------------
 \begin{problem}{}{4}{0}
+  \section{a}
+  \begin{align}
+    var\bigg(\frac{(n-k-1)S_e^2}{\sigma^2}\bigg) &= 2(n-k-1) \\
+    \frac{(n-k-1)^2}{\sigma^4} Var(S_e^2) &= 2(n-k-1) \\
+    \frac{n-k-1}{\sigma^4} Var(S_e^2) &= 2 \\
+    Var(S_e^2) &= \frac{2\sigma^4}{n-k-1}
+    \end{align}
+  \section{b}
+  \section{c}
 \end{problem}
 % -------------------------------------------------------------------------------
 % Problem 5.0
@@ -227,6 +250,63 @@ $x_2 + x_3 + x_4 = 1 \implies$ matrix is not full rank and we cannot invert $X^{
 % Problem 7.0
 %-------------------------------------------------------------------------------
 \begin{problem}{}{7}{0}
+  \section{a}
+  \textbf{$E[\hat{Y}_{n+1}]$:} 
+  \begin{align}
+    E[\hat{Y}_{n+1}] &= E[X_{n+1}^{'}\betah] \\
+                     &=X_{n+1}^{'} E[\betah] \\ 
+    E[\hat{Y}_{n+1}] &=X_{n+1}^{'}\beta
+  \end{align}
+  \textbf{$E[Y_{n+1}]$:} 
+  \begin{align}
+    E[Y_{n+1}] &= E[X_{n+1}^{'}\beta + \varepsilon_{n+1}] = X_{n+1}^{'}\beta 
+  \end{align}
+  \section{b}
+  \begin{align}
+    E(\tilde{Y}_{n+1} - Y_{n+1}) &= 0 \\
+    E[\tilde{Y}_{n+1}] -E[Y_{n+1}] &= 0 \\
+    a^{'}E[Y_{n+1}] - X_{n+1}^{'}\beta &= 0 \\
+    a^{'}X \beta - X_{n+1}^{'}\beta &= 0 \\
+    (a^{'}X - X_{n+1}^{'})\beta &= 0 \implies a^{'}X = X_{n+1}^{'}
+  \end{align}
+  \section{c}
+  \begin{align}
+    Var(\hat{Y}_{n+1}) &= Var(X_{n+1}^{'}\betah) \\
+                       &= X_{n+1}^{'}Var(\betah)X_{n+1} \\
+                       &= X_{n+1}^{'}[\sigma^2(X^{'}X)^{-1}]X_{n+1} \\
+    Var(\hat{Y}_{n+1}) &= \sigma^2 X_{n+1}^{'}(X^{'}X)^{-1}X_{n+1}
+  \end{align}
+  \begin{align}
+    Var(\tilde{Y}_{n+1}) &= Var(a^{'}Y_{n+1}) = \sigma^2 a^{'}a \\
+                         &= \sigma^2 (X_{n+1}^{'}X^{-1})(X^{'})^{-1}X_{n+1} \\
+                         &= \sigma^2X_{n+1}^{'} (XX^{'})^{-1}X_{n+1}
+  \end{align}
+  \section{d}
+  \begin{align}
+  \end{align}
+\end{problem}
+%-------------------------------------------------------------------------------
+% Problem 8.0
+%-------------------------------------------------------------------------------
+\begin{problem}{}{8}{0}
+  \section{a}
+  \begin{align}
+    e^{'}e &= ((I-H)Y)^{'}((I-H)Y) \\
+           &= Y^{'}(I-H)^{'}(I-H)Y \\
+    e^{'}e &= Y^{'}(I-H)Y
+  \end{align}
+  \section{b}
+  \begin{align}
+    tr[(I-H)E[Y^{'}Y]] &= tr[(I-H)(\sigma^2 I + X\beta \beta^{'}X^{'})] \\
+    &= tr[\sigma^2I + X\beta \beta^{'}X^{'} - \sigma^2 H - HX\beta \beta^{'}X^{'}] \\
+    &= \sigma^2 tr(I) - \sigma^2 tr(H) \\
+    tr[(I-H)E[Y^{'}Y]] &= \sigma^2 (n-k-1)
+  \end{align}
+  \section{c}
+  \begin{align}
+    Var(e) &= Var((I-H)Y) 
+  \end{align}
+  \section{d}
 \end{problem}
 \end{document}
 
