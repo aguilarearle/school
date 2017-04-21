@@ -1,7 +1,8 @@
 CS 131
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 1. Lecture 1 (April 3)
+--------------------------------------------------------------------------------
   * What does “safe” mean?
     - Memory errors in C/C++ code are the major source of security 
       vulnerabilities.
@@ -15,8 +16,8 @@ CS 131
         c) Memory safety checks are performed during execution.
           ∙ Array bounds checks, null pointer checks.
   * OCaml
-    - Functional Programming: encourages a style of programming where variable 
-      never reassigned after intialization.
+`    - Functional Programming: encourages a style of programming where variable 
+      never reassigned after initialization.
       a) No "side effects"
         ∙ A function is a pure (mathematical) function: every time you call
           it with the same argument value, it returns the same result.  
@@ -29,7 +30,7 @@ CS 131
   * What can you do with ocaml
   	- Arithmetic
       a) i.e 42 + 8 ;;
-    - Variables assignment usign "let"
+    - Variables assignment using "let"
       a) let x = 42 + 8;;
       b) immutable - can't change the value after the fact.
     - Define Functions
@@ -76,8 +77,9 @@ CODE    ∙ let rec sumLst l =
              | h::t -> h + sumLst(t)
 ____________________________________  
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 2. Lecture 2 (April 5)
+--------------------------------------------------------------------------------
   * A grammar for the subset of Ocaml we've seen 
     - E ::= C | X | E OP E 
          | function P -> E
@@ -114,7 +116,7 @@ ___________________________________________________________
         ∙ let quadruple n = (double n) + (double n)
          * This is inefficient we can make this function better
 _______________________________
-CODE     * let quadruble n = 
+CODE     * let quadruple n = 
             let d = (double n)
             in d + d;
 _______________________________
@@ -157,21 +159,24 @@ CODE   	  * let twice' = fun f x -> f(f x)
 CODE   	  * let twice' f x = f(f x)
 
     - Example:
-    	let rec incLst l = 
+_______________________________________________    
+CODE	let rec incLst l = 
     		match l with
     			[] -> []
     		   | h::t -> (h+1)::(incLst t)
+__________________________________________________________    
    	- Example:
    		let rec exclaimLst l =
    		    match l with 
    		    	[] -> []
    		      | h::t -> (h ^ "!")::(exclaimLst t)
+__________________________________________________________    		
     - Example 
     	let rec map f l
     	    match l with 
     	        [] -> []
     	       | h::t -> (f h)::(map f t)
-      ∙ We can rewrtie incLst and exclaimLst like this:
+      ∙ We can rewrite incLst and exclaimLst like this:
         * let incLst = map (function x -> x+1)
         * let exclaimLst = map (function x -> x ^ "!") 
     - What if we want to increment each element in a list of lists.
@@ -186,8 +191,9 @@ CODE   	  * let twice' f x = f(f x)
     	   		let rest = filter p t 
     	   		in if p h then h::rest else rest
 
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 3. Lecture 3.
+--------------------------------------------------------------------------------
   * map 
     - ('a -> 'b) -> ('a list -> 'b list)
     - Note if we have ('a -> 'b) * 'a list -> 'b list
@@ -222,7 +228,8 @@ CODE- let incBy l n = List.map (function x -> x + n) l;;
    	  ∙ Formally combineInts f (x1;...;xn) b = f x1 (f x2 (... (f xn b) ... ))
   * Aside: We can also write the result above as such
     - combineInts (+) [1;2;3;4] 1;;
-    - Note for product use "( * )" not "(*)" since "(*" is the start of the comment. 
+    - Note for product use "( * )" not "(*)" since "(*" is the start of the
+      comment. 
    	- Note be careful about non commutative operators.
   * Use combineInts to calculate the length of the list
     - let lengths l = combineInts (function x y ->  y + 1) l 0;
@@ -247,29 +254,33 @@ CODE- let incBy l n = List.map (function x -> x + n) l;;
          		match l1 with 
          			[] -> l2
          		| h::t -> h::(append t l2)
-      ∙ let append l1 l2 = fold_right (fun elem appendedRest -> elem::appendedRest) l1 l2;
+      ∙ let append l1 l2 =
+      	    	   fold_right (fun elem appendedRest -> elem::appendedRest)
+									l1 l2;
     - Create a function to duplicate the list
-	  ∙ let dupList l = fold_right (fun elem dupRest -> elem::elem::dupRest) l []
+	  ∙ let dupList l = fold_right
+	    		(fun elem dupRest -> elem::elem::dupRest) l []
   * fold_right/left2
   	- let dotProd l1 l2 = 
-  		list.fold.right2 (fun e1 e2 restDotProd -> e1*e2 + restDotProd) l1 l2 0;   
+  		list.fold.right2 (fun e1 e2 restDotProd -> e1*e2 + restDotProd)
+									l1 l2 0;
   * What have we learned so far?
   	- Key control structures: Recursion and pattern matching
-  	- Key data strauctures: Lists and tuples
+  	- Key data structures: Lists and tuples
   	- First-class function: a little of both. 
     - MISSING:
       ∙ user defined types.
       ∙ privacy/protection/encapsulations
 
-  * Ocaml lets you define your own datatypes 
+  * Ocaml lets you define your own data-types 
   	- Similar to structs in C or classes in Java
-  	- differencees datatypes are designed for 
+  	- differences data-types are designed for 
   	  ∙ immutability
   	  ∙ 
 
-  * Datatype that represents signs
+  * Data-type that represents signs
     - type sign = Pos | Neg | Zero;;
-    - ocaml requires that datatypes be lowercase and their values start with
+    - ocaml requires that data-types be lowercase and their values start with
       a upper case.
     - Does not do anything yet, we need to write functions that use "sign"
       ∙ let signOF n = 
@@ -290,20 +301,227 @@ CODE- let incBy l n = List.map (function x -> x + n) l;;
       		match p with
       			pt (x,y) -> Pt (-. x, -. y);;
 
+--------------------------------------------------------------------------------
+4. Lecture 4
+--------------------------------------------------------------------------------
+  * Recall
+    - type sign = Pos | Neg | Zero
+    - We cannot do much with "sign", we could create functions that
+      mess with "sign".
+      ∙ Let intToSign n =
+      	    match n with
+	     0 -> Zero
+	    | _ when n > 0 -> Pos
+	    | _ -> Neg
+      ∙ Let signToInt s -
+      	    match s with
+	     pos -> 1
+	    | neg -> -1
+	    | zero -> 0
 
+  * More complex data-types
+    - type shape = Circle of float | Rect of float * float
+      ∙ Usage: Circle <x = float> => shape = Circle x
+        Usage: Rect <(x=float, y = float)> => shape = Rect (x,y)
+    - We create a function that operates on "shape" types
+      ∙ let area s =
+      	  match s with
+	    Circle r -> 3.14 *. r *. r
+	    | Rect (l,w) -> l *. w
+  * There is no notion of null in ocaml
+    - Languages have null as a placeholder for values.
+    - We can implement null in ocaml
+      ∙ type nullableInt = Null | Nonnull of Int
+    - Here nullableInt is not the same is Int, it forces you to check if its
+      null. Other languages don't require this.
+    - We create a function to get the int in nullableInt
+      ∙ let nullableIntToInt n =
+      	 match n with
+	   Null -> 0
+	 | Nonnull i -> i
+    - Create a function that will add 1 to a nullableInt unless it is Null.
+      ∙ let incNullableInt n =
+      	 match n with
+	  Null -> Null
+	| Nonnull i -> Nonnull (i+1)
+    - We create a function that will perform operations on NullableInt in a
+      safe way.
+      ∙ let updateNullableInt f n =
+      	  match n with
+	    Null -> Null
+	  | Nonnull i -> Nonnull (f i)
+    - We can make nullableInt to work with any type of data be polymorphic.
+      ∙ type 'a nullable = Null | Nonnull of 'a
+    - Same implementation in standard library called option and it has types
+      "None" and "Some".
+    - Function that gives you the nth element of a list. We want to return
+      something if n is larger than length of the list.
+      ∙ My implementation
+      	let  rec nth n l =
+      	  match n with
+	    0 ->
+	        match l with
+	          [] -> None
+	        | h::t -> Some h 
+	    _ ->
+	        match l with
+	          [] -> None
+	        | h::t ->  Some nth (n-1) t
+      ∙ Class implementation
+        let rec nth n l =
+	 match n with
+	   0 -> 
+	        match l with
+	          [] -> None
+	        | h::t -> Some h
+	 | _ when n < 0 -> None
+	 | _ ->
+	        match l with
+	          [] -> None
+		| h::t -> nth (n-1) t
+      ∙ We can condense it
+        let rec nth n l =
+	  match l with
+	    [] -> None
+	  | h::t ->
+	    match n with
+	    0 -> Some h
+	  | _ when n < 0 -> None
+	  | _ -> nth (n-1) t
+	
+      ∙ We can condense even further
+        let rec nth n l =
+	    match (n, l) with
+	      (_, []) -> None
+	    | (_,_) when n < 0 -> None
+	    | (0,h::t) -> Some h
+	    | (_, h::r) -> nth (n-1) t
+  * Need to be able to define data-types in terms of themselves.
+    - For example making lists
+      ∙ type intlist = Empty | Node of int * intlist
+      ∙ [1;2;3] is represented as Node(1, Node(2, Node(3, Empty)))
+    - Can convert both ways
+      ∙ let rec toIntList l -
+      	  match l with
+	    [] -> Empty
+	  | h::t -> Node(h, toIntList t)
+      ∙ let rec fromIntList l =
+      	  match l with
+	    Empty -> []
+	  | Node(h,t) -> h:: (fromIntList t)
+    - Can make lists polymorphic
+      ∙ type 'a mylist = Empty | Node of 'a * 'a mylist
+    - Can create our own version of Map as well
+      ∙ let rec mymap f l =
+      	  match l with
+	  Empty -> Empty
+       |  Node(h,t) -> Node((f h), (mymap f t))
+  * Binary Trees (data on internal nodes not leaves)
+    - type 'a mytree = Leaf | InternalNode of 'a * 'a mytree * 'a mytree
+    - Function that will calculate the size (length of a tree)
+      ∙ let rec size t =
+      	  match t with
+	     Leaf -> 0
+	   | InternalNode(_,r,l) -> 1 + (size l) + (size r)
+    - let rec preorder t =
+          match t with
+	    Leaf -> []
+	  | InternalNode(d,r,l) -> [d] @ preorder(l) @ preorder(r)
+      ∙ Move [d] to the middle and you get
+      ∙ Mode [d] to the right you get
+    - Insertion into a binary tree
+      ∙ let rec insert x t =
+      	    match t with
+	      Leaf -> Node(x, Leaf, Leaf)
+	    | InternalNode(d, l ,r) ->
+	      		      if (x < d) then InternalNode(d, (insert x l), r)
+			      else InternalNode(d, l, (insert x r))
 
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
+--------------------------------------------------------------------------------
+5. Lecture 5
+--------------------------------------------------------------------------------
+  * Scoping
+    - Key Question: Which variable declaration does a particular variable
+      usage refer to.
+    - The language maintains during execution an ENVIRONMENT
+      ∙ Mapping from variable names to their values
+      ∙ A data structure which is constantly being updated.
+      ∙ At the start of a program the environment is empty and as we declare
+      	variables the environment binds the variables to their values.
+        a) You cant think of the environment as a list of tuples for example:
+	   [("x",3);("y", 100);...]
+    - Consider let double = (function n -> n*2)
+      ∙ This creates an environment where "double" can be instantiated and
+      	updated it is destroyed when the function returns.
+      ∙ For this example our environment now has the following
+      	[("double"), <fun>)]
+      ∙ When we make a call like (double 34) ("n", 34) gets temporarily put in
+      	the environment, it get returned to the original environment at the
+	end of the function.
+      ∙ Note double is not in the environment when we make a call like the one
+      	above, this would give us an error. This can only be done when we have
+	a recursive function.
+      ∙ What is actually going to happen is that every environment is going to
+      	have its own environment.
+      ∙ Here is another example suppose we do the following after declaring
+      	double.
+        a) let x = 3;;
+	b) let three() = x
+	   1) Will output int=3 since our environment is
+	      [("double", <fun>),("x",3)]
+    - Local Variable Declarations
+      ∙ DEFINITION Static/Lexical Scoping: A variable reference refers to the
+      	declaration of the that variable that is nearest  in the enclosing
+	scope TEXTUALLY.
+        a) Can statically (at compile time) determine the variable declaration
+	   associated with each variable usage.
+      ∙ Consider the following example
+        a) $ Environment []
+	  let y = 3 in
+	   $ Environment [("y",3)]
+	     let z = y * 2 in
+	   $ Environment [("y",3); ("z",6)]
+	       	 y + z
+	   $ Environment []
+      ∙ DEFINITION Dynamic Scoping: A variable reference
+      ∙ How is Dynamic Scoping difference than Static Scoping
+        a) Environment for static scoping:
+	   $ Environment []
+	   # let x = 45
+	   $ Environment [("x",45)]
+	   # let add45 = (function y -> y + x)
+	   $ Environment [("x", 45); ("add45", <fun>)]
+	   # add45 3 ===> int = 48
+	   # let x = 12
+	   $ Environment [("x", 12); ("add45", <fun>)] // This implies that
+	     		 	     	       	       	  add45 contains a
+							  record of ("x",45) as
+							  such:
+				     [("x",12); ("add45", (<fun>, [("x", 45)]))]
+	   # add45 3 ===> int = 48
+	   # x ===> int = 12
+	   # x = "hello"
+	   # add45 3 ===> int = 48
+	 b) To make static scoping work, every function has to keep its
+	    static environment with it. That environment is used when the
+	    function is called.
+    - Variable Shadowing
+      ∙ let x = 34 in
+      	    let y = x + 1 in      // using x = 34
+	    	let x = x + 32 in // using x = 34
+		  x + y;;         // using x = 66, earlier x is being shadowed
+    - Another Example
+      ∙	$ Environment []      
+        # let add = (function x -> function y -> x + y)
+	$ Environment [("add", (<fun>, []))]
+	# let add45 = add 45
+	$ Environment [("add", (<fun>, [])),
+	  	       ("add45", (fun y -> x + y, [("x", 45)]))]
+	# add45 3 ===> int = 48
+	# let x = 12
+	$ Environment [("add", (<fun>, [])),
+	  	       ("add45", (fun y -> x + y, [("x", 45)])),
+		       ("x", 12)]
+	# add45 3 ===> int = 48
+    
 
