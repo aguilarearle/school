@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.1.31)  20 APR 2017 13:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.1.31)  20 APR 2017 18:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -854,7 +854,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 252--253
+Underfull \hbox (badness 10000) in paragraph at lines 263--264
 
  []
 
@@ -865,7 +865,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 291--292
+Underfull \hbox (badness 10000) in paragraph at lines 305--306
 
  []
 
@@ -875,11 +875,18 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[5] (./hw2.aux) ) 
+[5]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[6] (./hw2.aux) ) 
 Here is how much of TeX's memory you used:
  17811 strings out of 494953
  345022 string characters out of 6180977
- 418814 words of memory out of 5000000
+ 417814 words of memory out of 5000000
  20723 multiletter control sequences out of 15000+600000
  9805 words of font info for 37 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -895,10 +902,10 @@ st/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
 /amsfonts/cm/cmsy8.pfb>
-Output written on hw2.pdf (5 pages, 126214 bytes).
+Output written on hw2.pdf (6 pages, 128040 bytes).
 PDF statistics:
- 67 PDF objects out of 1000 (max. 8388607)
- 48 compressed objects within 1 object stream
+ 70 PDF objects out of 1000 (max. 8388607)
+ 50 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
