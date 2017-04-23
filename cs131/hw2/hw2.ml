@@ -70,20 +70,64 @@ let rec (evalExp : exp -> float) =
               | Mult -> (evalExp a) *. (evalExp c)
               | Div -> (evalExp a) /. (evalExp c)
 
-let _ = assert( (evalExp BinOp(BinOp(Num 1.0, Add, Num 2.0), Mult, Num 3.0) ) = 9 )
+(*let _ = assert( (evalExp (BinOp(BinOp(Num 1.0, Add, Num 2.0), Mult, Num 3.0)) ) = 9.0 *)
               
                                         
 (* a type for stack instructions *)	  
 type instr = Push of float | Swap | Calculate of op
 
-let (execute : instr list -> float) =
-  raise ImplementMe
-      
-let (compile : exp -> instr list) =
-  raise ImplementMe
 
+                                                   
+let rec exec_helper calc inst =  
+  match inst with
+    [] -> let res::t = calc in res
+  | h::t ->
+     match h with
+       Push(x) -> (exec_helper (x::calc) t)
+     | Swap -> let h1::h2::t2 = calc in (exec_helper (h2::h1::t2) t)
+     | Calculate(y) ->
+        let h1::h2::t2 = calc in
+        match y with
+          Add -> (exec_helper ((h2 +. h1)::t2) t)
+        | Sub -> (exec_helper ((h2 -. h1)::t2) t)
+        | Mult -> (exec_helper ((h2 *. h1)::t2) t)
+        | Div -> (exec_helper ((h2 /. h1)::t2) t)
+
+let (execute : instr list -> float) =
+  function i ->
+           match i with
+             [] -> 0.0
+           | _ -> exec_helper [] i
+
+let (compile : exp -> instr list) =
+  function e ->
+           let rec compile_helper e l =
+             match e with
+               Num(x) -> Push(x)::l
+             | BinOp(a,b,c) -> (compile_helper a l) @
+                                 (compile_helper c l) @ [(Calculate(b) )]
+           in compile_helper e []                                                         
+
+
+let rec decompile_helper inst e =
+  match inst with
+    [] -> let exp::t = e in exp
+  | h::t ->
+     match h with
+       Push(x) -> (decompile_helper t (Num(x)::e) )
+     | Swap ->
+        let BinOp(a,b,c)::t2 = e in (decompile_helper t (BinOp(c,b,a)::t2))
+     | Calculate(x) ->
+        let h1::h2::t2 = e in
+        (decompile_helper t (BinOp(h2, x, h1)::t2) )                             
+          
 let (decompile : instr list -> exp) =
-  raise ImplementMe
+  function instructions ->
+           match instructions with
+             [] -> Num(0.0)
+           | _ -> decompile_helper instructions []
+
+         
 
 (* EXTRA CREDIT *)        
 let (compileOpt : exp -> (instr list * int)) =
