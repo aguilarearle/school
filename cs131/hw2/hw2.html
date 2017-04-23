@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+lang="en"><head><title>Homework 2</title>
+</head>
+
+
+<body>
+
+<h1>Homework 2</h1>
+
+<h2>Due Tuesday, April 25, at 11:30pm</h2>
+<h3>Turn in your homework via the course web page as an updated version of the <tt>hw2.ml</tt>
+text file that I have provided. 
+
+<h3>Make sure the file can be successfully loaded into the OCaml interpreter
+via the <tt>#use</tt> directive; if not you get an automatic 0 for the homework!</h3>
+
+<h3>Recall the CS131 Academic Honesty Policy!  You must list whom you
+discussed the assignment with at the top of your assignment, and also what
+other resources you used.</h3>
+
+For this assignment, you will get practice with higher-order functions
+and datatypes in ML.
+In a few places below, you are required to implement your functions in
+a particular way,
+so <i>pay attention to those directives or you will get no credit for the problem</i>.
+In addition you should obey our usual style rules:
+<ul> <li> <i>Never</i> use imperative features like
+assignment and loops.  If you're using a construct not discussed in
+class or in the book, you're probably doing something bad!</li> <li>
+Use pattern matching instead of conditionals wherever it is natural
+to do so.</li> <li> Use local variables to avoid recomputing an
+expression that is needed multiple times in a function.</li>
+<li>Similarly, avoid code duplication.  If the same code is needed in
+multiple places, possibly with slight variations, make a helper function
+so that the code only has to be written once.</li>
+</ul>
+
+A few other tips: <ul>
+<li>Feel free to use functions from the <tt>List</tt> module that you
+  find helpful.</li>
+<li>Create any number of helper functions as needed.
+</li>
+<li> Write comments where useful to tell the
+reader what's going on.  Comments in OCaml are enclosed in <tt>(*</tt>
+and <tt>*)</tt>.</li>
+
+<li> Test your functions on several inputs, including corner cases --
+we will be doing the same.  One useful approach is <i>test-driven
+development</i>: write a bunch of test cases first, before you start
+coding, to act as a "spec" for what you need to do.</li>
+</ul>
+
+Now on to the assignment!
+I've provided a file <tt>hw2.ml</tt> that has the 
+name and type of each function that you must implement.  <b>Make sure
+each of your functions has exactly the expected name and type (or an
+equivalent type); otherwise you will get no credit for it.</b>
+I've also declared some datatypes that are needed in Problem #2.
+
+<h3>Problem #1: Vectors and Matrices</h3>
+
+The <tt>hw2.ml</tt> file defines a <tt>vector</tt> as a <i>type
+alias</i> for a list of floating-point numbers.  Rather than being a new type, <tt>vector</tt> is just a shorthand for the type <tt>float list</tt> -- they can be used interchangeably.  Similarly, a <tt>matrix</tt> is a
+type alias for a list of vectors, with each vector representing one
+row in the matrix.  You may assume that all rows of a matrix will have
+the same length.
+
+<p>In this problem you will implement several
+functions for vectors and matrices.  <b>None of your functions,
+including helper functions, can be recursive.  Instead, you will
+need to make good use of higher-order functions from the <a href="http://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html">List</a>
+module.</b>  Functions are allowed to call functions that have been defined above
+them in the file, as the solution to prior questions.
+
+<ol type="a">
+<li>Implement <tt>vplus</tt>, which performs <a
+  href="http://mathworld.wolfram.com/VectorAddition.html">vector
+  addition</a>.  For example, <tt>vplus [1.1;2.2;3.3] [4.4;5.5;6.6]</tt> returns
+  <tt>[5.5;7.7;9.9]</tt> (or something very close to that, due to
+  errors in floating-point arithmetic).  You may assume that the two argument vectors have
+  the same length.  <i>Hint: Check out <tt>List.map2</tt>, which will
+  be useful here and throughout this section.</i><p></li>
+
+<li>Implement <tt>mplus</tt>, which performs <a
+  href="http://mathworld.wolfram.com/MatrixAddition.html">matrix
+  addition</a>.  You may assume that the two argument matrices have
+  the same dimensions.  <p></li>
+
+<li>Implement <tt>dotprod</tt>, which computes the <a
+  href="https://en.wikipedia.org/wiki/Dot_product#Algebraic_definition">dot
+  product</a> of two vectors.  You may assume that the two argument vectors have
+  the same length.  <p></li>
+
+<li>Implement <tt>transpose</tt>, which computes the <a
+  href="https://en.wikipedia.org/wiki/Transpose">transpose</a> of a
+  given matrix.<p></li>
+  
+<li>Implement <tt>mmult</tt>, which performs <a
+  href="http://mathworld.wolfram.com/MatrixMultiplication.html">matrix
+  multiplication</a>.  For any call <tt>(mmult m1 m2)</tt> you may assume that the number of columns in
+  <tt>m1</tt> is equal to the number of rows in <tt>m2</tt>.<p></li>
+</ol>  
+  
+<h3>Problem #2: Calculators</h3>
+
+<ol type="a">
+<p> <li> Consider a simple calculator that accepts arithmetic
+  expressions and computes their values.  An implementation of the
+  calculator might
+  <i>parse</i>
+  the user input into a nice tree structure like the following:
+
+<p><tt>type op = Add | Sub | Mult | Div</tt><br>
+<tt>type exp = Num of float | BinOp of exp * op * exp</tt>
+
+<p> For example, the expression <tt>(1.0 + 2.0) * 3.0</tt> would be
+parsed into the 
+value <tt>BinOp(BinOp(Num 1.0, Add, Num 2.0), Mult, Num 3.0)</tt>.
+
+<p>Write a function <tt>evalExp</tt> of type <tt>exp -> float</tt>
+that evaluates a given arithmetic expression.  For example, the result of evaluating our expression above should be <tt>9.0</tt> (which OCaml prints as just <tt>9.</tt> without the trailing zero).  Subexpressions within an expression should be evaluated from left to right.  You do not need to handle division-by-zero errors.
+</li>
+
+<p><li> A <a href="https://en.wikipedia.org/wiki/Stack_machine">stack
+machine</a> is a computer that executes
+instructions using only a stack (instead of a set of registers) for its
+memory.  Stack machines can be implemented in a simple way and have
+compact instructions, so they are often the representation used for
+<a href="https://en.wikipedia.org/wiki/Virtual_machine">virtual machines</a>. For example, Java programs compile to a
+relatively simple
+<a href="https://en.wikipedia.org/wiki/Java_bytecode">bytecode</a> language that is executed on a (virtual) stack
+machine called the <a
+href="https://en.wikipedia.org/wiki/Java_virtual_machine">Java virtual
+machine</a>.
+
+<p>A stack machine for a calculator might support the following set of
+instructions:
+
+<p><tt>type instr = Push of float | Swap | Calculate of op</tt>
+
+<p>The instructions are defined to manipulate a stack of floating point
+numbers (which we'll represent as a <tt>float list</tt>).  The
+instruction <tt>Push n</tt> pushes the number <tt>n</tt> onto the stack
+(thereby increasing the stack size by 1).  The instruction <tt>Swap</tt> pops the top two numbers off the stack and pushes them back
+on the stack in reverse order (thereby keeping the stack the same size).  The instruction <tt>Calculate
+op</tt> pops the top two numbers <tt>n1</tt> and <tt>n2</tt> off the stack and pushes the result
+of evaluating <tt>(n2 op n1)</tt> onto the stack (thereby decreasing the stack size by 1).  <i>Note that the first operand in the computation is the second value popped off the stack, and the second operand is the first value popped off the stack.  This makes a difference for non-commutative operations like subtraction and division.  This behavior makes sense since it corresponds with the order in which the operands were originally computed (and pushed onto the stack).</i>
+
+<p>For example, the arithmetic expression <tt>(1.0 + 2.0) * 3.0</tt>
+can be represented by the sequence of stack instructions <tt>[Push 1.0;
+Push 2.0; Calculate Add; Push 3.0; Calculate Mult]</tt>.  This style
+of providing the two operands before the operator is known as Reverse Polish notation (RPN).
+
+<p>Write a function <tt>execute</tt> of type <tt>instr list ->
+float</tt> that implements a stack machine.
+For example, <tt>execute([Push 1.0; Push 2.0; Calculate Add; Push 3.0; Calculate Mult])</tt> should evaluate to <tt>9.0</tt>.  You will
+find it useful to do most of the work in a helper function that takes an extra argument of type <tt>float list</tt>,
+which is used as a stack.  Starting from an empty stack <tt>[]</tt>, executing the above instructions one by one will cause the stack to consecutively look like <tt>[1.0]</tt>, <tt>[2.0; 1.0]</tt>, <tt>[3.0]</tt>, <tt>[3.0; 3.0]</tt>, and <tt>[9.0]</tt>.
+Once all of the stack instructions have been processed, the number at the top of the stack will be the
+final result value to return.
+<i>You don't need to handle the possibility of
+stack underflow, which occurs when the stack has too few elements to perform the next instruction. (But note how the OCaml typechecker properly warns about this possibility!)</i>
+</li>
+
+<p>
+<li>
+Write a function <tt>compile</tt> of type <tt>exp -> instr list</tt>
+that <i>compiles</i> (i.e., translates)
+an arithmetic expression into a sequence of stack instructions that represents the same computation.
+There should be a <tt>Calculate Add</tt> stack instruction
+for every <tt>Add</tt> in the input, and so on; evaluating the input expression to a
+number <tt>n</tt> and then returning <tt>[Push n]</tt> will get you no credit.
+<b>You should not use the <tt>Swap</tt> instruction at all (but see
+the last problem below).</b>
+<i>Hint: This function corresponds exactly to a postorder traversal of the input expression
+when viewed as a tree.</i>
+</li>
+
+<p><li>Write a function <tt>decompile</tt> of type
+  <tt>instr list -> exp</tt> that <a
+  href="https://en.wikipedia.org/wiki/Decompiler">decompiles</a>
+  (i.e., translates) a list of stack instructions
+  into an arithmetic expression that represents the same computation.
+  Again, simply executing the stack instructions will get you no credit.  You may assume that the
+  given sequence of stack instructions does in fact correspond to a single
+  arithmetic expression.  <i>Hint: This function is not too different
+  from the <tt>execute</tt> function above.  Like that one, here you will also want
+to define a helper function that uses a stack, but instead of the stack holding numbers, now it will hold values of type <tt>exp</tt>.</i>
+
+<p><li><b>EXTRA CREDIT:</b>  Your <tt>compile</tt> function above uses
+	    a particular compilation strategy, but in fact there are
+	    multiple ways to compile a single arithmetic
+             expression.  In particular, for each subexpression, you can
+	    choose to compile the left side first or the right side
+	    first.  (Because subtraction and division are not commutative,
+	    evaluating the right side first and then the left will require a
+	    <tt>Swap</tt> immediately afterward to preserve the
+	    behavior of the original expression.)
+
+	    <p>For example, 1.0 - (2.0 + 3.0) can be compiled to
+
+	      <p><tt>[Push 1.0; Push 2.0; Push 3.0; Calculate Add; Calculate Sub]</tt>
+
+		<p> but also to
+
+   <p><tt>[Push 2.0; Push 3.0; Calculate Add; Push 1.0; Swap; Calculate Sub]</tt>
+
+     <p>Real compilers spend a lot of effort to <i>optimize</i>
+       the code that they generate, typically for both time and
+       space.  In this problem, we will consider space usage, which is
+       an especially important consideration for small embedded
+       devices (see the <a
+       href="https://en.wikipedia.org/wiki/Internet_of_Things">
+Internet of Things</a>).
+
+<p>Which of the above two compiled code sequences is more optimal in
+       terms of space usage?  Well, if you look carefully, the first
+list of instructions
+requires a stack that can hold at least
+       three numbers at once, whereas the second list never requires more than
+       two numbers to be on the stack at any one time.  Therefore, the
+       second code sequence is more optimal.
+
+       <p>Write a function <tt>compileOpt</tt> of type <tt>exp -> (instr list * int)</tt>.
+          The function returns a pair containing (1) an optimal sequence of instructions
+	 for the given arithmetic expression; and (2) the minimum
+	 size of the stack necessary for evaluating this sequence of instructions.
+       "Optimal" here means requiring the smallest stack size for its evaluation.
+
+	 <p><tt>compileOpt</tt> can be computed recursively, using the
+	   optimal instruction sequences for the two operands and the
+	   stack sizes they each require.  You can decide which side
+	   (left or right) to compile first just by looking at the
+	   stack sizes each requires, without looking at their
+	   particular instruction sequences.  By default you should compile the left operand first,
+           as with <tt>compile</tt>.  However, you should instead compile the right
+	   operand first if it will reduce the maximum stack size required.
+           Also, in that case don't forget to insert a
+	   <tt>Swap</tt> command if the operation being computed is
+	   non-commutative; don't add a <tt>Swap</tt> command for
+	   commutative operations, since it's unnecessary there.</li>
+
+
+</ol>
+
+</body></html>

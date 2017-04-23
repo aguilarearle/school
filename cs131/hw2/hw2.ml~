@@ -1,0 +1,56 @@
+exception ImplementMe
+
+(* Problem 1: Vectors and Matrices *)
+
+(* type aliases for vectors and matrices *)            
+type vector = float list                                 
+type matrix = vector list
+
+let (vplus : vector -> vector -> vector) =
+  function v1 ->
+           function v2 ->
+                    List.map2 (+.) v1 v2  
+
+let (mplus : matrix -> matrix -> matrix) =
+  function m1 ->
+           function m2 ->
+                    List.map2 vplus m1 m2
+
+let (dotprod : vector -> vector -> float) =
+  function v1 ->
+           function v2 ->
+                    let sol1 = List.map2 ( *. ) v1 v2 in
+                    List.fold_left ( +. ) 0.0 sol1
+
+let (transpose : matrix -> matrix) =
+  raise ImplementMe
+
+let (mmult : matrix -> matrix -> matrix) =
+  raise ImplementMe
+
+        
+(* Problem 2: Calculators *)           
+           
+(* a type for arithmetic expressions *)
+type op = Add | Sub | Mult | Div
+type exp = Num of float | BinOp of exp * op * exp
+
+let (evalExp : exp -> float) =
+  raise ImplementMe
+
+(* a type for stack instructions *)	  
+type instr = Push of float | Swap | Calculate of op
+
+let (execute : instr list -> float) =
+  raise ImplementMe
+      
+let (compile : exp -> instr list) =
+  raise ImplementMe
+
+let (decompile : instr list -> exp) =
+  raise ImplementMe
+
+(* EXTRA CREDIT *)        
+let (compileOpt : exp -> (instr list * int)) =
+  raise ImplementMe
+
