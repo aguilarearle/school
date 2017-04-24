@@ -11,16 +11,39 @@ let (vplus : vector -> vector -> vector) =
            function v2 ->
                     List.map2 (+.) v1 v2  
 
+let _ = assert( (vplus [0.;0.;0.] [0.;0.;0.])  = [0.;0.;0.] )
+let _ = assert( (vplus [-1.;-2.;-3.] [1.;1.;1.])  = [0.; -1.; -2.])
+let _ = assert( (vplus [-1.;-2.;-3.] [-1.;-1.;-1.])  = [-2.; -3.; -4.])              
+let _ = assert( (vplus [-1.;-2.;-3.] [1.;2.;3.])  = [0.;0.;0.])
+
 let (mplus : matrix -> matrix -> matrix) =
   function m1 ->
            function m2 ->
                     List.map2 vplus m1 m2
+
+let _ = assert( (mplus [[1.]] [[1.]])  = [[2.]])
+let _ = assert( (mplus [[1.;1.]] [[1.;1.]])  = [[2.;2.]])
+let _ = assert( (mplus [[1.];[1.]] [[1.];[1.]])  = [[2.]; [2.]])              
+let _ = assert( (mplus [[1.;1.];[1.;1.]] [[1.;1.]; [1.;1.]] )  = [[2.; 2.]; [2.; 2.]])
+let _ = assert( (mplus [[1.;1.;1.];[1.;1.;1.];[1.;1.;1.]] [[1.;1.;1.]; [1.;1.;1.];[1.;1.;1.]])  = [[2.; 2.; 2.]; [2.; 2.; 2.]; [2.; 2.; 2.]])              
 
 let (dotprod : vector -> vector -> float) =
   function v1 ->
            function v2 ->
                     let sol1 = List.map2 ( *. ) v1 v2 in
                     List.fold_left ( +. ) 0.0 sol1
+
+let _ = assert( (dotprod [0.;0.;0.] [0.;0.;0.])  = 0.)
+let _ = assert( (dotprod [0.;0.;0.] [1.;2.;3.])  = 0.)
+let _ = assert( (dotprod [1.;1.;1.] [1.;1.;1.])  = 3.)
+let _ = assert( (dotprod [1.;1.;1.] [-1.;-1.;-1.])  = -3.)
+let _ = assert( (dotprod [-1.;-1.;-1.] [-1.;-1.;-1.])  = 3.)
+let _ = assert( (dotprod [1.;1.;1.] [-1.;1.;-1.])  = -1.)               
+(*
+let _ = assert( ()  = )
+let _ = assert( ()  = )
+let _ = assert( ()  = )
+*)                                                                               
 
 let build_row l acc =
   match l with
@@ -126,7 +149,6 @@ let (decompile : instr list -> exp) =
            match instructions with
              [] -> Num(0.0)
            | _ -> decompile_helper instructions []
-
          
 
 (* EXTRA CREDIT *)        

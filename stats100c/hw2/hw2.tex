@@ -142,7 +142,7 @@
            &= \sigma^2 \pmatb (X^{'}X)^{-1} & (X^{'}X)^{-1}X^{'}(I-H) \\ (I-H)X(X^{'}X)^{-1} & (I-H) \pmate  \\
     Var(Q) &= \sigma^2 \pmatb (X^{'}X)^{-1} & 0 \\ 0 & (I-H)\pmate
   \end{align}
-Therefore $\hat{Y}$ and $e$ are independent.
+$\boxed{\text{Therefore } \hat{Y} \text{ and } e \text{ are independent.}}$
 \end{problem}
 %-------------------------------------------------------------------------------
 % Problem 2.0
@@ -159,8 +159,7 @@ Therefore $\hat{Y}$ and $e$ are independent.
     Var(\betah_c) &=Var(\betah) - AcVar(\betah)c^{'}A^{'} + AVar(\gamma)A^{'} \\
     Var(\betah_c) &=Var(\betah) - AcVar(\betah)c^{'}A^{'} + AVar(c\beta)A^{'} \\
     Var(\betah_c) &=\sigma^2 (X^{'}X)^{-1} - Ac[\sigma^2 (X^{'}X)^{-1}]c^{'}A^{'} \\
-    Var(\betah_c) &=\sigma^2 (X^{'}X)^{-1} - 
-                    \sigma^2 (X^{'}X)^{-1}c^{'}[c^{'}(X^{'}X)^{-1}c]^{-1}c(X^{'}X)^{-1}
+    \Aboxed{Var(\betah_c) &=\sigma^2 (X^{'}X)^{-1} - \sigma^2 (X^{'}X)^{-1}c^{'}[c^{'}(X^{'}X)^{-1}c]^{-1}c(X^{'}X)^{-1}}
   \end{align}
 \end{problem}
 
@@ -240,7 +239,7 @@ We use the normal equations to substitute for $Y^{'}X$ and $X^{'}Y$.
     0 & -\sigma^2 & \sigma^2 \\
     \pmate
   \end{align}
-  Therefore $Cov(\betah_1, \betah_2) = 0$
+  $\boxed{\text{Therefore } Cov(\betah_1, \betah_2) = 0}$
   \section{b}
   \begin{align}
     X = 
@@ -266,11 +265,11 @@ $x_2 + x_3 + x_4 = 1 \implies$ matrix is not full rank and we cannot invert $X^{
   \begin{align}
     E[\hat{y}_{n+1}] &= E[x_{n+1}^{'}\betah] \\
                      &=x_{n+1}^{'} E[\betah] \\ 
-    E[\hat{y}_{n+1}] &=x_{n+1}^{'}\beta
+    \Aboxed{E[\hat{y}_{n+1}] &=x_{n+1}^{'}\beta}
   \end{align}
   \textbf{$E[y_{n+1}]$:} 
   \begin{align}
-    E[y_{n+1}] &= E[x_{n+1}^{'}\beta + \varepsilon_{n+1}] = x_{n+1}^{'}\beta 
+    \Aboxed{E[y_{n+1}] &= E[x_{n+1}^{'}\beta + \varepsilon_{n+1}] = x_{n+1}^{'}\beta} 
   \end{align}
   \section{b}
   \begin{align}
@@ -278,25 +277,34 @@ $x_2 + x_3 + x_4 = 1 \implies$ matrix is not full rank and we cannot invert $X^{
     E[\tilde{y}_{n+1}] -E[y_{n+1}] &= 0 \\
     a^{'}E[Y] - x_{n+1}^{'}\beta &= 0 \\
     a^{'}X \beta - x_{n+1}^{'}\beta &= 0 \\
-    (a^{'}X - x_{n+1}^{'})\beta &= 0 \implies a^{'}X = x_{n+1}^{'}
+    \Aboxed{(a^{'}X - x_{n+1}^{'})\beta &= 0 \implies a^{'}X = x_{n+1}^{'}}
   \end{align}
   \section{c}
   \begin{align}
     Var(\hat{y}_{n+1}) &= Var(x_{n+1}^{'}\betah) \\
                        &= x_{n+1}^{'}Var(\betah)x_{n+1} \\
                        &= x_{n+1}^{'}[\sigma^2(X^{'}X)^{-1}]x_{n+1} \\
-    Var(\hat{y}_{n+1}) &= \sigma^2 x_{n+1}^{'}(X^{'}X)^{-1}x_{n+1}
+    \Aboxed{Var(\hat{y}_{n+1}) &= \sigma^2 x_{n+1}^{'}(X^{'}X)^{-1}x_{n+1}}
   \end{align}
   \begin{align}
-    Var(\tilde{y}_{n+1}) &= Var(a^{'}Y) = \sigma^2 a^{'}a  
+    \Aboxed{Var(\tilde{y}_{n+1}) &= Var(a^{'}Y) = \sigma^2 a^{'}a}  
   \end{align}
   \section{d}
   \begin{align}
     Var(\tilde{y}_{n+1}) - Var(\hat{y}_{n+1}) &= 0 \\
-    \sigma^2 a^{'}a - \sigma^2 x_{n+1}^{'}(X^{'}X)^{-1}x_{n+1} &= 0\\
-    \sigma^2 a^{'}a - \sigma^2 a^{'}x(X^{'}X)^{-1}x^{'}a  &= 0 \\ 
-    \sigma^2 a^{'} (I - X(X^{'}X)^{-1}X^{'})a &= 0 \\
-    \sigma^2 a^{'}(I-H)a &= 0
+    \sigma^2 a^{'}a - \sigma^2 x_{n+1}^{'}(X^{'}X)^{-1}x_{n+1} &= \sigma^2 a^{'}a - \sigma^2 a^{'}x(X^{'}X)^{-1}x^{'}a\\
+    \sigma^2 a^{'} (I - X(X^{'}X)^{-1}X^{'})a &= \sigma^2 a^{'}(I-H)a  \\
+    \sigma^2 a^{'}(I-H)(I-H)^{'}a &= \sigma^2 ((I-H)^{'}a)^{'}(I-H)^{'}a 
+  \end{align}
+  We notice that $((I-H)^{'}a)^{'}(I-H)^{'}a$ is of the form $(M^{'}l)^{'}(M^{'}l)$ which 
+  implies that $(I-H)$ is at least postive semidefinite so then 
+  \begin{align}
+    \sigma^2 ((I-H)^{'}a)^{'}(I-H)^{'}a \ge 0
+  \end{align}
+  which implies that
+  \begin{align}
+    Var(\tilde{y}_{n+1}) - Var(\hat{y}_{n+1}) &\ge 0 \\
+    Var(\tilde{y}_{n+1}) &\ge Var(\hat{y}_{n+1})
   \end{align}
 \end{problem}
 %-------------------------------------------------------------------------------
@@ -307,14 +315,14 @@ $x_2 + x_3 + x_4 = 1 \implies$ matrix is not full rank and we cannot invert $X^{
   \begin{align}
     e^{'}e &= ((I-H)Y)^{'}((I-H)Y) \\
            &= Y^{'}(I-H)^{'}(I-H)Y \\
-    e^{'}e &= Y^{'}(I-H)Y
+    \Aboxed{e^{'}e &= Y^{'}(I-H)Y}
   \end{align}
   \section{b}
   \begin{align}
     tr[(I-H)E[Y^{'}Y]] &= tr[(I-H)(\sigma^2 I + X\beta \beta^{'}X^{'})] \\
     &= tr[\sigma^2I + X\beta \beta^{'}X^{'} - \sigma^2 H - HX\beta \beta^{'}X^{'}] \\
     &= \sigma^2 tr(I) - \sigma^2 tr(H) \\
-    tr[(I-H)E[Y^{'}Y]] &= \sigma^2 (n-k-1)
+    \Aboxed{tr[(I-H)E[Y^{'}Y]] &= \sigma^2 (n-k-1)}
   \end{align}
   \section{c}
   \begin{align}
