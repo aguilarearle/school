@@ -100,7 +100,7 @@
 % Assignmnet Variables
 %-------------------------------------------------------------------------------
 \newcommand{\hwTitle}{Homework 2}
-\newcommand{\hwDueDate}{April XX, 2017}
+\newcommand{\hwDueDate}{April 26, 2017}
 \newcommand{\hwClass}{Statistics 100C}
 \newcommand{\hwInstructor}{Nicolas Christou}
 \newcommand{\hwAuthor}{Earle Aguilar}
@@ -198,7 +198,42 @@ $\boxed{\text{Therefore } \hat{Y} \text{ and } e \text{ are independent.}}$
     Var(S_e^2) &= \frac{2\sigma^4}{n-k-1}
     \end{align}
   \section{b}
+   We have that  $S^2 = \frac{e^{'}e}{n-k+1}$ so then 
+   $\frac{(n-k+1)S^2}{\sigma^2}= \frac{e^{'}e}{\sigma^2}$ we have shown
+   in class that 
+   $\frac{e^{'}e}{\sigma^2} = \frac{\varepsilon^{'}(I-H)\varepsilon}{\sigma^2} \sim \chi_{n-k-1}^2$.
+   \begin{align} 
+     E[S^2] &= \frac{E[e^{'}e]}{n-k+1} \\
+     &= \frac{\sigma^2 (n-k-1)}{(n-k+1)}
+   \end{align}
+   \begin{align}
+     Var\bigg(\frac{(n-k+1)S^2}{\sigma^2}\bigg) &= 2(n-k-1) \\
+     \frac{(n-k+1)^2}{\sigma^4}Var(S^2) &= 2(n-k-1) \\
+     Var(S^2) &= \frac{2\sigma^4(n-k-1)}{(n-k+1)^2}
+   \end{align}
   \section{c}
+  Bias for $S_e^2$ 
+  \begin{align}
+    B_1 &= \sigma^2 - \sigma^2 \\
+    B_1 &= 0
+  \end{align}
+  MSE for $S_e^2$
+\begin{align}
+  MSE_1 &= \frac{2\sigma^4}{n-k-1}  
+\end{align}
+Bias for $S^2$ 
+\begin{align}
+  B_2 &= \frac{\sigma^2(n-k-1)}{n-k+1} - \sigma^2 \\
+  &= \sigma^2 \frac{n-k-1- (n-k+1)}{n-k+1} \\
+  B_2 &= \frac{-2\sigma^2}{n-k+1} 
+\end{align}
+MSE for $S^2$
+\begin{align}
+  MSE_2 &= \frac{2\sigma^4(n-k-1)}{(n-k+1)^2} + \frac{4\sigma^4}{(n-k+1)^2} \\
+        &= \frac{2\sigma^4}{(n-k+1)^2}(n-k-1+2) \\
+  MSE_2 &= \frac{2\sigma^4}{n-k+1}
+\end{align}
+$\boxed{\text{The } MSE_2 \text{ is smaller and so we should use } S^2}$.
 \end{problem}
 % -------------------------------------------------------------------------------
 % Problem 5.0
@@ -254,7 +289,7 @@ We use the normal equations to substitute for $Y^{'}X$ and $X^{'}Y$.
     1 & 13 & 0.1 & 0.6 & 0.3 \\
     \pmate
 \end{align}
-$x_2 + x_3 + x_4 = 1 \implies$ matrix is not full rank and we cannot invert $X^{'}X$.
+$\boxed{x_2 + x_3 + x_4 = 1 \implies \text{ matrix is not full rank and we cannot invert } X^{'}X}$.
 \end{problem}
 % -------------------------------------------------------------------------------
 % Problem 7.0
