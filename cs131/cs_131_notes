@@ -164,18 +164,23 @@ CODE	let rec incLst l =
     		match l with
     			[] -> []
     		   | h::t -> (h+1)::(incLst t)
-__________________________________________________________    
+________________________________________________
+
    	- Example:
+__________________________________________________________    	
    		let rec exclaimLst l =
    		    match l with 
    		    	[] -> []
    		      | h::t -> (h ^ "!")::(exclaimLst t)
 __________________________________________________________    		
-    - Example 
+    - Example
+__________________________________________________________        
     	let rec map f l
     	    match l with 
     	        [] -> []
     	       | h::t -> (f h)::(map f t)
+__________________________________________________________
+
       ∙ We can rewrite incLst and exclaimLst like this:
         * let incLst = map (function x -> x+1)
         * let exclaimLst = map (function x -> x ^ "!") 
@@ -184,12 +189,14 @@ __________________________________________________________
     - We want to filter a list that contains elements that satisfy a condition
       ∙ List.filter (function x -> x > 2) 
       ∙ List.filter (function x -> x mod 2 = 0)
+__________________________________________________________    
     - let rec filter p l = 
     	match l with
     		[] -> []
     	   | h::t -> 
     	   		let rest = filter p t 
     	   		in if p h then h::rest else rest
+__________________________________________________________    			
 
 --------------------------------------------------------------------------------
 3. Lecture 3.
@@ -205,21 +212,26 @@ CODE- let incBy l n = List.map (function x -> x + n) l;;
   * Map does not always help since it always returns a list what if we
    	 want a number.
    	- For example:
+__________________________________________________________    	
       ∙ let rec prodList l = 
     		match l with 
     			[] -> 1
     	  	| h::t -> h * prodlist(t)
+		
       ∙ let rec sumList l = 
     		match l with 
     			[] -> 0
     	  	| h::t -> h + sumlist(t)
+__________________________________________________________
 
    	- We want to fold the list into a number.
+__________________________________________________________________________________    	
    	  ∙ let rec (combineInts: (int -> int -> int) -> int list -> int -> int) =
    	  	    fun f l b -> 
    	  		match l with
    	  			[] -> b
    	  		  | h::t -> f h (combineInts f t b)
+___________________________________________________________________________________
 
    	  ∙ Usage:
    	    a) combineInts (fun x y -> x + y) [1;2;3;4] 0;;
@@ -235,11 +247,14 @@ CODE- let incBy l n = List.map (function x -> x + n) l;;
     - let lengths l = combineInts (function x y ->  y + 1) l 0;
       ∙ x is the element of the list and y is the result of the base case.
   * CombineInts is more general
+_______________________________________________________________________________ 
     - let rec fold_right =
    	  	    fun f l b -> 
    	  		match l with
    	  			[] -> b
    	  		  | h::t -> f h (fold_right f t b)
+_____________________________________________________________________________  
+
    	- type: ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
    	  ∙ 'a stands for the type of the elements of the list
    	  ∙ 'b stands for the type of the result of our list.
@@ -524,4 +539,320 @@ CODE- let incBy l n = List.map (function x -> x + n) l;;
 		       ("x", 12)]
 	# add45 3 ===> int = 48
     
+--------------------------------------------------------------------------------
+6. Lecture 6
+--------------------------------------------------------------------------------
+* Types
 
+  - Goal is to ensure that operations are only invoked with arguments of the
+    right types
+    
+    ∙ Basic sanity check.
+    ∙ Cal also be used to enforce requirements on user-defined types.
+    
+  - Static Vs Dynamic typechecking
+  
+    ∙ DEFINITION STATIC: means that you try to ensure the above goal at compile
+      time.
+      
+      a) Give a type to each program expression without running code.
+      b) Signal a compile-time error if not possible.
+      
+    ∙ DEFINITION DYNAMIC: means that you check that an operation has arguments
+      of the right type just before you execute the operation.
+
+      a) If ok; Execute the operation.
+      b) if not ok; throw an exception.
+      
+    ∙ Static is better than dynamic for large programs.
+
+  - Strongly typed Vs Weakly typed.
+  
+    ∙ a second dimension to evalue at type system.
+    ∙ DEFINITION WEAKLY TYPED: means there are certain type errors that the
+      language does not protect against.
+      
+      a) it's possible to treat a value one type accudentally as if it has
+      	 another type.
+      b) Implementation-dependent behavior.
+      c) C/C++
+      d) Key Issue: Memory Safety
+      
+        1) Memory errors in C
+	
+	  ‣ Out-of-bounds accesses ("Buffer Overrun"). The leading cause of
+	    security exploits.
+	  ‣ "Dangling Pointers". Free a pointer too early.
+	  ‣ Uninitialized Pointers.
+
+    ∙ DEFINITION STRONGLY TYPED: means that the type system achieves the above
+      goal 100% of the time.
+      
+      a) Ocaml, Python, Javascript      
+      b) How do strongly typed languages avoid the errors of weakly typed
+      	 languages?
+	 
+        1) Pointers are hidden
+	2) Run-time bounds checks on every array acces
+	3) Garbage collection at run time to free memory that's no longer used.
+	4) Pointers must be initialized before use.
+
+  - Does Ocaml have pointers?
+  
+    ∙ Yes everything is a pointer for example:
+    
+      a) let l = [1;2;3];
+      
+        1) l[*] --> [1 | --]--> [2 | --]-->[3 |--]-->@
+	
+      b) let l2 = 0::l;;
+
+        1) l[*] -------> [1 | --]--> [2 | --]-->[3 |--]-->@
+                          ^
+			  ^
+			  |
+	2) l2[*] --> [0 | --]
+
+  - Summarize:
+  
+    ∙ Static/Strong: Ocaml, Java, C#
+    ∙ Static/Weak: C, C++
+    ∙ Dynamic/strong: Javascript, Python, Lisp
+    ∙ Dynamic/Weak: ???
+
+  - Can make types fancier to catch more errors at compile time.
+  
+    ∙ Example: transpose has type matrix -> matrix
+
+      a) Better: matrix<m,n> -> matrix<n,m>
+
+* Exceptions
+
+  - Why do they exists and what are they good for?
+  - An association list if a list of pairs i.e
+  
+    ∙ [(1, "h1"), [2, "There"]]
+    
+  - We want to write a lookup function
+  
+    ∙ How do we deal with a key that is not in the list?
+    
+      a) First idea: Options
+      
+        1) lookup: 'a -> ('a and 'b) list -> 'b option
+	   let rec lookup k l =
+	       match l with
+	          [] -> None
+	      | (key,v)::t -> if (key = k) then Some v else (lookup k t)
+	2) Advantages and Disadvantafes of this approach
+	
+	  ‣ Advantage: It makes the error case very explicit
+	  ‣ Disadvantage: It forces every caller to deal with the error.
+	  
+	    † Let lookupAndExclaim k l =
+	          let vopt = lookup k l in
+		  match vopt with
+		     None -> None
+		 | Some s -> Some (s^"!")		 
+            † We have to pattern match again to make sure we have correct
+	      behavior.
+            † Lookup a bunch of keys and return None if any of them is missing.
+	    
+	      ◊ Let rec lookupAll ks l =
+	      	    match ks with
+		        [] -> None
+		     | k::rest ->
+		       let vopt = lookup k l in
+		       match vopt with
+		           None -> None
+			 | Some v ->
+			   let vsopt = lookupAll rest l in
+			   match vsopt with
+			       None -> None
+			     | Some vs -> Some (v::vs)
+			     
+  - What we want from exceptions:
+  
+    ∙ Clear indication of an error
+    ∙ Clean separaion of error handling code from ordinary functionality
+    ∙ Allow callers to easily pass throught the error if they can't handle it.
+
+  - We will create a lookup function using exceptions
+  
+    ∙ Example:
+      exception NotFound
+      let rec lookup k l =
+          match l with
+	     [] -> raise NotFound
+	  | (Key, v)::t -> if key = k then val else lookup k t
+
+    ∙ Example: Implicitely propagates the exception
+      exception NotFound
+      let lookupAndExclaimE k l =
+          (lookupE k l) ^ "!"
+
+  - What if we want to catch the error?
+  
+    ∙ Example: I want to return "error" if there's an error.
+      let lookupAndExclaimTry k l =
+         try
+	    (lookupE k l) ^ "!"
+	 with
+	    NotFound -> "error"
+	    
+  - Here we fix the funciton lookupAllE
+  
+    ∙ let lookupAllE ks l =
+          List.map (fun k -> lookupE k l) ks
+
+  - We can catch the error 
+    ∙ let lookupAllTry ks l
+      	  try
+	      Some (List.map (fun k -> lookupE k l) ks)
+	  with
+	      NotFound -> None
+  - We can specify the keys that are found or not found.
+    ∙ let lookupAllTry2 ks l =
+          List.map (fun k -> try Some (lookupE k l) with NotFound s -> None) ks
+
+--------------------------------------------------------------------------------
+7. Lecture 7
+--------------------------------------------------------------------------------
+
+* Parametric Polymorphism (Generics)
+  
+  - a way to make statically typed languages more expressive.
+  - ocaml wont run
+  
+    ∙ [1;2;3.3]
+    ∙ if true 1 else 1.1
+    
+  - Helps us write a function that does not have to know the types of
+    certain parameters for example
+    
+    ∙ Without PP: This will throw an error if we pass an int list
+    
+      1) let rec length (l: bool list) : int =
+      	      match l with
+	         [] -> []
+	        | _::t -> 1 + (length t)
+		
+    ∙ With PP: This will work with a list of anything
+    
+      2) let rec length l : int =
+      	     match l with
+	     	[] -> []
+	      | _::t -> 1 + (length t)
+
+        a) val lenght : 'a list -> int = <fun>
+	
+	  ‣ 'a is a "type" varible.
+	  ‣ 'a is implicitly instantiated on each call to length.
+
+  - Typechecking without PP
+  
+    ∙ let pos x = x >0   (*val pos : int -> bool = <fun>*)
+    ∙ How to typecheck this call
+    
+      1) pos 45;;
+      
+        a) lookup the type double: int -> bool
+	b) compute the type 45: int
+	c) check that the actual and formal parameters types are equal.
+        d) the type of the whole thing is the result type of the function: bool.
+
+  - Typechecking with PP
+  
+    ∙ length [true; false; true]
+
+      1) length [true, false, true];;
+    
+        a) look up the type length: 'a list -> int
+	b) Compute the type [True; false; true]: bool list
+	c) Check that we an find an instantiation of 'a with some type
+	   that makes the atual and formal parameter types be equal:
+	   'a bool
+	d) The type of the whole thing is the result type of the function : int.
+
+    ∙ rotate (1, "hi", 3.14)
+    
+      1) lookup the type rotate: ('a -> 'b -> 'c) -> ('c * 'a  *'b)
+      2) Compute the type (1, "hit", 3.14): int * string * float.
+      3) Check that we can find an instatniation of 'a, 'b, and 'c  with types
+      	 that meakes the actual and formal paramater types be equal:
+	 
+	   a) 'a = int
+	   b) 'b = string
+	   c) 'c = float
+
+      4) The type fot he whole thing is the instantiated version of the result
+      	 type of the function: float*int* string
+
+  - KEY IDEA: Parametric polymorphism
+  
+    ∙ One function
+    ∙ Can pass many different types of arguments.
+
+  - Contrast with static overloading
+  
+    ∙ Many functions
+    ∙ They all have the same name.
+
+  - Two operators in ocaml are "overloaded"
+  
+    ∙ (< , >) greater/less than
+    
+      1) 1 > 2
+      2) 1.1 > 2.2
+      3) "hello" > "hi"
+      
+    ∙ = equality operator
+    
+      1) 1 = 2
+      2) 1.1 > 2.2
+      3) "hello" = "hi"
+
+* Mini-Ocaml Interpreter
+
+  - Given: Some string of characters input at the command line
+  - STEP 1: Parse the given string of characters.
+
+    ∙ Convert it into a sequence of "tokens"
+    ∙ Parse the sequence of tokes
+    ∙ If grammatically incorrect, then reject (parse error)
+    ∙ otherwise produce a data structure called an abstract syntax tree (AST)
+
+      1) Unambiguously represent the code.
+      
+    ∙ Has already been implemented for us.
+
+  - STEP 2 [in a statically typed language]:
+  
+    ∙ Typecheck the program.
+    ∙ If error then reject (type error), otherwise move to the next step.
+    ∙ MOCaml does not have static typechecking.
+    ∙ Instead we'll do dynamic typechecking.
+
+  - STEP 3: Execute program.
+  
+    ∙ Recursive traversal of the AST.
+    
+      1) Compositional:
+      
+      	 a) Compute the values of subexpressions
+	 b) Figure out to combine them to produce the overall value.
+	 
+      2) Need to handle environment properly to account for variable scoping
+      
+    ∙ let rec evalExpr
+    
+      1) If(guard, thn, els) ->
+      	 	   (match evalExpr guard env with
+		          BoolVal true -> evalExpr thn env
+			| BoolVal false -> evalExpr els env
+		 	| _ ->  raise (DynamicTypeError "boolean guard expected") )
+
+  - STEP 4: Print an OCaml representation of the result.
+  - STEP 5: goto STEP 1.
+    
+  
