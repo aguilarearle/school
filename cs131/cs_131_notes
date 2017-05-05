@@ -3,45 +3,71 @@ CS 131
 --------------------------------------------------------------------------------
 1. Lecture 1 (April 3)
 --------------------------------------------------------------------------------
+
   * What does “safe” mean?
+  
     - Memory errors in C/C++ code are the major source of security 
       vulnerabilities.
-      a) I.e buffer overflows, dangling pointers, null dereference 
+      
+      a) I.e buffer overflows, dangling pointers, null dereference
+      
   * Most languages other than C/C++ are memory safe.
+  
     - No possibility for the above memory errors.
     - More generally, no way to get into an undefined state.
     - How can we achieve this?
+    
         a) Pointers are not exposed by the language.
         b) Memory cannot be explicitly freed.
         c) Memory safety checks are performed during execution.
           ∙ Array bounds checks, null pointer checks.
+	  
   * OCaml
+  
 `    - Functional Programming: encourages a style of programming where variable 
       never reassigned after initialization.
+      
       a) No "side effects"
+      
         ∙ A function is a pure (mathematical) function: every time you call
-          it with the same argument value, it returns the same result.  
+          it with the same argument value, it returns the same result.
+	  
           ~ Why is this a good thing?
+	  
               * Easy parallelism
               * Greatly simplifies program reasoning.
+	      
                   - Don't have to worry about something getting overwritten.
+		  
     - Much simpler language design
+    
   * Can download it at ocaml.org
   * What can you do with ocaml
-  	- Arithmetic
+  
+    - Arithmetic
+    
       a) i.e 42 + 8 ;;
+      
     - Variables assignment using "let"
+    
       a) let x = 42 + 8;;
       b) immutable - can't change the value after the fact.
+      
     - Define Functions
+    
       a) "function" var "->" body 
       b) i.e let double = (function z -> z * 2);;
-        ∙ call function like this: double 45 
+      
+        ∙ call function like this: double 45
+	
       c) Can also call function like this let double z = z * 2 and it will 
          infer that you are trying to declare a function.
+	 
     - Recursion
+    
       a) let rec factorial = 
-           (function n -> if n=0 then 1 else n*(factorial (n-1))) 
+           (function n -> if n=0 then 1 else n*(factorial (n-1)))
+	   
     - Pattern Matching
 __________________________________________________    
 CODE  a) i.e let rec factorial n = 
@@ -64,6 +90,7 @@ CODE  b) let rec isEven n =
         | _ -> isEven(if n > 0 then n-2 else n+2)
 __________________________________________________          
     - Lists
+    
       a) I.e [];; empty list
       b) i.e [1;2;3];;
       c) ["hi"; "there"]
@@ -80,7 +107,9 @@ ____________________________________
 --------------------------------------------------------------------------------
 2. Lecture 2 (April 5)
 --------------------------------------------------------------------------------
-  * A grammar for the subset of Ocaml we've seen 
+
+  * A grammar for the subset of Ocaml we've seen
+  
     - E ::= C | X | E OP E 
          | function P -> E
          | if E then E else E
@@ -92,14 +121,21 @@ ____________________________________
       b) X ::= Variable Names
       c) OP ::= + | - | * | < | ...
       d) P ::= C | _ | X | P::P
+      
   * Lists
+  
     - h::t is checking whether l is a list and then returns a name for the 
-      first element of the list "h" and a name for the rest of the list "t"     
+      first element of the list "h" and a name for the rest of the list "t"
+      
       a) We can also specify what to name in the list
+      
         ∙ let l = [1;2;3]
         ∙ h::t = l
+	
           * h = 1, t = [2;3]
+	  
         ∙ h1::h2::t = l
+	
           * h1 = 1, h2=2, t = [3]
 
     - We create a function called every other that returns every other element
@@ -111,18 +147,24 @@ CODE  a) let rec everyOther l =
             | _  -> l
 ___________________________________________________________            
     - Declaring Local Variables
+    
       a) Example
+      
         ∙ let double n = n * 2
         ∙ let quadruple n = (double n) + (double n)
+	
          * This is inefficient we can make this function better
 _______________________________
 CODE     * let quadruple n = 
             let d = (double n)
             in d + d;
 _______________________________
-       b) We can declare more than one just nest them
-  * Tuples  
+      b) We can declare more than one just nest them
+      
+  * Tuples
+  
     - Can be used to pass multiple arguments to a function
+    
 CODE    a) Example: let add (x,y) = x + y
 CODE    b) Example: let swap = 
                      function (x,y) -> (y,x);; 
@@ -134,27 +176,39 @@ CODE    a) let zip (l1, l2)
       	     ([],[]) -> []
       	   | (h1::t1,h2::t2) -> (h1,h2) :: zip(t1,t2)
 ______________________________________________________
+
     - Try to write unzip take a list of pairs and create two lists.
+    
   * Functions are just like any other expression
+  
     - can be passed to other functions
     - can be stored in variables/lists
     - can be returned from functions
+    
 CODE  a) Example: let quadruple x = double(double x);;
 CODE  b) Example: let fourthPower x = square(square x);;
 CODE  c) Example: let twice (f,x) = f(f x)
 CODE  d) Example: let quadruple x = twice(double x)
-      e) We can change twice 
+      e) We can change twice
+      
 CODE    ∙ let twice = function f -> (function x -> f(f x)) 
         ∙ we can use it to change quadruple
+	
           * let quadruple = twice double
+	  
     - "fun"
       a) Does what we did in e), use a function within a function.
+      
 CODE    ∙ let twice = fun f x -> f(f x)
+
     - Functions can also be returned
+    
       a) twice' takes one argument f and returns a new function that takes
          the second argument x and does the computation
+	 
 CODE    ∙  let twice' = function f -> (function x -> f(f x))
-        ∙ Shorthand 
+        ∙ Shorthand
+	
 CODE   	  * let twice' = fun f x -> f(f x)
 CODE   	  * let twice' f x = f(f x)
 
@@ -182,11 +236,16 @@ __________________________________________________________
 __________________________________________________________
 
       ∙ We can rewrite incLst and exclaimLst like this:
+      
         * let incLst = map (function x -> x+1)
-        * let exclaimLst = map (function x -> x ^ "!") 
+        * let exclaimLst = map (function x -> x ^ "!")
+	
     - What if we want to increment each element in a list of lists.
-      ∙ map (map (function x -> x+1)) 
+    
+      ∙ map (map (function x -> x+1))
+      
     - We want to filter a list that contains elements that satisfy a condition
+    
       ∙ List.filter (function x -> x > 2) 
       ∙ List.filter (function x -> x mod 2 = 0)
 __________________________________________________________    
@@ -201,16 +260,24 @@ __________________________________________________________
 --------------------------------------------------------------------------------
 3. Lecture 3.
 --------------------------------------------------------------------------------
-  * map 
+
+  * map
+  
     - ('a -> 'b) -> ('a list -> 'b list)
     - Note if we have ('a -> 'b) * 'a list -> 'b list
-      ∙ Forces a tuple to be sent, unlike currying which wont require that. 
+    
+      ∙ Forces a tuple to be sent, unlike currying which wont require that.
+      
     - Functional programming is the correct paradigm for large programs that
       need parallelism.
-CODE- let incBy l n = List.map (function x -> x + n) l;; 
-      ∙ Will increase the list by a specified number. 
+      
+CODE- let incBy l n = List.map (function x -> x + n) l;;
+
+      ∙ Will increase the list by a specified number.
+      
   * Map does not always help since it always returns a list what if we
    	 want a number.
+	 
    	- For example:
 __________________________________________________________    	
       ∙ let rec prodList l = 
@@ -234,18 +301,25 @@ ________________________________________________________________________________
 ___________________________________________________________________________________
 
    	  ∙ Usage:
+	  
    	    a) combineInts (fun x y -> x + y) [1;2;3;4] 0;;
    	    b) sumList l = combine(func x y -> x+y) l 0;;
 
    	  ∙ Formally combineInts f (x1;...;xn) b = f x1 (f x2 (... (f xn b) ... ))
+	  
   * Aside: We can also write the result above as such
+  
     - combineInts (+) [1;2;3;4] 1;;
     - Note for product use "( * )" not "(*)" since "(*" is the start of the
-      comment. 
-   	- Note be careful about non commutative operators.
+      comment.  
+    - Note be careful about non commutative operators.
+    
   * Use combineInts to calculate the length of the list
+  
     - let lengths l = combineInts (function x y ->  y + 1) l 0;
+    
       ∙ x is the element of the list and y is the result of the base case.
+      
   * CombineInts is more general
 _______________________________________________________________________________ 
     - let rec fold_right =
@@ -256,15 +330,21 @@ _______________________________________________________________________________
 _____________________________________________________________________________  
 
    	- type: ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
+	
    	  ∙ 'a stands for the type of the elements of the list
    	  ∙ 'b stands for the type of the result of our list.
+	  
     - let allpos l = fold_right 
-     			(fun elem restIsPos ->  (elem>0) && restIsPos) l true;;
+     			(fun elem restIsPos ->  (elem>0) && restIsPos) l true;;			
     - We can generalize allpos to a function which checks if all elements of 
        a list satisfy a condition.
+       
       ∙ let all p l = fold_right (fun elem rest -> (p elem) && rest) l true;
+      
     - Lets write "@" (append) with fold_right
+    
       ∙ First lets write it recursively
+      
         a) let rec append l1 l2 = 
          		match l1 with 
          			[] -> l2
@@ -273,45 +353,58 @@ _____________________________________________________________________________
       	    	   fold_right (fun elem appendedRest -> elem::appendedRest)
 									l1 l2;
     - Create a function to duplicate the list
+    
 	  ∙ let dupList l = fold_right
 	    		(fun elem dupRest -> elem::elem::dupRest) l []
+			
   * fold_right/left2
   	- let dotProd l1 l2 = 
   		list.fold.right2 (fun e1 e2 restDotProd -> e1*e2 + restDotProd)
 									l1 l2 0;
   * What have we learned so far?
+  
   	- Key control structures: Recursion and pattern matching
   	- Key data structures: Lists and tuples
-  	- First-class function: a little of both. 
+  	- First-class function: a little of both.
+	
     - MISSING:
+    
       ∙ user defined types.
       ∙ privacy/protection/encapsulations
 
-  * Ocaml lets you define your own data-types 
+  * Ocaml lets you define your own data-types
+  
   	- Similar to structs in C or classes in Java
   	- differences data-types are designed for 
   	  ∙ immutability
-  	  ∙ 
 
   * Data-type that represents signs
+  
     - type sign = Pos | Neg | Zero;;
     - ocaml requires that data-types be lowercase and their values start with
       a upper case.
     - Does not do anything yet, we need to write functions that use "sign"
+    
       ∙ let signOF n = 
       		match n with 
       			0 -> zero
-      		  | _ -> if n>0 then Pos else Neg;;		
+      		  | _ -> if n>0 then Pos else Neg;;
+		  
     - Now we get a sign and return an int
+    
       ∙ let signToInt s = 
       		match s with
       			pos -> 1 
       		  | neg -> -1
       		  | zero -> 0;;
+		  
     - Create a type that represents two dimensional points
+    
       ∙ type point = Pt of float * float
       ∙ Pt is now a constructor, Pt itself is not a point.
+      
     - Write a funct to negate a point
+    
       ∙ let negate p = 
       		match p with
       			pt (x,y) -> Pt (-. x, -. y);;
@@ -320,9 +413,11 @@ _____________________________________________________________________________
 4. Lecture 4
 --------------------------------------------------------------------------------
   * Recall
+  
     - type sign = Pos | Neg | Zero
     - We cannot do much with "sign", we could create functions that
       mess with "sign".
+      
       ∙ Let intToSign n =
       	    match n with
 	     0 -> Zero
@@ -335,42 +430,61 @@ _____________________________________________________________________________
 	    | zero -> 0
 
   * More complex data-types
+  
     - type shape = Circle of float | Rect of float * float
+    
       ∙ Usage: Circle <x = float> => shape = Circle x
         Usage: Rect <(x=float, y = float)> => shape = Rect (x,y)
+	
     - We create a function that operates on "shape" types
+    
       ∙ let area s =
       	  match s with
 	    Circle r -> 3.14 *. r *. r
 	    | Rect (l,w) -> l *. w
+	    
   * There is no notion of null in ocaml
+  
     - Languages have null as a placeholder for values.
     - We can implement null in ocaml
+    
       ∙ type nullableInt = Null | Nonnull of Int
+      
     - Here nullableInt is not the same is Int, it forces you to check if its
       null. Other languages don't require this.
+      
     - We create a function to get the int in nullableInt
+    
       ∙ let nullableIntToInt n =
       	 match n with
 	   Null -> 0
 	 | Nonnull i -> i
+	 
     - Create a function that will add 1 to a nullableInt unless it is Null.
+    
       ∙ let incNullableInt n =
       	 match n with
 	  Null -> Null
 	| Nonnull i -> Nonnull (i+1)
+	
     - We create a function that will perform operations on NullableInt in a
       safe way.
+      
       ∙ let updateNullableInt f n =
       	  match n with
 	    Null -> Null
 	  | Nonnull i -> Nonnull (f i)
+	  
     - We can make nullableInt to work with any type of data be polymorphic.
+    
       ∙ type 'a nullable = Null | Nonnull of 'a
+      
     - Same implementation in standard library called option and it has types
       "None" and "Some".
+      
     - Function that gives you the nth element of a list. We want to return
       something if n is larger than length of the list.
+      
       ∙ My implementation
       	let  rec nth n l =
       	  match n with
@@ -382,6 +496,7 @@ _____________________________________________________________________________
 	        match l with
 	          [] -> None
 	        | h::t ->  Some nth (n-1) t
+		
       ∙ Class implementation
         let rec nth n l =
 	 match n with
@@ -394,7 +509,9 @@ _____________________________________________________________________________
 	        match l with
 	          [] -> None
 		| h::t -> nth (n-1) t
+		
       ∙ We can condense it
+      
         let rec nth n l =
 	  match l with
 	    [] -> None
@@ -405,46 +522,62 @@ _____________________________________________________________________________
 	  | _ -> nth (n-1) t
 	
       ∙ We can condense even further
+      
         let rec nth n l =
 	    match (n, l) with
 	      (_, []) -> None
 	    | (_,_) when n < 0 -> None
 	    | (0,h::t) -> Some h
 	    | (_, h::r) -> nth (n-1) t
+	    
   * Need to be able to define data-types in terms of themselves.
     - For example making lists
-      ∙ type intlist = Empty | Node of int * intlist
+    
+      ∙ type intlist = Empty | Node of int * intlist 
       ∙ [1;2;3] is represented as Node(1, Node(2, Node(3, Empty)))
+      
     - Can convert both ways
+    
       ∙ let rec toIntList l -
       	  match l with
 	    [] -> Empty
-	  | h::t -> Node(h, toIntList t)
+	  | h::t -> Node(h, toIntList t)	  
       ∙ let rec fromIntList l =
       	  match l with
 	    Empty -> []
 	  | Node(h,t) -> h:: (fromIntList t)
+	  
     - Can make lists polymorphic
+    
       ∙ type 'a mylist = Empty | Node of 'a * 'a mylist
+      
     - Can create our own version of Map as well
+    
       ∙ let rec mymap f l =
       	  match l with
 	  Empty -> Empty
        |  Node(h,t) -> Node((f h), (mymap f t))
+       
   * Binary Trees (data on internal nodes not leaves)
+  
     - type 'a mytree = Leaf | InternalNode of 'a * 'a mytree * 'a mytree
     - Function that will calculate the size (length of a tree)
+    
       ∙ let rec size t =
       	  match t with
 	     Leaf -> 0
 	   | InternalNode(_,r,l) -> 1 + (size l) + (size r)
+	   
     - let rec preorder t =
           match t with
 	    Leaf -> []
 	  | InternalNode(d,r,l) -> [d] @ preorder(l) @ preorder(r)
+	  
       ∙ Move [d] to the middle and you get
       ∙ Mode [d] to the right you get
+      
     - Insertion into a binary tree
+    
       ∙ let rec insert x t =
       	    match t with
 	      Leaf -> Node(x, Leaf, Leaf)
@@ -456,16 +589,21 @@ _____________________________________________________________________________
 5. Lecture 5
 --------------------------------------------------------------------------------
   * Scoping
+  
     - Key Question: Which variable declaration does a particular variable
       usage refer to.
     - The language maintains during execution an ENVIRONMENT
+    
       ∙ Mapping from variable names to their values
       ∙ A data structure which is constantly being updated.
       ∙ At the start of a program the environment is empty and as we declare
       	variables the environment binds the variables to their values.
+	
         a) You cant think of the environment as a list of tuples for example:
 	   [("x",3);("y", 100);...]
+	   
     - Consider let double = (function n -> n*2)
+    
       ∙ This creates an environment where "double" can be instantiated and
       	updated it is destroyed when the function returns.
       ∙ For this example our environment now has the following
@@ -480,27 +618,37 @@ _____________________________________________________________________________
       	have its own environment.
       ∙ Here is another example suppose we do the following after declaring
       	double.
+	
         a) let x = 3;;
 	b) let three() = x
+	
 	   1) Will output int=3 since our environment is
 	      [("double", <fun>),("x",3)]
+	      
     - Local Variable Declarations
+    
       ∙ DEFINITION Static/Lexical Scoping: A variable reference refers to the
       	declaration of the that variable that is nearest  in the enclosing
 	scope TEXTUALLY.
+	
         a) Can statically (at compile time) determine the variable declaration
 	   associated with each variable usage.
+	   
       ∙ Consider the following example
+      
         a) $ Environment []
-	  let y = 3 in
+	     let y = 3 in
 	   $ Environment [("y",3)]
 	     let z = y * 2 in
 	   $ Environment [("y",3); ("z",6)]
-	       	 y + z
+	     y + z
 	   $ Environment []
+	   
       ∙ DEFINITION Dynamic Scoping: A variable reference
-      ∙ How is Dynamic Scoping difference than Static Scoping
+      ∙ How is Dynamic Scoping differenr than Static Scoping
+      
         a) Environment for static scoping:
+	
 	   $ Environment []
 	   # let x = 45
 	   $ Environment [("x",45)]
@@ -517,15 +665,20 @@ _____________________________________________________________________________
 	   # x ===> int = 12
 	   # x = "hello"
 	   # add45 3 ===> int = 48
+	   
 	 b) To make static scoping work, every function has to keep its
 	    static environment with it. That environment is used when the
 	    function is called.
+	    
     - Variable Shadowing
+    
       ∙ let x = 34 in
-      	    let y = x + 1 in      // using x = 34
-	    	let x = x + 32 in // using x = 34
-		  x + y;;         // using x = 66, earlier x is being shadowed
+      	let y = x + 1 in      // using x = 34
+	let x = x + 32 in // using x = 34
+	x + y;;         // using x = 66, earlier x is being shadowed
+	
     - Another Example
+    
       ∙	$ Environment []      
         # let add = (function x -> function y -> x + y)
 	$ Environment [("add", (<fun>, []))]
@@ -538,7 +691,141 @@ _____________________________________________________________________________
 	  	       ("add45", (fun y -> x + y, [("x", 45)])),
 		       ("x", 12)]
 	# add45 3 ===> int = 48
+
+What is a type?
+     a set of values, along with the allowed primitive operations on those values
+
+     type int is the set of 64-bit integers
+     operations: +, -, <, ...
+
+     int list :  [1;2], [5;23;17]
+     operations: @, ::, access head/tail (pattern matching)
+
+     int * bool: (1, false)
+     operations: access first/second (pattern matching)
+
+What is the point of types?
+   - constrain what you can do with data
+     each value can only be manipulated using
+     the operations of the value's type
+
+   - enforce abstraction boundaries
+     types are the abstractions
+
+   - including user-defined types
+									     	      		   basic form of program guarantee
+
+*static* typechecking:
+
+  - every program expression, statement, function,
+    is given a type at compile time
+  - if something can't be given a type, then you
+    get a compiler error
     
+  - examples: OCaml, C, C++, Java
+
+*dynamic* typechecking:
+  - during execution, right before executing a
+    primitive operation,the types of argument values are checked.
+    if they are of the wrong type, an exception is raised.
+
+  - examples: Python, JavaScript, Ruby, Lisp
+
+
+main advantage of static typechecking:
+  - early detection of errors (before program runs)
+  - guarantees for all possible executions of the
+    program (or of a function)
+  - if a function has type int -> int
+    the function won't have *type errors*
+    for any possible execution of the function.
+    as long as you pass an int, it will give
+    you back a int.
+
+    # let inc x = x+1;;
+      val inc : int -> int = <fun>
+
+    and if you get something wrong, the function will not typecheck:
+
+    # let inc x = if x<0 then x+1 else x+"hi";;
+
+    Error: This expression has type string but an expression was expected of type int
+
+  - no matter how much testing you do, you can never get this guarantee in a
+    dynamically typed language.  no checking at all is done on a function
+    when it is declared:
+
+    >>> def inc(x):
+    ...   if (x<0):
+    ...     return x+1
+    ...   else:
+    ...     return x+"hi"
+    ...
+
+    instead you will only find bugs when they actually occur:
+
+    >>> inc(-3)
+    -2
+    >>> inc(1)
+    Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "<stdin>", line 5, in inc
+    TypeError: unsupported operand type(s) for +: 'int' and 'str'
+
+secondary benefits of static typechecking:
+
+  - program documentation
+  - enforce the constraints of user-defined types
+    - e.g., binary trees are never accidentally treated as some other kind of data
+  
+  - efficiency
+    - no need to have values carry around tags at run time that indicate their
+      types, and no need to spend time checking those tags at run time
+
+disadvantages of static typechecking:
+  - dynamically typed languages are more flexible
+  - statically typed language can reject "good"
+    programs
+    - programs that won't actually have a "type error"
+      - won't pass values of the wrong type to a primitive operation
+
+    example: heterogenous lists
+
+    # [1; 2.2; 3.3];;
+    Error: This expression has type float but an expression was expected of type int
+
+    dynamically typed languages have no problem with code like this.
+    of course, you're on your own to make sure you manipulate the elements
+    of the list properly, according to their types.
+
+    how to make OCaml accept it?
+    use a datatype!
+
+    # type intOrFloat = I of int | F of float;;
+      type intOrFloat = I of int | F of float
+     # [I 1; F 2.2; F 3.3];;
+  - : intOrFloat list = [I 1; F 2.2; F 3.3]
+
+
+  this is a safe way to have heterogenous lists, because when an element of
+  the list is accessed, the only way to manipulate it is to pattern match on
+  it to figure out if it's an int or a float, before using the actual
+  underlying data.
+
+  static typechecking is critical for all but the smallest programs.
+  this is why companies are spending a lot of effort on it in the Web domain,
+  which is dominated by dynamically typed languages.
+
+Microsoft: TypeScript
+	   statically typed version of JavaScript
+
+Facebook: Hack
+	  statically typed version of PHP
+
+Facebook: Flow
+	  typechecker for JavaScript
+	  	      	  
+
 --------------------------------------------------------------------------------
 6. Lecture 6
 --------------------------------------------------------------------------------
@@ -548,7 +835,7 @@ _____________________________________________________________________________
     right types
     
     ∙ Basic sanity check.
-    ∙ Cal also be used to enforce requirements on user-defined types.
+    ∙ Can also be used to enforce requirements on user-defined types.
     
   - Static Vs Dynamic typechecking
   
@@ -644,6 +931,7 @@ _____________________________________________________________________________
 	       match l with
 	          [] -> None
 	      | (key,v)::t -> if (key = k) then Some v else (lookup k t)
+	      
 	2) Advantages and Disadvantafes of this approach
 	
 	  ‣ Advantage: It makes the error case very explicit
