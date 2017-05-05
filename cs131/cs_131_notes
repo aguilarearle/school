@@ -854,5 +854,82 @@ _____________________________________________________________________________
 
   - STEP 4: Print an OCaml representation of the result.
   - STEP 5: goto STEP 1.
-    
+--------------------------------------------------------------------------------
+8. Lecture 8
+--------------------------------------------------------------------------------
+* Functional Programing
+
+  - Recursion
+  - Pattern matching
+  - first-class functions
   
+    ∙ Functions ca be treated as data.
+    
+  - datatypes
+  - exceptions
+  
+* Concepts
+
+  - Static vs Dynamic Scoping
+  - Static vs dynamic typechecking
+  - Strong vs weak typechecking
+  
+    ∙ Strong typechecking - enforeces types 100% of the time. It never allows
+      value of one type to be treated as if it's a value of another type.
+    ∙ Weak typechecking - The typechecker sometimes allows a vlue of one type to
+      be treated as if it's a value of another type.
+      
+      ‣ Reason: Ensuring memory safety requires run-time checks.
+      
+        ◊ Bound checks on evert arrat access.
+	◊ Garbage collection to safely free memory.
+	◊ Null pointer chekcs before every dereference.
+      
+  - Parametric Polymorphism vs static overloading
+  
+    ∙ Parametric Polymorphism - we have one function that works on many different
+      datatypes.
+      
+      ‣ For staticlly typed languages.
+      
+    ∙ Static Overloading - many functions, they have the same name. At compile
+      time, which function to call is determined based on the types of
+      arguments.
+      
+      ‣ C/C++: At compile time it determines what type "+" works on.
+      
+      	◊ I.E 1 + 4  OR  1.1 + 4.4
+
+* Environment for static scoping Example
+  - Example:
+    ∙ let double x = x * 2  env:[("double", (function x -> x * 2, [] ))]
+    ∙ double 34 env:[("double", (function x -> x * 2, [] ))] 
+  
+      ‣ Grab the function's environment: []
+      ‣ add a bindin from formal to actual parameter: [(x,34)]
+      ‣ Execute the function body x*2 in this evironment.
+      
+  - Example
+    ∙ let x = 4
+    ∙ let addX y = x + y env:[(x,4), (addX, (fun y -> y+x, [(x,4)]))]
+    ∙ let x = 15 env:[(x,14), (addX, (fun y -> y+x, [(x,4)]))]
+    ∙ addX x
+    
+      ‣ Grab addX's environment [(x,4)] add a mapping from normal to actual:
+      
+      	◊ [(y,15), (x,4)]     
+
+* Traverse two trees to check for equality
+  - type tree = Leaf | Node of tree * int * tree
+  - let req eqTree t1 t2 =
+        match (t1, t2) with
+	(Leaf,Leaf) -> true
+    | (Nodes(s1,i, s2), Nodes(u1, j, u2)) -> i=j and (eqTree s1 u1) and
+      		   		     	  (eqTree s2 u2)
+    | _ -> false
+	
+--------------------------------------------------------------------------------
+9. Lecture 9
+--------------------------------------------------------------------------------
+
+*-∙(a-z)‣◊†
