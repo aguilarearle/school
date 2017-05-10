@@ -1,7 +1,7 @@
 
-(* Name:
-
-   UID:
+(* Name: Earle Aguilar
+ 
+   UID: 804501476
 
    Others With Whom I Discussed Things:
 
@@ -39,16 +39,29 @@ let rec patMatch (pat:mopat) (value:movalue) : moenv =
     (IntPat(i), IntVal(j)) when i=j -> Env.empty_env()
   | (BoolPat(i), BoolVal(j)) when i = j -> Env.empty_env()
   | (WildcardPat, _) -> Env.empty_env()
-  | (VarPat(x), v) -> let env = Env.empty_env() in (Env.add_binding x v env)
+  | (VarPat(x), _) -> (Env.add_binding x value (Env.empty_env()))
   | (TuplePat(l1), TupleVal(l2)) ->
-     let rec tup_helper l1 l2 e =
-       match (l1,l2) with
-       | (e1::t1, e2::t2) -> (tup_helper t1 t2 (patMatch e1 e2) )  
-       | _ -> e
-     in tup_helper l1 l2 (Env.empty_env())
-  | _ -> raise (ImplementMe "pattern matching not implemented")
-                                                                                                                                     
-    
+     (match (l1, l2) with
+        ([], _) -> Env.empty_env()
+      | (h1::t1, h2::t2) ->
+         let l1_ = (TuplePat (t1)) in
+         let l2_ = (TupleVal (t2)) in
+         (Env.combine_envs (patMatch h1 h2) (patMatch l1_ l2_) )
+      | _ -> raise MatchFailure      
+     )
+  | (DataPat(delim1, dat1), DataVal(delim2, dat2) ) when (delim1 = delim2) ->
+     (match (dat1, dat2) with
+        (None, None) -> Env.empty_env()
+       | Some(p) , Some(v) -> (patMatch p v))    
+  | _ -> raise MatchFailure
+
+               
+let rec patMatch_helper l e =
+    match l with
+      [] -> raise MatchFailure
+    | (l', e')::t ->
+       try (patMatch l' e, e') with
+         _ -> (patMatch_helper t e)                  
 (* Evaluate an expression in the given environment and return the
    associated value.  Raise a MatchFailure if pattern matching fails.
    Raise a DynamicTypeError if any other kind of error occurs (e.g.,
@@ -66,7 +79,7 @@ let rec evalExpr (e:moexpr) (env:moenv) : movalue =
       | BoolVal(false) -> evalExpr els env
       | _ -> raise (DynamicTypeError "Boolean guard expected.")
      )
-  | Var(x) -> (Env.lookup x env)
+  | Var(x) -> (try (Env.lookup x env) with _ -> raise (DynamicTypeError "Unbound Value"))
   | BinOp(l, o, r) ->
      let exp_l = (evalExpr l env) in
      let exp_r = (evalExpr r env) in
@@ -79,7 +92,7 @@ let rec evalExpr (e:moexpr) (env:moenv) : movalue =
          | Eq -> BoolVal(x = y)
          | Gt -> BoolVal(x > y)
         )
-      | _ ->  raise (DynamicTypeError "BinOp operation valid only for ints.")                   
+      | _ ->  raise (DynamicTypeError "BinOp operation valid only for ints.") 
      )
   | Negate(x) ->
      let exp_r = (evalExpr x env) in
@@ -92,33 +105,44 @@ let rec evalExpr (e:moexpr) (env:moenv) : movalue =
      (
        let func = (evalExpr f env) in
        match func with
-         FunctionVal(Some v, var, bdy, env) ->
-          (let VarPat(x) = var
-           in let env2 = (Env.add_binding x (evalExpr arg env) env)
-              in let env3 = (Env.add_binding v (evalExpr arg env2) env) 
-                 in (evalExpr bdy env3))
-       | FunctionVal(None, var, bdy, env) ->
-          (let VarPat(x) = var
-           in let env2 = (Env.add_binding x (evalExpr arg env) env)
-              in (evalExpr bdy env2))
+         FunctionVal(Some v, var, bdy, f_env) ->
+         (let env2 = (patMatch var (evalExpr arg env))
+          in let env3 = (Env.combine_envs f_env env2)
+             in let env4 = (Env.add_binding v func env3)
+                in (evalExpr bdy env4 ))
+       | FunctionVal(None, var, bdy, f_env) ->
+          (let env2 = (patMatch var (evalExpr arg env))
+           in let env3 = (Env.combine_envs f_env env2)
+              in (evalExpr bdy env3))             
        | _ -> raise (DynamicTypeError "Function Expected.")
-     ) 
-  | _ -> raise (ImplementMe "expression evaluation not implemented")
-               
+     )
+  | Tuple(tp) ->
+     TupleVal (List.map (function e -> evalExpr e env) tp)
+  | Data(delim, dat) ->
+     (
+       match dat with
+         None -> DataVal(delim, None)
+       | Some (e) -> DataVal(delim, Some (evalExpr e env)))
+  | Match(dat, patlist) ->     
+     (let dat1 = evalExpr dat env in
+      match patMatch_helper patlist dat1 with
+        (env2, exp2) ->
+        let combined = (Env.combine_envs env env2) in
+        (evalExpr exp2 combined) )
+                  
 (* Evaluate a declaration in the given environment.  Evaluation
    returns the name of the variable declared (if any) by the
    declaration along with the value of the declaration's expression.
 *)
 let rec evalDecl (d:modecl) (env:moenv) : moresult =
   match d with
-      (* a top-level expression has no name and is evaluated to a value *)
+    (* a top-level expression has no name and is evaluated to a value *)
     Expr(e) -> (None, evalExpr e env)
   | Let(v,e) -> (Some v, evalExpr e env)
   | LetRec(v,e) ->
-     (
-       match (evalExpr e env) with
-         FunctionVal(_, var, bdy, env) -> (Some v, FunctionVal (Some v, var, bdy,env) )
-     )   
- | _ -> raise (ImplementMe "Not a valid declaration.")
+     (match (evalExpr e env) with
+        FunctionVal( _, var, bdy, env) -> (Some v, FunctionVal(Some v, var, bdy, env) )
+      | _ -> raise (ImplementMe "Function Expected")
+     )
+       
                   
-(*(Env.combine_envs env (Env.add_binding x (evalExpr a env) env) )*)
