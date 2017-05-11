@@ -127,8 +127,8 @@ let rec evalExpr (e:moexpr) (env:moenv) : movalue =
      (let dat1 = evalExpr dat env in
       match patMatch_helper patlist dat1 with
         (env2, exp2) ->
-        let combined = (Env.combine_envs env env2) in
-        (evalExpr exp2 combined) )
+        let env3 = (Env.combine_envs env env2) in
+        (evalExpr exp2 env3) )
                   
 (* Evaluate a declaration in the given environment.  Evaluation
    returns the name of the variable declared (if any) by the
