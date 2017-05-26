@@ -1,0 +1,125 @@
+
+/*Logic / Declarative / Constraint-base Programming
+  -------------------------------------------------
+
+Transition from "how" to "what"
+
+example: from assembly to C
+  - Variables are "what"
+  - loops, conditionals
+
+example from class in Java:
+  - multithreading
+  - fork-join framework
+  - stream library  
+
+idea: use logic as the universal "what" language.
+
+Challenge: Huge search space to find a satisfying solution.
+
+Appplications today: 
+  - database querying
+  - big data analytics
+    * Spark has Shark (Used to be called Spark SQL)
+    * Hadoop has Pig
+    * Hive from Facebook has HiveQL
+  - User interface layout
+    * example: Mac/IOS Auto Layout
+    * Specify contranints among windows
+
+Gnu Prolog (gprolog.org)  */
+
+
+"," - AND
+"/=" - Not Equal
+
+/*Find a course that has cs32 as a prerequ and is itself a prereq of cs 132*/
+
+prereq(cs32, X), Prereq(X, cs132)
+
+/* Find two courses that have a prereq in common*/
+
+prereq(X,Y), prereq(X,Z), Y /= Z
+
+/* A rule is a way of deriving new facts from old facts*/
+
+/*preOfPre(X,Y) is true of X is a prereq of a prereq of Y*/
+
+/*
+forall X,Y. (exists Z. prereq(X,Z)) && (prereq(Z,Y)) ==> preOfPre(X,Y)
+*/
+
+preOfPre(X,Y) :- prereq(Z,Y) , prereq(X,Z).
+
+/* preTrans(X,Y) is true if X is a transitive prereq of Y*/
+
+
+preTrans(X,Y) :- prereq(X,Y).
+preTrans(X,Y) :- prereq(X,Z), preTrans(Z,Y)
+
+
+
+append([1,2], [3,4], L).  ==> $ L = [1,2,3,4]
+
+append(X,[3,4], [1,2,3,4]). ==> $ X = [1,2]
+
+
+/*
+let rec append l1 l2 = 
+	match l1 with 
+		[] -> l2 
+	 | h::t -> h::(append t l2)	 
+*/
+
+app([], L2, L2).
+app([H|T], L2, [H|R]) :- app(T, L2,R).
+
+/*
+let rec reverse l == 
+	match l with 
+		[] -> []
+		| h::t ->
+			let r = (reverse t) in
+			let q = r@[h] in q
+
+*/
+
+rev([], []).
+rev([H|T], Q) :- rev(T,R), append(R,[H], Q)
+
+/* Puzze Solving with Prolog*/
+
+/* Wolf - goat - cabbage puzzle*/
+
+/*Initial State: [west,west,west,west]*/
+/*Goal State: [east,east,east,east]*/
+
+/* What are the moevs ?
+	wolf, goat, cabbage, none
+*/
+
+/* predicate moves(State1, Move, State2) should be true if
+   starting from State1 and doing move Move will get you to State2
+*/
+
+opposite(west,east).
+opposite(east,west).
+
+move([P,W,G,C], wolf, [PNew,PNew,G,C]) :- 
+	P=W, opposite(G,C), opposite(P,PNew).
+
+move([P,W,G,C], goat, [PNew,PNew,G,C]) :- 
+	P=G, opposite(P,PNew).
+
+move([P,W,G,C], cabbage, [PNew,PNew,G,C]) :- 
+	P=C, opposite(W,G), opposite(P,PNew).	
+
+move([P,W,G,C], none, [PNew,PNew,G,C]) :- 
+	 opposite(W,G),opposite(G,C),opposite(P,PNew).	
+
+/*wolfPuzzle(State1, Moves, State2) is true if starting from State1
+	and executing the moves in Moves, we end up in State2*/
+
+wolfPuzzle(S, [], S).
+wolfPuzzle(S1, [M|Ms], S3) :- 
+	move(S1, M, S2), wolfPuzzle(S2, Ms, S3).		 
