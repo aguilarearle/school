@@ -99,13 +99,13 @@ class SumStream{
 			a[i] = i;
 		}
 		int sum = Arrays.stream(a)
-						. parallel() // This is too simple so 
-									 // the overhead will reduce speedup
-						. reduce(
-							0, 
-							(i1, i2) -> i1+i2
-							)
-		System.out.println(sum);				
+		    . parallel() // This is too simple so 
+		    // the overhead will reduce speedup
+		    . reduce(
+			     0, 
+			     (i1, i2) -> i1+i2
+			     )
+		    System.out.println(sum);				
 	}
 }
 
@@ -118,11 +118,8 @@ class SortedStream{
 		for (int i = 0; i < size ; i++){
 			a[i] = Math.random() * size;
 		}
-		double[] out = Arrays.stream(a)
-							 . parallel()
-							 . sorted()
-							 . toArray;
-
+		double[] out = Arrays.stream(a). parallel(). sorted().toArray;
+		
 		for (int i = 0; i < 10; i ++){
 			system.out.println(out[i]);
 		}
