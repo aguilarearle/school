@@ -1,32 +1,14 @@
-exception ImplementMe
 
-(* Problem 1: Vectors and Matrices *)
-
-(* type aliases for vectors and matrices *)
-type vector = float list
-type matrix = vector list
-
-
-let rec (transpose : matrix -> matrix) =
-  function m1 ->
-	   match m1 with
-	     [] -> []
-	   | h::t -> (transpose h)@(transpose t)
-
-
+let rec duplist l1 l2 =
+  match (l1,l2) with
+    ([],[]) -> true
+  | ([], _) -> false
+  | (_, []) -> false
+  | (h1::t1, a::b::t2) -> if ((h1 == a) && (h1 == b)) then (duplist t1 t2) else false
 	   
-(*
-[[1;2]
- [4;5]]
-*)	   
-
-
-(*
-h = [1;2]
-t = [4;5]
-*)
-	      
-(*
-[[1;4]
- [2;5]]
-*)	   
+let rec subset l1 l2 =
+  match (l1, l2) with
+    ([],[]) -> true
+  | ([], _) -> true
+  | (_ , []) -> false
+  | (h1::t1, h2::t2) -> if (h1 == h2) then (subset t1 t2) else (subset (h1::t1) t2)

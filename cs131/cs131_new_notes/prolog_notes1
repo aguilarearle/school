@@ -94,12 +94,12 @@ rev([H|T], Q) :- rev(T,R), append(R,[H], Q)
 /*Initial State: [west,west,west,west]*/
 /*Goal State: [east,east,east,east]*/
 
-/* What are the moevs ?
+/* What are the moves ?
 	wolf, goat, cabbage, none
 */
 
 /* predicate moves(State1, Move, State2) should be true if
-   starting from State1 and doing move Move will get you to State2
+   starting from State1 and enacting the action Move will get you to State2
 */
 
 opposite(west,east).

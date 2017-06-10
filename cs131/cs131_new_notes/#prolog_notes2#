@@ -1,0 +1,170 @@
+* Queries
+
+  - findall(X, append(X,Y, [1,2,3,4]), L)
+    * Get all the solutions of append and save all the X's in L
+
+
+* Unification (Pattern Matching)
+  - Unification takes two terms t1 and t2 and returns
+    either No or an environment (mapping variables to
+    terms) that makes t1 and t2 syntatically identical
+
+  - Syntax of Terms
+    
+    1. t ::= c | X | c(t1, ..., tn)
+       c ::= constant (lowercase identifier)
+       X ::= variable (Uppercase identifier)
+
+  - Pseudocode for Unification:
+
+    1. c = c ---> {}       
+    2. X = t ---> {X:t}
+
+        a) t = X ---> {X:t}
+
+    3. c(t1,t2) = c(t1', t2') ---> 
+	  result1 = (t1=t1')
+	  result2 = (t2=t2')
+	  if either (result1 == NO)
+	    return No
+	      else 
+	    	result2 = (result1(t2) = result1(t2'))
+	          if(result2 == No)
+	    	    return No
+	    	  else return result1 U result2
+    4. Otherwise ---> No
+	 
+  - Example: f(X,b) = f(a,X)
+  		X=a ---> {X:a}
+
+  		{X:a}(b) = {X:a}(X)
+  		b = a ---> No
+  - Example: g(a,X,X) = g(Y, a, Z)
+  		a = Y ---> {Y:a} (Call this e1)	
+  		e1(X) = e1(a)
+
+  		X = a ---> {X:a} (Call this e2)		
+
+  		e1(e2(X)) = e1(e2(Z))
+
+  		a = Z ---> {Z:a} (Call this e3)
+
+  		return e1 U e2 U e3
+
+    - Example: g(X,X,a) = g(Z, a, Y)
+  		X = Z ---> {X:Z} (Call this e1)	
+  		e1(X) = e1(a)
+
+  		Z = a ---> {Z:a} (Call this e2)		
+
+  		e1(e2(a)) = e1(e2(Y))
+
+  		a = Y ---> {Y:a} (Call this e3)
+
+  		return e1 U e2 U e3		
+
+  	- Note : this union has to "Chase" the constraints to 
+  			ensure that no variable in the domain of the environment
+  			also appears in the range of the domain.	
+
+  - a = b.
+     $ no 
+     they are constants they can never be unified
+
+  - f(X,b) = F(a,Y).
+     $ X=a
+     $ Y=b
+
+  - f(a, X, X) = g(Y, a, Z).
+     $ X=a
+     $ Y=a
+     $ Z=a
+
+------------------------------------------
+* Aside: Casts versus Convesions in Java
+
+float f = ...;
+int i = (int f);
+[equivalent to: int i = floatToInt(f)]
+
+Object o = ...;
+Car c = (Car) o;
+
+[equivalent to :
+	if (o's class is Car or a subclass)
+		c = 0;
+	else
+		throw new ClassCastExeption	
+]
+
+
+safe way to cast (if you need to): 
+
+Object o = ....;
+if (o instanceof Car)
+	Car c = (Car) o
+else
+	Handles Foo
+------------------------------------------
+
+* More Queries
+
+  - preOfPre(Y,Z) :- prereq(Y,P), prereq(P,Z).
+
+/*
+
+keep track of list of goals:
+
+[preOfPre(cs32, X)]
+
+unify preOfPre(cs32, X) with preOfPre(Y,Z)
+
+{Y:cs32, X:Z}
+
+
+new list of goals:
+
+[prereq(cs32,P),prereq(P,Z)]
+
+find a solution for the first subgoal:
+
+{P:cs33}
+
+[prereq(cs33,Z)]
+
+find a solution for the first subgoal:
+
+{Z:cs111}
+
+
+
+*/
+
+/*
+Building the tree:
+
+	Two kinds of nodes:
+
+		- goal nodes: stackof goals that need to be proven
+		- No node: leag
+		- Root: goal node with a single goal 
+		  * The original query
+
+	Every goal node has k children, where k is the
+	number of facts/rules in the program  
+		- left to right in program order
+
+	Determining what the children are:
+	If the first goal does not unify withthe head
+	of the kth fact/rule:
+		the kth child is a NO node.
+
+	Otherwise
+		- the kth child is a goal node
+		pop off the first goal from the parent
+		push any new subgoals from the kth rule.
+				
+
+*/
+
+
