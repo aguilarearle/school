@@ -1,0 +1,128 @@
+
+
+
+prereq(cs31, cs32).
+prereq(cs32, cs33).
+prereq(cs32,cs111).
+prereq(cs33,cs111).
+prereq(cs32,cs118).
+prereq(cs33, cs118).
+prereq(cs111,cs118).
+
+preOfPre(X,Y) :- prereq(X,P), prereq(P,Y).
+
+
+								[ POfP(cs32, C) ]
+								       | 12 
+								       | (x=cs32, C=Y)
+								       |
+						[--------p(cs32,P), P(P,Y)----------]
+						 /     /       |     |    \   \   \   
+					    /4    /5       |6    |7    \8  \9  \10
+					   /	 /         |     No     \   No   No
+					  No    /          |             \ 
+					       /           |              \
+					      /            |               \					       
+				    [P(cs33,Y)]      [P(cs111,Y)]    [P(cs118,Y)]
+				   / |  |   | \         /    \ 	          |   
+		       4-6/  |7 |8  |  \10     /4-9   \10    	  | 4-10
+			    No   |  No  |   No    No      Y=cs118     No
+				     |      |                  |
+			         |    Y=cs118             [ ]
+			       Y=cs111  |
+			         |      |
+			         |     [ ]
+			        [ ]
+
+app([], L, L).
+app([H|T], L, [H|A]) :- app(T, L, A).
+
+rev([],[]).
+rev([H|T],R) :- rev(T, L), app(L,[H], R)
+
+
+/* Query: rev([1],L) */
+
+My Tree:
+                                    [rev([1],L)]
+                                          | 
+                                          | 42 , L=R
+                                          |
+                                   [rev([1|[]], R)]
+                                          |
+                                          |
+                                          |
+                               [rev([],L), app(L, [1], R)]
+                                   /            | 
+                                  /40           | 37
+                                 /              | 
+                               L=[]         [app([],[1],R)]
+                                                 |
+                                                 |
+                                                 |
+                                               R =[1]
+
+Class Tree:
+                                      [rev([1],L)]
+                                     /     |
+                                 40 /   41 | H=1
+                                   /       | T=[]
+                                  No       | L=R
+                                  		   |
+                               [rev([],L'), app(L', [1],R)]
+    								/               \
+    							40 /                 \
+    						L'=[] /                   \
+    							 /					  No
+    					 [app([],[1],R)]
+    					   /    |    \
+    				   37 /     |     \ 38
+    				     /	    |      \
+    				   []      R=[1]    No
+
+
+/*Query: rev(L, [1])*/
+
+                    [rev(L,[1])]
+                       /     \
+                   40 /       \ 41
+                     No        \ L= [H|T], R=[1]
+                                \ 
+                                 \
+                    [rev(T,L'), app(L', [H], [1])]
+                           /       \	
+                  T=[] 40 /         \ 41  T=[H0|T0]
+                  L'=[]  /           \    L' = R0
+                        /             \	
+              [app([],[H],[1])]        \
+                    |	  |38			\
+            L=[H] 37|	  |				 \
+            H=1   	|	  NO			  \
+                   [ ]				       \
+                         				    \
+                                       [rev(T0,L0),
+                                        app(L0,[H0],R0),
+                                        app(L',[H],[1])]
+/*
+t1 is t2:
+	evaluates t2 as an arithmetic expression 
+	  - t2 must not have any variables in it	
+	  	unifies the result with t1.
+*/
+
+
+temp(C,F) :- F is 1.8*C + 32.0.
+
+len([],0).
+
+len([_|T],N) :- len(T,L), N is L+1
+
+/*
+  Linear Arithmetic:
+      c1x1 + c2x2 + ... + cnxn + c = 0
+*/
+
+max(X,Y,X) :- X #>= Y.
+max(X,Y,Y) :- X #< Y.
+
+max(X,5,5), fd_labeling([X])
