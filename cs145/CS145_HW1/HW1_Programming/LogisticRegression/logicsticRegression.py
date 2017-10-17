@@ -28,12 +28,15 @@ class logistic:
     def gradients(self):
         gradients = []
         ##################### Please Fill Missing Lines Here #####################
-        h_1 = 1 / (1 + exp(-(self.parameters[0] + self.parameters[1] * 60 + self.parameters[2] * 155)))
-        h_2 = 1 / (1 + exp(-(self.parameters[0] + self.parameters[1] * 64 + self.parameters[2] * 135)))
-        h_3 = 1 / (1 + exp(-(self.parameters[0] + self.parameters[1] * 73 + self.parameters[2] * 170)))
-        grad_1 = - h_1 + (1 - h_2) + (1 - h_3)
-        grad_2 = - h_1*60 + (1-h_2)*64 + (1-h_3)*73
-        grad_3 = - h_1*155 + (1-h_2)*135 + (1-h_3)*170
+        e_x1 = exp(self.parameters[0] + self.parameters[1]*60 + self.parameters[2]*155)
+        e_x2 = exp(self.parameters[0] + self.parameters[1]*64 + self.parameters[2]*135)
+        e_x3 = exp(self.parameters[0] + self.parameters[1]*73 + self.parameters[2]*170)
+        p_x1 = - ( e_x1 / (1 + e_x1) )
+        p_x2 = - ( e_x2 / (1 + e_x2) )
+        p_x3 = - ( e_x3 / (1 + e_x3) )
+        grad_1 = - P_x1 + (1 - p_x2) + (1- p_x3)
+        grad_2 = - 60*P_x1 + 64*(1 - p_x2) + 73*(1- p_x3)
+        grad_3 = - 155*P_x1 + 135*(1 - p_x2) + 170*(1- p_x3)
         gradients.append(grad_1)
         gradients.append(grad_2)
         gradients.append(grad_3)
