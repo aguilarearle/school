@@ -27,10 +27,16 @@ class logistic:
     #******************************************************
     def gradients(self):
         gradients = []
-        grad_1 = self.parameters[0]
-        grad_1 = self.parameters[1]
-        grad_1 = self.parameters[2]
         ##################### Please Fill Missing Lines Here #####################
+        h_1 = 1 / (1 + exp(-(self.parameters[0] + self.parameters[1] * 60 + self.parameters[2] * 155)))
+        h_2 = 1 / (1 + exp(-(self.parameters[0] + self.parameters[1] * 64 + self.parameters[2] * 135)))
+        h_3 = 1 / (1 + exp(-(self.parameters[0] + self.parameters[1] * 73 + self.parameters[2] * 170)))
+        grad_1 = - h_1 + (1 - h_2) + (1 - h_3)
+        grad_2 = - h_1*60 + (1-h_2)*64 + (1-h_3)*73
+        grad_3 = - h_1*155 + (1-h_2)*135 + (1-h_3)*170
+        gradients.append(grad_1)
+        gradients.append(grad_2)
+        gradients.append(grad_3)
         return gradients
     #******************************************************
     def iterate(self):
