@@ -1,5 +1,11 @@
 import math
 import numpy
+
+import pandas as pd
+from pandas import Series, DataFrame
+
+from sklearn.linear_model import LogisticRegression
+
 #-------------------------------------------------------------------
 def log(n):
     return math.log(n)
@@ -11,7 +17,7 @@ class logistic:
     #******************************************************
     def __init__(self, parameters):
         self.parameters = parameters
-        self.alpha = .001
+        self.alpha = 1
     #******************************************************
     ########## Feel Free to Add Helper Functions ##########
     #******************************************************
@@ -47,9 +53,11 @@ class logistic:
         ##################### Please Fill Missing Lines Here #####################
         hessian = self.hessian()
         gradients = self.gradients()
-        gradients = numpy.array(gradients)
-        self.parameters = self.parameters + self.alpha *  numpy.dot(numpy.linalg.inv(hessian), gradients)
-        return self.parameters
+##        gradients = numpy.array(gradients)
+        self.parameters = self.parameters - self.alpha *  numpy.dot(numpy.linalg.inv(hessian), gradients)
+        self.parameters = numpy.array(self.parameters)
+
+        return self.parameters[0]
     #******************************************************
     def hessian(self):
         n = len(self.parameters)
@@ -63,9 +71,9 @@ class logistic:
         p_x2 = - (e_x2 / (1 + e_x2))
         p_x3 = - (e_x3 / (1 + e_x3))
 
-        mat1 = numpy.matrix([[p_x1,60*p_x1,155*p_x1],
-                             [p_x2,64*p_x2,135*p_x2],
-                             [p_x3,73*p_x3,170*p_x3]])
+        mat1 = numpy.matrix([[-p_x1,-60*p_x1,-155*p_x1],
+                             [-p_x2,-64*p_x2,-135*p_x2],
+                             [-p_x3,-73*p_x3,-170*p_x3]])
         mat2 = numpy.matrix([[1*(1-p_x1)  , 1*(1-p_x2)  , 1*(1-p_x3)],
                              [60*(1-p_x1) , 64*(1-p_x2) , 73*(1-p_x3)],
                              [155*(1-p_x1), 135*(1-p_x2), 170*(1-p_x3)]])
@@ -76,8 +84,31 @@ class logistic:
 #parameters = []
 ##################### Please Fill Missing Lines Here #####################
 ## initialize parameters
-parameters = [.25,.25, .25]
+parameters = [.25, .25, .25]
+print(parameters)
+
 l = logistic(parameters)
 parameters = l.iterate()
+print(parameters)
+
 l = logistic(parameters)
-print (l.iterate())
+parameters = l.iterate()
+print (parameters)
+
+l = logistic(parameters)
+parameters = l.iterate()
+print (parameters)
+
+l = logistic(parameters)
+parameters = l.iterate()
+print (parameters)
+
+X = DataFrame([[1,60,155],[1,64,135],[1,73,170]])
+Y = DataFrame([0,1,1])
+print(X)
+
+log_model = LogisticRegression()
+
+log_model.fit(X,Y)
+
+print(log_model.coef_)
