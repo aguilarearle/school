@@ -117,32 +117,7 @@ parameters = l.iterate()
 print(parameters)
 
 l = logistic(parameters)
-parameters = l.iterate()
-print (parameters)
-
-l = logistic(parameters)
-parameters = l.iterate()
-print (parameters)
-
-l = logistic(parameters)
-parameters = l.iterate()
-print (parameters)
-
-l = logistic(parameters)
-parameters = l.iterate()
-print (parameters)
-
-l = logistic(parameters)
-parameters = l.iterate()
-print (parameters)
-
-l = logistic(parameters)
-parameters = l.iterate()
-print (parameters)
-
-l = logistic(parameters)
-parameters = l.iterate()
-print (parameters)
+print(l.iterate())
 
 
 X = DataFrame([[60,155],[64,135],[73,170]])
