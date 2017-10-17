@@ -21,16 +21,10 @@ class logistic:
     #******************************************************
     def __init__(self, parameters):
         self.parameters = parameters
-        self.alpha = .1
+        self.alpha = 1
         self.m = DataFrame([[60, 155], [64, 135], [73, 170]])
         self.m = (self.m - self.m.mean()) / self.m.std()
 
-        print(self.m.iloc[0,0])
-        print(self.m.iloc[1,0])
-        print(self.m.iloc[2,0])
-        print(self.m.iloc[0,1])
-        print(self.m.iloc[1,1])
-        print(self.m.iloc[2,1])
     #******************************************************
     ########## Feel Free to Add Helper Functions ##########
     #******************************************************
@@ -57,21 +51,15 @@ class logistic:
     def gradients(self):
         gradients = []
         ##################### Please Fill Missing Lines Here #####################
-        e_x1 = exp(self.parameters[0] +
-                   self.parameters[1]*self.m.iloc[0,0] +
-                   self.parameters[2]*self.m.iloc[0,1])
-        e_x2 = exp(self.parameters[0] +
-                   self.parameters[1]*self.m.iloc[1,0] +
-                   self.parameters[2]*self.m.iloc[1,1])
-        e_x3 = exp(self.parameters[0] +
-                   self.parameters[1]*self.m.iloc[2,0] +
-                   self.parameters[2]*self.m.iloc[2,1])
+        e_x1 = exp(self.parameters[0] + self.parameters[1]*self.m.iloc[0,0] + self.parameters[2]*self.m.iloc[0,1])
+        e_x2 = exp(self.parameters[0] + self.parameters[1]*self.m.iloc[1,0] + self.parameters[2]*self.m.iloc[1,1])
+        e_x3 = exp(self.parameters[0] + self.parameters[1]*self.m.iloc[2,0] + self.parameters[2]*self.m.iloc[2,1])
         p_x1 =   e_x1 / (1 + e_x1)
         p_x2 =   e_x2 / (1 + e_x2)
         p_x3 =   e_x3 / (1 + e_x3)
         grad_1 = - p_x1 + (1 - p_x2) + (1- p_x3)
-        grad_2 = - 60 * p_x1 + 64 * (1 - p_x2) + 73 * (1- p_x3)
-        grad_3 = - 155 * p_x1 + 135 * (1 - p_x2) + 170 * (1- p_x3)
+        grad_2 = - self.m.iloc[0,0] * p_x1 + self.m.iloc[1,0] * (1 - p_x2) + self.m.iloc[2,0] * (1- p_x3)
+        grad_3 = - self.m.iloc[0,1] * p_x1 + self.m.iloc[1,1] * (1 - p_x2) + self.m.iloc[2,1] * (1- p_x3)
         gradients.append(grad_1)
         gradients.append(grad_2)
         gradients.append(grad_3)
@@ -91,30 +79,25 @@ class logistic:
     def hessian(self):
         n = len(self.parameters)
         hessian = numpy.zeros((n, n))
-
         ##################### Please Fill Missing Lines Here #####################
-        e_x1 = exp(self.parameters[0] +
-                   self.parameters[1]*self.m.iloc[0,0] +
-                   self.parameters[2]*self.m.iloc[0,1])
-        e_x2 = exp(self.parameters[0] +
-                   self.parameters[1]*self.m.iloc[1,0] +
-                   self.parameters[2]*self.m.iloc[1,1])
-        e_x3 = exp(self.parameters[0] +
-                   self.parameters[1]*self.m.iloc[2,0] +
-                   self.parameters[2]*self.m.iloc[2,1])
+        e_x1 = exp(self.parameters[0] + self.parameters[1]*self.m.iloc[0,0] + self.parameters[2]*self.m.iloc[0,1])
+        e_x2 = exp(self.parameters[0] + self.parameters[1]*self.m.iloc[1,0] + self.parameters[2]*self.m.iloc[1,1])
+        e_x3 = exp(self.parameters[0] + self.parameters[1]*self.m.iloc[2,0] + self.parameters[2]*self.m.iloc[2,1])
+
         p_x1 = e_x1 / (1 + e_x1)
         p_x2 = e_x2 / (1 + e_x2)
         p_x3 = e_x3 / (1 + e_x3)
 
-
-        mat1 = numpy.matrix([[-p_x1, -self.m.iloc[0,0]*p_x1, -self.m.iloc[0,1]*p_x1],
-                             [-p_x2, -self.m.iloc[1,0]*p_x2, -self.m.iloc[1,1]*p_x2],
-                             [-p_x3, -self.m.iloc[2,0]*p_x3, -self.m.iloc[2,1]*p_x3]])
+        mat1 = numpy.matrix([[p_x1, self.m.iloc[0,0]*p_x1, self.m.iloc[0,1]*p_x1],
+                             [p_x2, self.m.iloc[1,0]*p_x2, self.m.iloc[1,1]*p_x2],
+                             [p_x3, self.m.iloc[2,0]*p_x3, self.m.iloc[2,1]*p_x3]])
 
         mat2 = numpy.matrix([[1  *(1-p_x1)  , 1*(1-p_x2)  , 1*(1-p_x3)],
                              [self.m.iloc[0,0]*(1-p_x1) , self.m.iloc[1,0]*(1-p_x2) , self.m.iloc[2,0]*(1-p_x3)],
-                             [self.m.iloc[0,1]*(1-p_x1), self.m.iloc[1,1]*(1-p_x2), self.m.iloc[2,1]*(1-p_x3)]])
+                             [self.m.iloc[0,1]*(1-p_x1) , self.m.iloc[1,1]*(1-p_x2) , self.m.iloc[2,1]*(1-p_x3)]])
+
         hessian = numpy.dot(mat2, mat1)
+        hessian = -1 * hessian
         return hessian
 #-------------------------------------------------------------------
 #parameters = []
@@ -123,7 +106,7 @@ X = DataFrame([[60,155],[64,135],[73,170]])
 
 Y = DataFrame([0,1,1])
 Y = numpy.ravel(Y)
-print(X.iloc[0,0])
+
 ## initialize parameters
 parameters = [.25, .25, .25]
 #parameters = numpy.random.random_sample(3)
@@ -164,11 +147,10 @@ print (parameters)
 
 X = DataFrame([[60,155],[64,135],[73,170]])
 
-print( (X-X.mean()) /X.std())
+
 Y = DataFrame([0,1,1])
 Y = numpy.ravel(Y)
-print(X)
-
+X = (X - X.mean() )/ X.std()
 log_model = LogisticRegression(random_state=1)
 
 log_model.fit(X,Y)
