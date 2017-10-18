@@ -70,8 +70,11 @@ class Instances(object):
 
 def compute_entropy(data):
     total_entropy = 0.0
-    ########## Please Fill Missing Lines Here ##########
-
+    vals = data[0].value_counts()
+    total = vals[0] + vals[1]
+    I1 = 
+    I2 = 
+    entropy = vals[0]/total * math.log(vals[0]/total,2) + vals[1]*math.log(vals[1]/total,2)
     return total_entropy
     
 

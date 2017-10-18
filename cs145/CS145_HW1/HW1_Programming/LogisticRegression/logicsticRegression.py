@@ -57,7 +57,8 @@ class logistic:
         p_x1 =   e_x1 / (1 + e_x1)
         p_x2 =   e_x2 / (1 + e_x2)
         p_x3 =   e_x3 / (1 + e_x3)
-        grad_1 = - p_x1 + (1 - p_x2) + (1- p_x3)
+
+        grad_1 = - p_x1 + (1 - p_x2) + (1 - p_x3)
         grad_2 = - self.m.iloc[0,0] * p_x1 + self.m.iloc[1,0] * (1 - p_x2) + self.m.iloc[2,0] * (1- p_x3)
         grad_3 = - self.m.iloc[0,1] * p_x1 + self.m.iloc[1,1] * (1 - p_x2) + self.m.iloc[2,1] * (1- p_x3)
         gradients.append(grad_1)
@@ -71,7 +72,7 @@ class logistic:
         gradients = self.gradients()
 
 ##        gradients = numpy.array(gradients)
-        self.parameters = self.parameters - self.alpha *  numpy.dot(numpy.linalg.inv(hessian), gradients)
+        self.parameters = self.parameters -  numpy.dot(numpy.linalg.inv(hessian), gradients)
         self.parameters = numpy.array(self.parameters)
 
         return self.parameters[0]
