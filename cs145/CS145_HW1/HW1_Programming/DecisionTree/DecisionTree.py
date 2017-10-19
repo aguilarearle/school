@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
+from __future__ import division
+
 import sys
 import random
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import KFold
 from collections import Counter
+
+import math
+
 
 # Class for instances with operations
 class Instances(object):
@@ -13,7 +19,7 @@ class Instances(object):
         self.num_attrs = -1
         self.num_instances = 0
         self.attr_set = []
-        
+
 
     def add_instance(self, _lbl, _attrs):
         self.label.append(_lbl)
@@ -25,7 +31,7 @@ class Instances(object):
         self.num_instances += 1
         assert(self.num_instances == len(self.label))
 
-    
+
     def make_attr_set(self):
         self.attr_set = [set([self.attrs[i][j] for i in range(self.num_instances)]) for j in range(self.num_attrs)]
 
@@ -37,18 +43,18 @@ class Instances(object):
                 self.add_instance(data[0], data[1:])
         self.make_attr_set()
         return self
-    
+
 
     def split(self, att_idx):
         assert(0 <= att_idx < self.num_attrs)
         split_data = {x: Instances() for x in self.attr_set[att_idx]}
         for i in range(self.num_instances):
-            key = self.attrs[i][att_idx] 
+            key = self.attrs[i][att_idx]
             split_data[key].add_instance(self.label[i], self.attrs[i])
         for key in split_data:
             split_data[key].attr_set = self.attr_set
         return split_data
-    
+
 
     def shuffle(self):
         indices = list(range(len(self.label)))
@@ -69,19 +75,59 @@ class Instances(object):
 
 
 def compute_entropy(data):
+
     total_entropy = 0.0
-    vals = data[0].value_counts()
-    total = vals[0] + vals[1]
-    I1 = 
-    I2 = 
-    entropy = vals[0]/total * math.log(vals[0]/total,2) + vals[1]*math.log(vals[1]/total,2)
+    counts = np.array(data)
+    counts = pd.value_counts(pd.Series(counts))
+    if (counts.shape[0] == 1):
+        total = counts[0]
+        total_entropy = - (counts[0]/total) * math.log(counts[0]/total, 2)
+    elif (counts.shape[0] == 2):
+        total = counts[0] + counts[1]
+        total_entropy = -  (counts[0] / total) * math.log(counts[0] / total, 2) - (counts[1] / total) * math.log(counts[1] / total, 2)
     return total_entropy
-    
+
 
 def compute_info_gain(data, att_idx):
     info_gain = 0.0
     ########## Please Fill Missing Lines Here ##########
+    info_D = compute_entropy(data.label)
+    print(info_D)
+    info_ATT = 0.0
+#    print(info_D)
+    att = pd.DataFrame(data.attrs)
+    lbl = pd.DataFrame(data.label)
 
+    att_lbl = pd.concat([att[att_idx], lbl], axis=1)
+    att_lbl.columns = [0,1]
+#    att_lbl_dropq = att_lbl[att_lbl[0] != '?']
+
+    total = att_lbl.shape[0]
+    counts = pd.value_counts(att_lbl[0])
+    lbl = counts.index.values
+    #print(len(lbl))
+    if(len(lbl) == 0):
+        print("Zero")
+
+    if(len(lbl) == 1):
+        att_lbl_1 = att_lbl[att_lbl[0] == lbl[0]]
+        info_ATT  = (counts[0] / total) * compute_entropy(att_lbl_1[1].tolist())
+    elif(len(lbl) == 2):
+        att_lbl_1 = att_lbl[att_lbl[0] == lbl[0]]
+        att_lbl_2 = att_lbl[att_lbl[0] == lbl[1]]
+        info_ATT = (counts[0]/total) * compute_entropy(att_lbl_1[1].tolist()) + (counts[1] / total) * compute_entropy(att_lbl_2[1].tolist())
+    elif(len(lbl) == 3):
+        att_lbl_1 = att_lbl[att_lbl[0] == lbl[0]]
+        att_lbl_2 = att_lbl[att_lbl[0] == lbl[1]]
+        att_lbl_3 = att_lbl[att_lbl[0] == lbl[2]]
+        info_ATT = (counts[0] / total) * compute_entropy(att_lbl_1[1].tolist()) + \
+                   (counts[1] / total) * compute_entropy(att_lbl_2[1].tolist()) +\
+                   (counts[2] / total) * compute_entropy(att_lbl_3[1].tolist())
+
+
+    #.values.flatten()
+    info_gain = info_D - info_ATT
+    #print(info_gain)
     return info_gain
 
 
@@ -127,8 +173,8 @@ class DecisionTree(object):
             return self.m_class
         else:
             return self.m_successors[attrs[self.m_attr_idx]].classify(attrs)
-            
- 
+
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 1 + 1:
@@ -136,13 +182,21 @@ if __name__ == '__main__':
         sys.exit(0)
     random.seed(27145)
     np.random.seed(27145)
-    
+
     sel_func = int(sys.argv[2]) if len(sys.argv) > 1 + 1 else 0
-    assert(0 <= sel_func <= 1) 
+    assert(0 <= sel_func <= 1)
 
     data = Instances().load_file(sys.argv[1])
+
     data = data.shuffle()
-    
+
+    test1 = pd.DataFrame(data.attrs)
+    test2 = pd.DataFrame(data.label)
+    test3 = pd.concat([test1,test2], axis = 1)
+    #  print(test1)
+    #  print(test2)
+#    print(test3[[16,17]])
+    #.values.flatten()
     # 5-Fold CV
     kf = KFold(n_splits=5)
     n_fold = 0
@@ -159,4 +213,4 @@ if __name__ == '__main__':
         print('Fold-{}: {}'.format(n_fold, nfold_acc))
 
     print('5-CV Accuracy = {}'.format(np.mean(accuracy)))
-        
+
