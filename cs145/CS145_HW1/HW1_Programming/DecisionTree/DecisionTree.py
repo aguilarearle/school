@@ -77,66 +77,57 @@ class Instances(object):
 def compute_entropy(data):
 
     total_entropy = 0.0
-    counts = np.array(data)
-    counts = pd.value_counts(pd.Series(counts))
-    if (counts.shape[0] == 1):
-        total = counts[0]
-        total_entropy = - (counts[0]/total) * math.log(counts[0]/total, 2)
-    elif (counts.shape[0] == 2):
-        total = counts[0] + counts[1]
-        total_entropy = -  (counts[0] / total) * math.log(counts[0] / total, 2) - (counts[1] / total) * math.log(counts[1] / total, 2)
+    vals = {}
+   
+    for element in data.label:
+        if element in vals:
+            vals[element] += 1
+        else:
+            vals[element] = 1
+
+    total = sum(vals.values())
+    for value in vals:
+        total_entropy -= (vals[value]/total) *math.log(vals[value]/total,2)
+
     return total_entropy
 
 
 def compute_info_gain(data, att_idx):
     info_gain = 0.0
     ########## Please Fill Missing Lines Here ##########
-    info_D = compute_entropy(data.label)
-    print(info_D)
+    info_D = compute_entropy(data)
     info_ATT = 0.0
-#    print(info_D)
-    att = pd.DataFrame(data.attrs)
-    lbl = pd.DataFrame(data.label)
 
-    att_lbl = pd.concat([att[att_idx], lbl], axis=1)
-    att_lbl.columns = [0,1]
-#    att_lbl_dropq = att_lbl[att_lbl[0] != '?']
-
-    total = att_lbl.shape[0]
-    counts = pd.value_counts(att_lbl[0])
-    lbl = counts.index.values
-    #print(len(lbl))
-    if(len(lbl) == 0):
-        print("Zero")
-
-    if(len(lbl) == 1):
-        att_lbl_1 = att_lbl[att_lbl[0] == lbl[0]]
-        info_ATT  = (counts[0] / total) * compute_entropy(att_lbl_1[1].tolist())
-    elif(len(lbl) == 2):
-        att_lbl_1 = att_lbl[att_lbl[0] == lbl[0]]
-        att_lbl_2 = att_lbl[att_lbl[0] == lbl[1]]
-        info_ATT = (counts[0]/total) * compute_entropy(att_lbl_1[1].tolist()) + (counts[1] / total) * compute_entropy(att_lbl_2[1].tolist())
-    elif(len(lbl) == 3):
-        att_lbl_1 = att_lbl[att_lbl[0] == lbl[0]]
-        att_lbl_2 = att_lbl[att_lbl[0] == lbl[1]]
-        att_lbl_3 = att_lbl[att_lbl[0] == lbl[2]]
-        info_ATT = (counts[0] / total) * compute_entropy(att_lbl_1[1].tolist()) + \
-                   (counts[1] / total) * compute_entropy(att_lbl_2[1].tolist()) +\
-                   (counts[2] / total) * compute_entropy(att_lbl_3[1].tolist())
-
-
-    #.values.flatten()
+    dat_slice = data.split(att_idx)
+    for element in data.attr_set[att_idx]:
+        info_ATT += (dat_slice[element].num_instances/data.num_instances) * compute_entropy(dat_slice[element])
     info_gain = info_D - info_ATT
-    #print(info_gain)
+    
     return info_gain
 
 
 def comput_gain_ratio(data, att_idx):
     gain_ratio = 0.0
+
     ########## Please Fill Missing Lines Here ##########
+    gain = compute_info_gain(data, att_idx)
+    count_dict = {}
+    test = data.attr_set[att_idx]
+    for element in test:
+        if element in count_dict:
+            count_dict[element] += 1
+        else:
+            count_dict[element]  = 1
+    split = 0.0
+    total = sum(count_dict.values())
 
-    return gain_ratio
+    for element in count_dict:
+        split -= (count_dict[element]/total) * math.log((count_dict[element]/total),2)
 
+    if(split == 0):
+        return split   
+    gain_ratio = gain/split
+    return gain
 
 # Class of the decision tree model based on the ID3 algorithm
 class DecisionTree(object):
@@ -157,9 +148,13 @@ class DecisionTree(object):
             self.m_attr_idx = np.argmax(gains)
             if np.abs(gains[self.m_attr_idx]) < 1e-9:
                 # A leaf to decide the decided class
+
                 self.m_attr_idx = None
                 ########## Please Fill Missing Lines Here ##########
 
+                counts = pd.value_counts(pd.Series(self.instances.label))
+                
+                self.m_class = counts.idxmax()                
             else:
                 # A branch
                 split_data = self.instances.split(self.m_attr_idx)
@@ -193,10 +188,7 @@ if __name__ == '__main__':
     test1 = pd.DataFrame(data.attrs)
     test2 = pd.DataFrame(data.label)
     test3 = pd.concat([test1,test2], axis = 1)
-    #  print(test1)
-    #  print(test2)
-#    print(test3[[16,17]])
-    #.values.flatten()
+
     # 5-Fold CV
     kf = KFold(n_splits=5)
     n_fold = 0

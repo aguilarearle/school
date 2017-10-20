@@ -33,16 +33,12 @@ def getBeta(train_x, train_y):
 def getBetaBatchGradient(train_x, train_y, alpha):
     beta = np.random.rand(train_x.shape[1])
     ########## Please Fill Missing Lines Here ##########
-    converge = False
-    err = train_y - np.dot(train_x, beta)
-    while not converge:
-        temp_err = np.array(err )
-
-        beta =  beta + alpha * np.dot(np.transpose(train_x), err)
-
+    #converge = False
+    
+    for i in range(1,100):
         err = train_y - np.dot(train_x, beta)
-        if(abs(np.sum(temp_err - err) ) <  100):
-            converge = True
+        beta =  beta + alpha * np.dot( np.transpose(train_x), err)
+
     return beta
     
 # train_x and train_y are numpy arrays
@@ -52,8 +48,10 @@ def getBetaStochasticGradient(train_x, train_y, alpha):
     beta = np.random.rand(train_x.shape[1])
     ########## Please Fill Missing Lines Here ##########
     err = train_y - np.dot(train_x, beta)
-    for i in range(train_x.shape[0]):
-        beta = beta + alpha * err[i] * train_x[i,:]
+
+    for i in range(1,100):
+        for j in range(train_x.shape[0]):
+            beta = beta + alpha * err[j] * train_x[j,:]
     return beta
 
 # predicted_y and test_y are the predicted and actual y values respectively as numpy arrays
@@ -117,7 +115,8 @@ class LinearRegression(object):
 if __name__ == '__main__':
     # Change 1st paramter to 0 for closed form, 1 for batch gradient, 2 for stochastic gradient
     # Add a second paramter with value 1 for z score normalization
-    '''    print('------------------------------------------------')
+
+    print('------------------------------------------------')
     print('Closed Form Without Normalization')
     lm = LinearRegression(0)
     lm.predict()
@@ -130,7 +129,7 @@ if __name__ == '__main__':
     print('------------------------------------------------')
     print('Stochastic Gradient Without Normalization')
     lm = LinearRegression(2)
-    lm.predict()'''
+    lm.predict()
     
     print('------------------------------------------------')
     print('Closed Form With Normalization')
