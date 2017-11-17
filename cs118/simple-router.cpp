@@ -43,30 +43,32 @@ SimpleRouter::handlePacket(const Buffer& packet, const std::string& inIface)
   macToString(iface->addr);
   std::cerr << ipToString(iface->ip) << std::endl;
   if (ethtype == ethertype_arp){ // ARP
+
       const uint8_t* arp_buf = buf + sizeof(ethernet_hdr);
       const arp_hdr *hdr = reinterpret_cast<const arp_hdr*>(arp_buf);
+      unsigned short operation = ntohs(hdr->arp_op);
 
-      if(htons(hdr->arp_op) == 1){ // Request
+      if(operation == arp_op_request){ // Request
           ipToString(iface->ip);
           //fprintf(stderr, "%d", iface->addr);
           size_t packet_length = sizeof(arp_hdr) + sizeof(ethernet_hdr);
           ethernet_hdr *new_ethernet_hdr = new ethernet_hdr();
-          //new_ethernet_hdr->ether_shost = ehdr
-          //new_ethernet_hdr->ether_dhost = ehdr->ether_dhost;
+          //new_ethernet_hdr->ether_shost = ehdr->ether_dhost;
+          //new_ethernet_hdr->ether_dhost = ;
           //new_ethernet_hdr->ether_dhost = ehdr->ether_type;
           arp_hdr *new_arp_hdr = new arp_hdr();
-          //new_arp_hdr->arp_hrd = hdr->arp_hrd;
-          //new_arp_hdr->arp_pro = hdr->arp_pro;
-          //new_arp_hdr->arp_hln = hdr->arp_hln ;
-          //new_arp_hdr->arp_pln = hdr->arp_pln ;
-          //new_arp_hdr->arp_op = hdr->arp_ ;
-          //new_arp_hdr->arp_sha = hdr->arp_ ;
-          //new_arp_hdr->arp_sip = hdr->arp_ ;
-          //new_arp_hdr->arp_tha = hdr->arp_ ;
-          //new_arp_hdr->arp_tip = hdr->arp_;
+          new_arp_hdr->arp_hrd = hdr->arp_hrd;
+          new_arp_hdr->arp_pro = hdr->arp_pro;
+          new_arp_hdr->arp_hln = hdr->arp_hln ;
+          new_arp_hdr->arp_pln = hdr->arp_pln ;
+          new_arp_hdr->arp_op =  htons(2);
+          new_arp_hdr->arp_sha = iface->addr;
+          new_arp_hdr->arp_sip = hdr->arp_ip;
+          new_arp_hdr->arp_tha = hdr->arp_sha;
+          new_arp_hdr->arp_tip = hdr->arp_sip;
 
       }
-      else if (htons(hdr->arp_op) == 2) { //Reply
+      else if (operation == arp_op_reply) { //Reply
       }
       //fprintf(stderr, "\tOpcode: %d\n", htons(hdr->arp_op));
   }
