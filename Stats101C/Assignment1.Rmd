@@ -1,0 +1,184 @@
+---
+title: "Assignment 1"
+author: "Earle Aguilar"
+date: "April 5, 2018"
+output: pdf_document
+---
+
+```{r, echo=FALSE, eval = FALSE}
+library(dplyr)
+```
+# Problem 1
+
+##a)
+
+\textbf{Inference Questions:}
+
+Does the location affect the price of real state? \newline
+Does the number of baths affect the price of real state?
+
+\textbf{Prediction Questions:}
+
+Do larger square feet increase the price of real state? \newline
+Does the type of real state increase the price?
+
+##a)
+
+\textbf{Does the location affect the price of real state?}
+
+```{r}
+df <- read.csv("~/GitHub/LArealestate.csv")
+summary(df)
+```
+
+
+The city column has double culver city entries with different capilatization. Im going to create a new column ('city2') which has the correct number of factors.
+
+```{r}
+city2 <- as.factor(tolower(as.character(df$city)) )
+df$city2 <- city2
+```
+
+First I'm doing a preliminiary check to determine how significant the city is in the model in comparison to other variables of interest.
+
+```{r}
+summary(lm(df$price ~ df$city2 + df$beds + df$baths + df$sqft + df$type, df))
+```
+
+The above output shows that aside from square feet the next significant parameter is the city so I will make a model with just real state price and the city.
+
+
+\textbf{Fitting Model}
+
+```{r}
+model <- lm(df$price ~ df$city2, df)
+summary(model)
+```
+
+According to the model the city where the real state is located is significant. Beverly hills has the highest cost followed by Culver city and then Palms. 
+
+# Problem 2
+
+```{r}
+df2 <- read.csv("~/GitHub/hw1.csv")
+```
+##a)
+
+\textbf{model1} $f(x) = b_0 + b_1x$ :
+
+```{r}
+m1 <- lm(y~x, df2)
+anova(m1)
+```
+
+\textbf{model2} $f(x) = b_0 + b_1x + b_2x^2$:
+
+```{r}
+m2 <- lm(y~x+I(x^2), df2)
+anova(m2)
+```
+
+\textbf{model3} $f(x) = b_0 + b_1x + b_2x^2 + b_3x^3$:
+
+```{r}
+m3 <- lm(y~x+I(x^2)+I(x^3), df2)
+anova(m3)
+```
+
+\textbf{model4} $f(x) = b_0 + b_1x + b_2x^2 + b_3x^3 + b_4x^4$:
+
+```{r}
+m4 <- lm(y~x+I(x^2)+I(x^3)+I(x^4), df2)
+anova(m4)
+```
+
+\textbf{model5} $f(x) = b_0 + b_1x + b_2x^2 + b_3x^3 + b_4x^4 + b_5x^5$:
+
+```{r}
+m5 <- lm(y~x+I(x^2)+I(x^3)+I(x^4)+I(x^5), df2)
+anova(m5)
+```
+
+
+##b)
+
+Based on the MSE for the training data I would choose model 4 because it has the lowest MSE.
+
+##c)
+
+Creating testing data.
+
+```{r}
+set.seed(456)
+x=seq(0,4,by=.5)
+y=500+200*x + rnorm(length(x),0,100)
+df3 <- data.frame(x,y)
+
+```
+
+```{r}
+X_test <-seq(0,4,by=.5)
+df_test <- data.frame(X_test)
+```
+
+```{r}
+myMSE <- function(arg1, arg2, n){
+ s_ = (arg1-arg2)^2
+ return (sum(s_)/n)
+}
+```
+
+Test MSE model1:
+
+```{r}
+m1.predictions <- predict(m1, df_test)
+myMSE(df3$y, m1.predictions, nrow(df3) )
+```
+
+Test MSE model2:
+
+```{r}
+m2.predictions <- predict(m2, df_test)
+myMSE(df3$y, m2.predictions, nrow(df3) )
+```
+
+Test MSE model3:
+```{r}
+m3.predictions <- predict(m3, df_test)
+myMSE(df3$y, m3.predictions, nrow(df3) )
+```
+
+Test MSE model4:
+```{r}
+m4.predictions <- predict(m4, df_test)
+myMSE(df3$y, m4.predictions, nrow(df3) )
+```
+
+Test MSE model5:
+```{r}
+m5.predictions <- predict(m5, df_test)
+myMSE(df3$y, m5.predictions, nrow(df3) )
+```
+
+##d) 
+The MSE for training begins to fluccuate towards smaller values as the model has higher polynomial degrees. The test MSE is optimal with the simplest model and begins to fluccuate towards larger values as the number of degrees in the polynomial increases. The MSEs make sense the data come from a linear sample. In the training case the MSE is being reduced because the model is overfitting and explaning random error. This model will fail with testing data however the simple one degree polynomial model does well in test.
+
+# Problem 3
+
+##a) 
+
+This is a regression problem and we are more interested in inference. $n = 500$,$p = 3$.
+
+##b) 
+
+This is a classification problem and we are interested in prediction. $n = 20$, $p = 13$
+
+##c)
+
+This is a regression problem and we are interested in prediction. $n = 52$, $p = 3$
+
+# Problem 4
+
+Given the following model $y_i = X\beta + \epsilon$ the assumptions are $E(\epsilon \vert X) = 0 \ \ \ \forall X$ and $Var(\epsilon \vert X) = \sigma_{\epsilon}^2$.
+
+If there is some lab work done and each sample contaminates another then the errors are not independent and so the variablility will not equal $\sigma$

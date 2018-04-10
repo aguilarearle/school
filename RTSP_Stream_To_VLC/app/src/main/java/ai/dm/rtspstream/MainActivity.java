@@ -80,10 +80,11 @@ public class MainActivity extends Activity implements OnClickListener,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         mButtonSave     = (Button) findViewById(R.id.video);
         mButtonVideo    = (Button) findViewById(R.id.save);
         mButtonStart    = (ImageButton) findViewById(R.id.start);
@@ -161,6 +162,8 @@ public class MainActivity extends Activity implements OnClickListener,
 
 
     }
+
+    // Starts/stops stream and connects/disconnects server.
     private void toggleStream(){
         mProgressBar.setVisibility(View.VISIBLE);
         if(!mClient.isStreaming()){
@@ -176,21 +179,48 @@ public class MainActivity extends Activity implements OnClickListener,
             editor.commit();
 
             Pattern uri = Pattern.compile("rtsp://(.+):(\\d*)/(.+)");
+            Pattern mine = Pattern.compile("None");
             Matcher m = uri.matcher(mEdittextURI.getText().toString());
-            ip = m.group(1);
-            port = m.group(2);
-            path = m.group(3);
-
+            Matcher m2= mine.matcher(mEdittextURI.getText().toString());
+            if (m2.find()){
+                ip = "192.168.1.5";
+                port = "1935";
+                path = "/live/test.steam";
+            }
+            else {
+                ip = m.group(1);
+                port = m.group(2);
+                path = m.group(3);
+            }
             mClient.setCredentials(mEditTextUsername.getText().toString(), mEditTextPassword.toString());
             mClient.setServerAddress(ip, Integer.parseInt(port));
             mClient.setStreamPath("/"+path);
             mClient.startStream();
-            
+        } else {
+            // Stop stream (Disconnect RTSP server)
+            mClient.stopStream();
         }
     }
+    private void enableUI(){
+        mButtonStart.setEnabled(true);
+        mButtonCamera.setEnabled(true);
+    }
+    private void logError(final String msg){
+        final String error = (msg == null) ? "Error unknown" : msg;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage(msg).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-
+        mSession.startPreview();
     }
 
     @Override
@@ -200,7 +230,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
+        mClient.stopStream();
     }
 
     @Override
@@ -210,7 +240,33 @@ public class MainActivity extends Activity implements OnClickListener,
                 mLayoutServerSettings.setVisibility(View.GONE);
                 toggleStream();
                 break;
-
+            case R.id.flash:
+                if(mButtonFlash.getTag().equals("on")){
+                    mButtonFlash.setTag("off");
+                    mButtonFlash.setImageResource(R.drawable.ic_flash_on_holo_light);
+                } else{
+                    mButtonFlash.setImageResource(R.drawable.ic_flash_off_holo_light);
+                    mButtonFlash.setTag("on");
+                }
+            case R.id.camera:
+                mSession.switchCamera();
+                break;
+            case R.id.settings:
+                if (mLayoutVideoSettings.getVisibility() == View.GONE &&
+                        mLayoutServerSettings.getVisibility() == View.GONE){
+                    mLayoutServerSettings.setVisibility(View.VISIBLE);
+                } else {
+                    mLayoutServerSettings.setVisibility(View.GONE);
+                    mLayoutVideoSettings.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.video:
+                mRadioGroup.clearCheck();
+                mLayoutServerSettings.setVisibility(View.GONE);
+                mLayoutVideoSettings.setVisibility(View.VISIBLE);
+            case R.id.save:
+                mLayoutServerSettings.setVisibility(View.GONE);
+                break;
         }
 
     }
@@ -224,22 +280,69 @@ public class MainActivity extends Activity implements OnClickListener,
 
     @Override
     public void onRtspUpdate(int message, Exception exception) {
-
+        switch (message){
+            case RtspClient.ERROR_CONNECTION_FAILED:
+            case RtspClient.ERROR_WRONG_CREDENTIALS:
+                mProgressBar.setVisibility(View.GONE);
+                enableUI();
+                logError(exception.getMessage());
+                exception.printStackTrace();
+                break;
+        }
     }
 
     @Override
     public void onBitrateUpdate(long bitrate) {
-
+        mTextBitrate.setText(""+bitrate/1000+" kbps");
     }
 
     @Override
     public void onSessionError(int reason, int streamType, Exception e) {
+        mProgressBar.setVisibility(View.GONE);
+        switch (reason){
+            case Session.ERROR_CAMERA_ALREADY_IN_USE:
+                break;
+            case Session.ERROR_CAMERA_HAS_NO_FLASH:
+                mButtonFlash.setImageResource(R.drawable.ic_flash_on_holo_light);
+                mButtonFlash.setTag("off");
+                break;
+            case Session.ERROR_INVALID_SURFACE:
+                break;
+            case Session.ERROR_STORAGE_NOT_READY:
+                break;
+            case Session.ERROR_CONFIGURATION_NOT_SUPPORTED:
+                VideoQuality quality = mSession.getVideoTrack().getVideoQuality();
+                logError("The following settings are not supported on this phone: " +
+                quality.toString() + " " + "("+e.getMessage()+")" );
+                e.printStackTrace();
+                return;
+            case Session.ERROR_OTHER:
+                break;
+        }
+        if(e != null){
+            logError(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mClient.release();
+        mSession.release();
+        mSurfaceView.getHolder().removeCallback(this);
     }
 
     @Override
     public void onPreviewStarted() {
-
+        if (mSession.getCamera() == CameraInfo.CAMERA_FACING_FRONT){
+            mButtonFlash.setEnabled(false);
+            mButtonFlash.setTag("off");
+            mButtonFlash.setImageResource(R.drawable.ic_flash_on_holo_light);
+        }
+        else {
+            mButtonFlash.setEnabled(true);
+        }
     }
 
     @Override
@@ -249,11 +352,15 @@ public class MainActivity extends Activity implements OnClickListener,
 
     @Override
     public void onSessionStarted() {
-
+        enableUI();
+        mButtonStart.setImageResource(R.drawable.ic_switch_video_active);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void onSessionStopped() {
-
+        enableUI();
+        mButtonStart.setImageResource(R.drawable.ic_switch_video);
+        mProgressBar.setVisibility(View.GONE);
     }
 }
