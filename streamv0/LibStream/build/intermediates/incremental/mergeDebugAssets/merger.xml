@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/earleaguilar/git/school/streamv0/LibStream/src/main/assets"/><source path="/Users/earleaguilar/git/school/streamv0/LibStream/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/Users/earleaguilar/git/school/streamv0/LibStream/src/debug/assets"/></dataSet></merger>

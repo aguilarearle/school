@@ -608,7 +608,7 @@ public class RtspClient {
 			}
 			if (line==null) throw new SocketException("Connection lost");
 
-			Log.d(TAG, "Response from server: "+response.status);
+			Log.d(TAG, "Response from server$$$$$$$: "+response.status);
 
 			return response;
 		}

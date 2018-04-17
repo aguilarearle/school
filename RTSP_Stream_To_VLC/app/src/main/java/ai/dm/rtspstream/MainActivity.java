@@ -3,24 +3,33 @@ package ai.dm.rtspstream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ai.dm.rtspstream.api.CustomRtspServer;
 import net.majorkernelpanic.streaming.MediaStream;
 import net.majorkernelpanic.streaming.Session;
 import net.majorkernelpanic.streaming.SessionBuilder;
 import net.majorkernelpanic.streaming.audio.AudioQuality;
 import net.majorkernelpanic.streaming.gl.SurfaceView;
 import net.majorkernelpanic.streaming.rtsp.RtspClient;
+import net.majorkernelpanic.streaming.rtsp.RtspServer;
 import net.majorkernelpanic.streaming.video.VideoQuality;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.ComponentName;
+
 
 import android.hardware.Camera.CameraInfo;
+
 import android.os.Bundle;
+import android.os.IBinder;
+
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -45,10 +54,10 @@ import org.w3c.dom.Text;
 
 
 public class MainActivity extends Activity implements OnClickListener,
-        RtspClient.Callback, Session.Callback,
+        Session.Callback,
         SurfaceHolder.Callback, OnCheckedChangeListener{
 
-    public final static String TAG = "MainActicity";
+    public final static String TAG = "MainActivity";
 
     private Button mButtonSave;
     private Button mButtonVideo;
@@ -75,7 +84,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
     private Session mSession;
 
-    private RtspClient mClient;
+    private RtspServer mRtspServer;
 
 
     @Override
@@ -93,7 +102,7 @@ public class MainActivity extends Activity implements OnClickListener,
         mButtonSettings = (ImageButton) findViewById(R.id.settings);
 
         mSurfaceView          = (SurfaceView) findViewById(R.id.surface);
-        mEdittextURI          = (EditText) findViewById(R.id.uri);
+        //mEdittextURI          = (EditText) findViewById(R.id.uri);
         mEditTextPassword     = (EditText) findViewById(R.id.password);
         mEditTextUsername     = (EditText) findViewById(R.id.username);
         mTextBitrate          = (TextView) findViewById(R.id.bitrate);
@@ -112,7 +121,7 @@ public class MainActivity extends Activity implements OnClickListener,
         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         if (mPrefs.getString("uri", null) != null)
             mLayoutServerSettings.setVisibility(View.GONE);
-        mEdittextURI.setText(mPrefs.getString("uri", getString(R.string.default_stream)));
+        //mEdittextURI.setText(mPrefs.getString("uri", getString(R.string.default_stream)));
         mEditTextPassword.setText(mPrefs.getString("Password", ""));
         mEditTextUsername.setText(mPrefs.getString("username", ""));
 
@@ -129,13 +138,18 @@ public class MainActivity extends Activity implements OnClickListener,
                 .build();
 
         // Configures RTSP client
-        mClient = new RtspClient();
-        mClient.setSession(mSession);
-        mClient.setCallback(this);
+        //mClient = new RtspClient();
+        //mClient.setSession(mSession);
+        //mClient.setCallback(this);
 
-
+        this.startService(new Intent(this, CustomRtspServer.class));
         mSurfaceView.getHolder().addCallback(this);
         selectQuality();
+
+    }
+
+    public void onStart(){
+        super.onStart();
 
     }
 
@@ -166,39 +180,25 @@ public class MainActivity extends Activity implements OnClickListener,
     // Starts/stops stream and connects/disconnects server.
     private void toggleStream(){
         mProgressBar.setVisibility(View.VISIBLE);
-        if(!mClient.isStreaming()){
-            String ip, port, path;
+        if(mRtspServer == null){
 
 
             // Save the content user inputs in sharedprefs
             SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
             Editor editor = mPrefs.edit();
-            editor.putString("uri", mEdittextURI.getText().toString());
+            //editor.putString("uri", mEdittextURI.getText().toString());
             editor.putString("password", mEditTextPassword.getText().toString());
             editor.putString("username", mEditTextUsername.getText().toString());
             editor.commit();
 
-            Pattern uri = Pattern.compile("rtsp://(.+):(\\d*)/(.+)");
-            Pattern mine = Pattern.compile("None");
-            Matcher m = uri.matcher(mEdittextURI.getText().toString());
-            Matcher m2= mine.matcher(mEdittextURI.getText().toString());
-            if (m2.find()){
-                ip = "192.168.1.5";
-                port = "1935";
-                path = "/live/test.steam";
-            }
-            else {
-                ip = m.group(1);
-                port = m.group(2);
-                path = m.group(3);
-            }
-            mClient.setCredentials(mEditTextUsername.getText().toString(), mEditTextPassword.toString());
-            mClient.setServerAddress(ip, Integer.parseInt(port));
-            mClient.setStreamPath("/"+path);
-            mClient.startStream();
+            //mRtspServer.setAuthorization(mEditTextUsername.getText().toString(),mEditTextPassword.toString());
+            bindService(new Intent(this, CustomRtspServer.class), mRtspServiceConnection, Context.BIND_AUTO_CREATE);
         } else {
+            mRtspServer.removeCallbackListener(mRtspCallbackListener);
+            unbindService(mRtspServiceConnection);
             // Stop stream (Disconnect RTSP server)
-            mClient.stopStream();
+            this.stopService(new Intent(this,CustomRtspServer.class));
+
         }
     }
     private void enableUI(){
@@ -230,7 +230,9 @@ public class MainActivity extends Activity implements OnClickListener,
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        mClient.stopStream();
+        this.stopService(new Intent(this,CustomRtspServer.class));
+
+        //mClient.stopStream();
     }
 
     @Override
@@ -278,18 +280,6 @@ public class MainActivity extends Activity implements OnClickListener,
         selectQuality();
     }
 
-    @Override
-    public void onRtspUpdate(int message, Exception exception) {
-        switch (message){
-            case RtspClient.ERROR_CONNECTION_FAILED:
-            case RtspClient.ERROR_WRONG_CREDENTIALS:
-                mProgressBar.setVisibility(View.GONE);
-                enableUI();
-                logError(exception.getMessage());
-                exception.printStackTrace();
-                break;
-        }
-    }
 
     @Override
     public void onBitrateUpdate(long bitrate) {
@@ -328,7 +318,7 @@ public class MainActivity extends Activity implements OnClickListener,
     @Override
     public void onDestroy(){
         super.onDestroy();
-        mClient.release();
+        //Client.release();
         mSession.release();
         mSurfaceView.getHolder().removeCallback(this);
     }
@@ -363,4 +353,36 @@ public class MainActivity extends Activity implements OnClickListener,
         mButtonStart.setImageResource(R.drawable.ic_switch_video);
         mProgressBar.setVisibility(View.GONE);
     }
+
+    private ServiceConnection mRtspServiceConnection = new ServiceConnection(){
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service){
+            mRtspServer = (CustomRtspServer) ((RtspServer.LocalBinder)service).getService();
+            mRtspServer.addCallbackListener(mRtspCallbackListener);
+            mRtspServer.start();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {}
+
+
+    };
+
+    private RtspServer.CallbackListener mRtspCallbackListener = new RtspServer.CallbackListener() {
+        @Override
+        public void onError(RtspServer server, Exception e, int error) {
+            // Port is alreadu being used by another app
+            if(error == RtspServer.ERROR_BIND_FAILED){
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(R.string.port_used)
+                        .setMessage(getString(R.string.bind_failed, "RTSP")).show();
+            }
+        }
+
+        @Override
+        public void onMessage(RtspServer server, int message) {
+
+        }
+    };
+
 }

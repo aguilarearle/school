@@ -14,6 +14,7 @@
     <string name="username_hint">Leave empty if not needed</string>
     <string name="default_bitrate">0 kbps</string>
     <string name="default_stream">rtsp://192.168.1.5:1935/live/test.stream</string> <!-- TODO Have to change this to go to a specific server-->
-
+    <string name="port_used">Port already in use !</string>
+    <string name="bind_failed">You need to choose another port for the %s server !</string>
 </resources>
 

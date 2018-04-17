@@ -17,29 +17,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
-            <TableRow>
-
-                <TextView
-                    android:id="@+id/indicationUri"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:paddingRight="10dp"
-                    android:text="@string/uri"
-                    android:textColor="@android:color/white" />
-
-                <EditText
-                    android:id="@+id/uri"
-                    style="@style/EditText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:layout_margin="0dp"
-                    android:inputType="textUri"
-                    android:singleLine="true"
-                    android:text="@string/default_stream" >
-                </EditText>
-            </TableRow>
 
             <TableRow>
 
